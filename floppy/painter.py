@@ -1,5 +1,4 @@
 import os
-import time
 from floppy.graph import Graph
 from floppy.node import InputNotAvailable, ControlNode
 from floppy.mainwindow import Ui_MainWindow
@@ -11,6 +10,10 @@ from PyQt5.QtGui import *
 from PyQt5.Qt import QTimer
 import platform
 import logging
+
+import chainer
+
+import numpy
 
 logger = logging.getLogger('Floppy')
 
@@ -37,7 +40,9 @@ class Painter2D(Painter):
                  int: QColor(0, 115, 130),
                  float: QColor(0, 200, 0),
                  object: QColor(190, 190, 190),
-                 bool: QColor(190, 0, 0),}
+                 bool: QColor(190, 0, 0),
+                 chainer.Variable: QColor(100, 0, 100),
+                 numpy.ndarray: QColor(100, 0, 200),}
     nodes = []
     scale = 1.
     globalOffset = QPoint(0, 0)
@@ -755,7 +760,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         iconRoot = os.path.realpath(__file__)
         iconRoot = os.path.join(os.path.dirname(os.path.dirname(iconRoot)), 'floppy')
-        self.iconRoot = os.path.join(iconRoot, 'ressources')
+        self.iconRoot = os.path.join(iconRoot, 'resources')
         self.settings = QSettings('Floppy', 'Floppy')
 
         self.setupUi(self)

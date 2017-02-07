@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/jens/Floppy/floppy/ressources/mainwindow.ui'
+# Form implementation generated from reading ui file 'floppy/resources/mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.4
 #

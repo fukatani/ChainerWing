@@ -14,11 +14,12 @@ class ColorDict(object):
 
 TEMPLATES = {}
 TYPECOLORS = ColorDict({'str': 'rgb(255, 190, 0)',
-              'int': 'rgb(0, 115, 130)',
-              'float': 'rgb(0, 200, 0)',
-              'object': 'rgb(190, 190, 190)',
-              'bool': 'rgb(190, 0, 0)',
-              })
+                        'int': 'rgb(0, 115, 130)',
+                        'float': 'rgb(0, 200, 0)',
+                        'object': 'rgb(190, 190, 190)',
+                        'bool': 'rgb(190, 0, 0)',
+                        'Variable': 'rgb(100, 0, 100)',
+                        })
 
 
 class TemplateElement(object):
