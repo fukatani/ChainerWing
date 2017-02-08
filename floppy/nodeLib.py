@@ -18,8 +18,6 @@ for i, path in enumerate(os.listdir(customNodesPath)):
             print('Warning: error in custom node:\n{}'.format(str(e)))
 
 
-
-
 class NodeFilter(QLineEdit):
     """
     Widget for filtering a list of available nodes by user specified characteristics.
@@ -27,7 +25,8 @@ class NodeFilter(QLineEdit):
     def __init__(self, parent=None):
         super(NodeFilter, self).__init__(parent)
         self.textEdited.connect(self.check)
-        self.setStyleSheet("NodeFilter {background-color:rgb(75,75,75) ;border:1px solid rgb(0, 0, 0); "
+        self.setStyleSheet("NodeFilter {background-color:rgb(75,75,75) ;"
+                           "border:1px solid rgb(0, 0, 0); "
                            "border-color:black; color: white }")
 
     def focusInEvent(self, event):
@@ -156,7 +155,6 @@ class NodeList(QListView):
 
             self.graph.spawnNode(self.selectedClass, position=(pos.x(), pos.y()))
             self.graph.update()
-
 
     def mouseMoveEvent(self, event):
         """

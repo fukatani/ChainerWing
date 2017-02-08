@@ -509,7 +509,7 @@ class Painter2D(Painter):
                         continue
                     else:
                         self.triggers.add(node)
-                        drawItem.activeate()
+                        drawItem.activate()
                 # pen.setColor(QColor(255, 190, 0))
                 try:
                     pen.setColor(Painter2D.PINCOLORS[inputPin.info.varType])
@@ -1191,7 +1191,7 @@ class DrawItem(object):
     def deactivate(self):
         self.active = False
 
-    def activeate(self):
+    def activate(self):
         self.active = True
 
     def update(self, x, y, w, h, transform):
@@ -1233,10 +1233,10 @@ class DrawItem(object):
             return True
 
     def watch(self, pos):
-         pass
+        pass
 
     def watchDown(self, pos):
-         pass
+        pass
 
     def keyPressEvent(self, event):
         pass
@@ -1413,7 +1413,7 @@ class LineEdit(DrawItem):
             painter.drawText(xx+5, yy-3+TEXTYOFFSET, ww-10, hh+5, alignment, text)
 
     def keyPressEvent(self, event):
-        if event.key() == 16777219:
+        if event.key() == 16777219:  # Backspace
             self.text = self.text[:-1]
         else:
             self.text += self.sanitizeInputString(event.text())
@@ -1516,5 +1516,3 @@ class NodeDialog(QDockWidget):
         """
         pin = self.graph.getPinWithID(self.pin)
         return pin.info.varType.__name__
-
-
