@@ -244,6 +244,7 @@ class MetaNode(type):
             result._addTag(tag)
         return result
 
+
 @abstractNode
 class Node(object, metaclass=MetaNode):
     """
@@ -586,6 +587,7 @@ class ProxyNode(Node):
     def addProxyOutput(self, name, output, input, varType):
         pass
 
+
 @abstractNode
 class ControlNode(Node):
     """
@@ -608,218 +610,6 @@ class ControlNode(Node):
     def __init__(self, *args, **kwargs):
         super(ControlNode, self).__init__(*args, **kwargs)
         self.waiting = False
-
-
-class Switch(ControlNode):
-    """
-    Node for creating a basic if/else construction.
-    The input 'Switch' accepts a bool. Depending of the value of the input, the 'True' or 'False' outputs are set to
-    the value of the 'Start' input.
-    As soon as the 'Control' input is set by one of the code branches originating from the 'True' and 'False' outputs,
-    the value of the 'Final' output is set to the value of the 'Control' input.
-    """
-    Input('Switch', bool)
-    Output('True', object)
-    Output('False', object)
-    Tag('If')
-    Tag('Else')
-
-    def __init__(self, *args, **kwargs):
-        super(Switch, self).__init__(*args, **kwargs)
-        self.fresh = True
-
-    def check(self):
-        if self.fresh:
-            for inp in self.inputs.values():
-                if inp.name == 'Control':
-                    continue
-                if inp.name == 'TRIGGER' and not inp.connected:
-                    continue
-                if not inp.isAvailable():
-                    # print('        {}: Prerequisites not met.'.format(str(self)))
-                    return False
-            return True
-        else:
-            if self.inputs['Control'].isAvailable():
-                return True
-
-    def run(self):
-        print('Executing node {}'.format(self))
-        if self.fresh:
-            if self._Switch:
-                self._True(self._Start)
-            else:
-                self._False(self._Start)
-        else:
-            self._Final(self._Control)
-
-    def notify(self):
-        if self.fresh:
-            output = self.outputs['True'] if self._Switch else self.outputs['False']
-            for con in self.graph.getConnectionsOfOutput(output):
-                outputName = con['outputName']
-                nextNode = con['inputNode']
-                nextInput = con['inputName']
-                nextNode.setInput(nextInput, self.outputs[outputName].value, loopLevel=self.loopLevel)
-            self.fresh = False
-            self.inputs['Start'].reset(self.loopLevel)
-            self.inputs['Switch'].reset(self.loopLevel)
-        else:
-            output = self.outputs['Final']
-            for con in self.graph.getConnectionsOfOutput(output):
-                outputName = con['outputName']
-                nextNode = con['inputNode']
-                nextInput = con['inputName']
-                nextNode.setInput(nextInput, self.outputs[outputName].value, loopLevel=self.loopLevel)
-            self.fresh = True
-        self.inputs['Control'].reset()
-        [Info.reset(inp, self.loopLevel) for inp in self.inputs.values()]
-
-#
-# class Loop(ControlNode):
-#     """
-#     Generic loop node that iterates over a range(x: int)-like expression.
-#     """
-#     Input('Iterations', int)
-#     Output('LoopBody', object)
-#
-#     def __init__(self, *args, **kwargs):
-#         super(ControlNode, self).__init__(*args, **kwargs)
-#         self.fresh = True
-#         self.counter = 0
-#         self.loopLevel = 0
-#
-#     # def prepare(self):
-#     #     pass
-#
-#     def check(self):
-#         if self.fresh:
-#             for inp in self.inputs.values():
-#                 if inp.name == 'Control':
-#                     continue
-#                 if not inp.isAvailable():
-#                     # print('        {}: Prerequisites not met.'.format(str(self)))
-#                     return False
-#             return True
-#         if self.counter > 0:
-#             if self.inputs['Control'].isAvailable():
-#                 return True
-#
-#     def run(self):
-#         print('Executing node {}'.format(self))
-#         if self.fresh:
-#             self.counter = self._Iterations
-#             self._LoopBody(self._Start)
-#             self.fresh = False
-#         elif self.counter == 0:
-#             self._Final(self._Control)
-#         else:
-#             self.counter -= 1
-#             self._LoopBody(self._Control)
-#
-#
-#     def notify(self):
-#         if self.counter > 0:
-#             output = self.outputs['LoopBody']
-#             for con in self.graph.getConnectionsOfOutput(output):
-#                 outputName = con['outputName']
-#                 nextNode = con['inputNode']
-#                 nextInput = con['inputName']
-#                 # nextNode.prepare()
-#                 nextNode.setInput(nextInput, self.outputs[outputName].value, override=True, loopLevel=self.loopLevel+1)
-#             self.inputs['Control'].reset()
-#
-#         else:
-#             output = self.outputs['Final']
-#             for con in self.graph.getConnectionsOfOutput(output):
-#                 outputName = con['outputName']
-#                 nextNode = con['inputNode']
-#                 nextInput = con['inputName']
-#                 nextNode.setInput(nextInput, self.outputs[outputName].value, loopLevel=self.loopLevel)
-#             # self.prepare()
-#             self.fresh = True
-#             for inp in self.inputs.values():
-#                 if not inp.name == 'Iterations':
-#                     inp.reset()
-#         # print(self.inProgress)
-#         # exit()
-
-
-class WaitAll(Node):
-    """
-    Watis for all inputs to be set before executing further nodes.
-    """
-    Input('Pass', object)
-    Input('Wait', object)
-    Output('Out', object)
-
-    def run(self):
-        self._Out(self._Pass)
-
-    def notify(self):
-        super(WaitAll, self).notify()
-        [inp.reset(self.loopLevel) for inp in self.inputs.values()]
-
-
-class WaitAny(Node):
-    """
-    Waits for any inputs to be set. This doesn't make much sense, does it?
-    """
-    Input('Wait1', object)
-    Input('Wait2', object)
-    Output('Out', object)
-
-    def setup(self):
-        self.useInput = None
-
-    def check(self):
-        for inp in self.inputs.values():
-            if inp.valueSet:
-                # print('        {}: Prerequisites not met.'.format(str(self)))
-                self.useInput = inp
-                return True
-
-    def run(self):
-        super(WaitAny, self).run()
-        self._Out(self.useInput())
-
-
-class Test(Node):
-    Input('Test', bool)
-    Output('T', bool)
-
-    def run(self):
-        super(Test, self).run()
-        print(self._Test)
-        self._T(self._Test)
-
-
-class TestNode(Node):
-    Input('strInput', str)
-    Output('strOutput', str)
-
-    def run(self):
-        super(TestNode, self).run()
-        import time
-        time.sleep(self.ID/2000.)
-        self._strOutput('')
-
-    # def report(self):
-    #     r = super(TestNode, self).report()
-    #     r['template'] = 'plotTemplate'
-    #     return r
-
-
-class FinalTestNode(TestNode):
-    def run(self):
-        super(FinalTestNode, self).run()
-
-
-class TestNode2(Node):
-    Input('strInput', str)
-    Input('floatInput', float, default=10.)
-    Input('Input', str, default='TestNode')
-    Output('strOutput', str)
 
 
 class CreateBool(Node):
@@ -958,11 +748,6 @@ class ForLoop(ControlNode):
         return r
 
 
-class ForEach(ForLoop):
-    Input('Start', object, list=True)
-    Output('ListElement', object)
-
-
 class IsEqual(Node):
     """
     Sets output to object1 == object2.
@@ -974,18 +759,6 @@ class IsEqual(Node):
     def run(self):
         super(IsEqual, self).run()
         self._Equal(self._object1 == self._object2)
-
-
-class CreateString(Node):
-    """
-    Creates a string object.
-    """
-    Input('Str', str)
-    Output('String', str)
-
-    def run(self):
-        super(CreateString, self).run()
-        self._String(self._Str)
 
 
 @abstractNode
@@ -1019,137 +792,6 @@ class DebugPrint(DebugNode):
         self._Out(obj)
 
 
-class Join(Node):
-    Input('Str1', str)
-    Input('Str2', str)
-    Output('Joined', str)
-
-    def run(self):
-        super(Join, self).run()
-        self._Joined(''.join([self._Str1, self._Str2]))
-
-
-class Break(Node):
-    Input('Input', object)
-    Output('Output', object)
-    Tag('Loop')
-
-    def run(self):
-        super(Break, self).run()
-        self._Output(self._Input)
-
-    def notify(self):
-        output = self.outputs['Output']
-        for con in self.graph.getConnectionsOfOutput(output):
-            outputName = con['outputName']
-            nextNode = con['inputNode']
-            nextInput = con['inputName']
-            # nextNode.prepare()
-            nextNode.setInput(nextInput, self.outputs[outputName].value, override=True, loopLevel=self.loopLevel-1)
-
-
-class SetValue(Node):
-    Input('Name', str)
-    Input('Value', object)
-    Output('Trigger', object)
-
-    def __init__(self, *args, **kwargs):
-        super(SetValue, self).__init__(*args, **kwargs)
-        self.lastValue = (None, None)
-
-    def run(self):
-        super(SetValue, self).run()
-        self.graph.STOREDVALUES[self._Name] = self._Value
-        self.lastValue = (self._Name, self._Value)
-
-    def report(self):
-        r = super(SetValue, self).report()
-        n, v = self.lastValue
-        r['inputs'] = [(n, type(v).__name__, str(v))]
-        return r
-
-
-class GetValue(Node):
-    # Input('Trigger', object)
-    Input('Name', str)
-    Output('Value', object)
-
-    def run(self):
-        self._Value(self.graph.STOREDVALUES[self._Name])
-
-
-class Split(Node):
-    Input('String', str)
-    Input('Separator', str)
-    Output('List', str, list=True)
-
-    def run(self):
-        super(Split, self).run()
-        self._List(self._String.split(self._Separator))
-
-
-class SplitLines(Node):
-    Input('String', str)
-    Output('List', str, list=True)
-
-    def run(self):
-        super(SplitLines, self).run()
-        self._List(self._String.splitlines())
-
-
-class ShowValues(Node):
-    # Input('Trigger', object)
-    Output('Output', object)
-
-    def __init__(self, *args, **kwargs):
-        super(ShowValues, self).__init__(*args, **kwargs)
-        self.store = {}
-
-    def run(self):
-        super(ShowValues, self).run()
-        self._Output(self._TRIGGER)
-        self.store = self.graph.STOREDVALUES
-
-    def report(self):
-        r = super(ShowValues, self).report()
-        r['template'] = 'programTemplate'
-        s = self.store
-        keys = sorted(s.keys())
-        r['stdout'] = '\\n'.join(['{}: {}'.format(key, str(s[key])) for key in keys])
-        return r
-
-
-class CreateList(Node):
-    Input('Name', str)
-    Output('List', object, list=True)
-
-    def run(self):
-        super(CreateList, self).run()
-        l = []
-        self.graph.STOREDVALUES[self._Name] = l
-        self._List(l)
-
-
-class AppendValue(Node):
-    Input('Name', str)
-    Input('Value', object)
-    Output('List', object, list=True)
-
-    def run(self):
-        super(AppendValue, self).run()
-        self.graph.STOREDVALUES[self._Name].append(self._Value)
-        self._List(self.graph.STOREDVALUES[self._Name])
-
-
-class ToString(Node):
-    Input('Value', object)
-    Output('String', str)
-
-    def run(self):
-        super(ToString, self).run()
-        self._String(str(self._Value))
-
-
 class MakeTable(Node):
     Input('Keys', str, list=True)
     # Input('Values', object, list=True)
@@ -1179,16 +821,5 @@ class MakeTable(Node):
         print(table)
         self._Table(table)
 
-
-class TestReturn(Node):
-    Input('Value', object)
-    Input('Reference', object, optional=True)
-
-    def run(self):
-        super(TestReturn, self).run()
-        val = 0 if self._Value == self._Reference else 1
-        print(self._Value, self._Reference)
-        import os
-        os._exit(val)
 
 # TODO Cleanup this mess. Prepare method and probably a lot of other stuff is no longer needed.

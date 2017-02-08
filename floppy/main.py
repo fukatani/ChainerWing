@@ -14,7 +14,6 @@ fh.setFormatter(formatter)
 logger.addHandler(fh)
 
 
-
 def run():
     logger.info('Starting Floppy Application with '+' '.join(sys.argv))
     app = QApplication(sys.argv)
@@ -25,7 +24,6 @@ def run():
 def initializePainter():
     painter = Painter2D()
     Graph(painter=painter)
-
     return painter
 
 
@@ -47,5 +45,3 @@ def parseArgv():
     parser.add_argument('--test', nargs=1, required=False, default=False)
     args = parser.parse_args()
     return args
-
-
