@@ -66,7 +66,3 @@ class ReportWidget(WebView):
             pass
         #scrollValue = self.page().scrollPosition()
         self.setHtml(tmplt(data, self.cache[:], self.fileBase, self.width()), url)
-
-
-
-

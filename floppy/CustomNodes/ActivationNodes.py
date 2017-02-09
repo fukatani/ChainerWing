@@ -12,4 +12,3 @@ class Relu(Node):
     def run(self):
         # TODO(fukatani) link
         pass
-

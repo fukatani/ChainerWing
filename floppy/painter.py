@@ -355,7 +355,6 @@ class Painter2D(Painter):
                 # print(self.clickedNode)
         return nodes
 
-
     def openDialog(self, event):
         dialog = NodeDialog(self, event, self.clickedPin, self.graph)
         self.dialog = dialog
