@@ -33,11 +33,7 @@ def startUI(app, painter):
     win.show()
     logger.debug('Startup successful. Handing main thread control to Qt main loop.')
     sys.exit(app.exec_())
-    # try:
-    #     sys.exit(app.exec_())
-    # except KeyboardInterrupt:
-    #     print('Keyboard Interrupt. Shutting down gracefully.')
-    #     win.killRunner()
+
 
 def parseArgv():
     parser = argparse.ArgumentParser()
