@@ -1,4 +1,4 @@
-from floppy.node import Node, Input, Output, Tag, abstractNode
+from floppy.node import Node, Input, Output
 
 import chainer
 

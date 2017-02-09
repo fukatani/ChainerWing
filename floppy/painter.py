@@ -98,10 +98,7 @@ class Painter2D(Painter):
         self.watchingItems = []
         self.rightClickedNode = None
         self.lastReport = None
-        self.contextSensitive = True
-
         self.contextSensitive = False
-
         self.mouseDownPos = None
         self.dialog = None
         self.relayTo = None
@@ -152,7 +149,6 @@ class Painter2D(Painter):
         newNode = self.graph.createSubGraphNode(name, self.graph.toJson(subgraph=name), relayInputs,
                                                 relayOutputs, spawnAt=(pos.x(), pos.y()))
         self.update()
-
 
     def setSelectedSubgraph(self, graph, parent=None):
         if not parent:
@@ -725,14 +721,12 @@ class Painter2D(Painter):
 
     def drawGrid(self, painter):
         color = 105
-
         spacing = 100 * self.scale
         while spacing < 25:
             spacing *= 9
             color = 70 + (color-70) / 2.5
         if color < 0:
             return
-
 
         pen = QPen()
         pen.setColor(QColor(color, color, color))

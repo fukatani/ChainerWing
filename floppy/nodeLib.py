@@ -146,9 +146,7 @@ class NodeList(QListView):
             pos = QCursor.pos()
             topLeft = self.graph.painter.mapToGlobal(self.graph.painter.pos())
             pos -= topLeft
-
             pos -= self.graph.painter.center
-            # pos -= self.graph.painter.center
             # print(pos, self.graph.painter.center, pos*transform)
             pos /= self.graph.painter.scale
             # print(transform)
