@@ -144,15 +144,21 @@ class NodeList(QListView):
         if event.pos().x() < 0:
             # transform = self.graph.painter.transform
             pos = QCursor.pos()
-            topLeft = self.graph.painter.mapToGlobal(self.graph.painter.pos())
-            pos -= topLeft
-            pos -= self.graph.painter.center
-            # print(pos, self.graph.painter.center, pos*transform)
-            pos /= self.graph.painter.scale
-            # print(transform)
+            pos = self.correctPos(pos)
 
             self.graph.spawnNode(self.selectedClass, position=(pos.x(), pos.y()))
             self.graph.update()
+
+    def correctPos(self, pos):
+        pos -= self.getTopLeft()
+        pos -= self.graph.painter.center
+        # print(pos, self.graph.painter.center, pos*transform)
+        pos /= self.graph.painter.scale
+        # print(transform)
+        return pos
+
+    def getTopLeft(self):
+        return self.graph.painter.mapToGlobal(self.graph.painter.pos())
 
     def mouseMoveEvent(self, event):
         """
@@ -204,11 +210,7 @@ class ContextNodeList(NodeList):
         super(NodeList, self).mouseReleaseEvent(event)
         # pos = QCursor.pos()
         pos = self.parent().mapToGlobal(self.parent().pos())
-        topLeft = self.graph.painter.mapToGlobal(self.graph.painter.pos())
-        pos -= topLeft
-
-        pos -= self.graph.painter.center
-        pos /= self.graph.painter.scale
+        pos = self.correctPos(pos)
         self.graph.spawnNode(self.selectedClass, position=(pos.x(), pos.y()))
         self.down = False
         self.graph.requestUpdate()
@@ -225,11 +227,7 @@ class ContextNodeList(NodeList):
             name = self.filter.listView.selectedIndexes()[0].data()
             self.selectedClass = NODECLASSES[name]
             pos = self.parent().mapToGlobal(self.parent().pos())
-            topLeft = self.graph.painter.mapToGlobal(self.graph.painter.pos())
-            pos -= topLeft
-
-            pos -= self.graph.painter.center
-            pos /= self.graph.painter.scale
+            pos = self.correctPos(pos)
             self.graph.spawnNode(self.selectedClass, position=(pos.x()-5, pos.y()-40))
             self.down = False
             self.graph.requestUpdate()
@@ -279,12 +277,3 @@ class ContextNodeFilter(NodeFilter):
             item.setText(node)
             model.appendRow(item)
         self.listView.setModel(model)
-
-
-
-
-
-
-
-
-
