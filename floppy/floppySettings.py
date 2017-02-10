@@ -110,129 +110,71 @@ class DefaultConnectionEdit(QLineEdit):
         self.settings.setValue('DefaultConnection', self.text())
 
 
-class FontSizeEdit(QSpinBox):
-    def __init__(self, settings, globals, parent):
+class AbstractEdit(QSpinBox):
+    def __init__(self, settings, globals, parent, default, valType=int):
         self.parent = parent
         self.globals = globals
         self.settings = settings
-        super(FontSizeEdit, self).__init__()
-        v = settings.value('NodeFontSize', type=int)
-        v = v if v else 8
+        super(AbstractEdit, self).__init__()
+        v = settings.value(self.value_key, type=valType)
+        v = v if v else default
         self.setValue(v)
         self.valueChanged.connect(self.redraw)
 
     def commit(self):
-        self.settings.setValue('NodeFontSize', self.value())
-        self.globals['LINEEDITFONTSIZE'] = self.value()
+        self.settings.setValue(self.value_key, self.value())
+        self.globals[self.globals_key] = self.value()
 
     def redraw(self):
-        self.globals['LINEEDITFONTSIZE'] = self.value()
+        self.globals[self.globals_key] = self.value()
         self.parent.redraw()
 
 
-class FontOffsetEdit(QSpinBox):
+class FontSizeEdit(AbstractEdit):
+    globals_key = 'LINEEDITFONTSIZE'
+    value_key = 'NodeFontSize'
     def __init__(self, settings, globals, parent):
-        self.parent = parent
-        self.globals = globals
-        self.settings = settings
-        super(FontOffsetEdit, self).__init__()
-        v = settings.value('NodeFontOffset', type=int)
-        v = v if v else 0
+        super(FontSizeEdit, self).__init__(settings, globals, parent, 8)
+
+
+class FontOffsetEdit(AbstractEdit):
+    globals_key = 'TEXTYOFFSET'
+    value_key = 'NodeFontOffset'
+    def __init__(self, settings, globals, parent):
+        super(FontOffsetEdit, self).__init__(settings, globals, parent, 0)
         self.setRange(-10, 10)
-        self.setValue(v)
-        self.valueChanged.connect(self.redraw)
-
-    def commit(self):
-        self.settings.setValue('NodeFontOffset', self.value())
-        self.globals['TEXTYOFFSET'] = self.value()
-
-    def redraw(self):
-        self.globals['TEXTYOFFSET'] = self.value()
-        self.parent.redraw()
 
 
-class TitleFontSizeEdit(QSpinBox):
+class TitleFontSizeEdit(AbstractEdit):
+    globals_key = 'NODETITLEFONTSIZE'
+    value_key = 'TitleFontSize'
     def __init__(self, settings, globals, parent):
-        self.parent = parent
-        self.globals = globals
-        self.settings = settings
-        super(TitleFontSizeEdit, self).__init__()
-        v = settings.value('TitleFontSize', type=int)
-        v = v if v else 11
+        super(TitleFontSizeEdit, self).__init__(settings, globals, parent, 11)
         self.setRange(1, 20)
-        self.setValue(v)
-        self.valueChanged.connect(self.redraw)
-
-    def commit(self):
-        self.settings.setValue('TitleFontSize', self.value())
-        self.globals['NODETITLEFONTSIZE'] = self.value()
-
-    def redraw(self):
-        self.globals['NODETITLEFONTSIZE'] = self.value()
-        self.parent.redraw()
 
 
-class ConnectionLineWidthEdit(QSpinBox):
+class ConnectionLineWidthEdit(AbstractEdit):
+    globals_key = 'CONNECTIONLINEWIDTH'
+    value_key = 'ConnectionLineWidth'
     def __init__(self, settings, globals, parent):
-        self.parent = parent
-        self.globals = globals
-        self.settings = settings
-        super(ConnectionLineWidthEdit, self).__init__()
-        v = settings.value('ConnectionLineWidth', type=int)
-        v = v if v else 2
+        super(ConnectionLineWidthEdit, self).__init__(settings, globals, parent, 2)
         self.setRange(1, 20)
-        self.setValue(v)
-        self.valueChanged.connect(self.redraw)
-
-    def commit(self):
-        self.settings.setValue('ConnectionLineWidth', self.value())
-        self.globals['CONNECTIONLINEWIDTH'] = self.value()
-
-    def redraw(self):
-        self.globals['CONNECTIONLINEWIDTH'] = self.value()
-        self.parent.redraw()
 
 
-class NodeWidthEdit(QSpinBox):
+class NodeWidthEdit(AbstractEdit):
+    globals_key = 'NODEWIDTHSCALE'
+    value_key = 'NodeWidthScale'
     def __init__(self, settings, globals, parent):
-        self.parent = parent
-        self.globals = globals
-        self.settings = settings
-        super(NodeWidthEdit, self).__init__()
-        v = settings.value('NodeWidthScale', type=int)
-        v = v if v else 100
+        super(NodeWidthEdit, self).__init__(settings, globals, parent, 100)
         self.setRange(50, 250)
-        self.setValue(v)
-        self.valueChanged.connect(self.redraw)
-
-    def commit(self):
-        self.settings.setValue('NodeWidthScale', self.value())
-        self.globals['NODEWIDTHSCALE'] = self.value()
-
-    def redraw(self):
-        self.globals['NODEWIDTHSCALE'] = self.value()
-        self.parent.redraw()
 
 
-class PinSizeEdit(QSpinBox):
+class PinSizeEdit(AbstractEdit):
+    globals_key = 'PinSize'
+    value_key = 'PINSIZE'
     def __init__(self, settings, globals, parent):
-        self.parent = parent
-        self.globals = globals
-        self.settings = settings
-        super(PinSizeEdit, self).__init__()
-        v = settings.value('PinSize', type=int)
-        v = v if v else 8
+        super(PinSizeEdit, self).__init__(settings, globals, parent, 8)
         self.setRange(1, 25)
-        self.setValue(v)
-        self.valueChanged.connect(self.redraw)
-
-    def commit(self):
-        self.settings.setValue('PinSize', self.value())
-        self.globals['PINSIZE'] = self.value()
-
-    def redraw(self):
-        self.globals['PINSIZE'] = self.value()
-        self.parent.redraw()
 
 
 class WorkFileDirEdit(QPushButton):

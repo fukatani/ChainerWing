@@ -944,9 +944,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.mainToolBar.addAction(self.connectAction)
         # self.mainToolBar.addAction(self.statusAction)
         self.mainToolBar.addAction(self.dropAction)
-
-
-
         self.mainToolBar.addSeparator()
         self.mainToolBar.addAction(self.settingsAction)
         self.mainToolBar.addSeparator()
