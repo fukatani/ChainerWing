@@ -1,12 +1,8 @@
 import json
-import zlib
 import time
 from collections import OrderedDict
 from floppy.node import ControlNode, Node, MetaNode
-from floppy.runner import Runner, sendCommand, RGIConnection
-from socket import AF_INET, SOCK_STREAM, socket
 from floppy.node import NODECLASSES
-from threading import Thread, Lock
 
 
 def dummy(nodeClass):
@@ -46,28 +42,6 @@ class Graph(object):
             painter.registerGraph(self)
         else:
             self.painter = dummy
-
-    def spawnAndConnect(self, port=8079):
-        """
-        Spawns a new graph interpreter instance and establishes a TCP/IP connection to it.
-        :return:
-        """
-        if not self.runner:
-            self.runner = Runner()
-        self.connect2RemoteRunner(host='127.0.0.1', port=port)
-        self.slave = True
-
-    def connect2RemoteRunner(self, host='127.0.0.1', port=8079):
-        self.cmdHost = host
-        self.cmdPort = int(port)
-        self.slave = False
-        self.rgiConnection = RGIConnection()
-        self.rgiConnection.connect(self.cmdHost, self.cmdPort)
-        # self.connect2Runner(host, port)
-        # self.statusLock = Lock()
-        # self.statusQueue = Queue(100)
-        self.connected = True
-        # self.statusListener = StatusListener(self, self.clientSocket, self.statusQueue, self.statusLock)
 
     def __getattr__(self, item):
         if item == 'newID':
@@ -310,7 +284,6 @@ class Graph(object):
     def getRunningNodes(self):
         return self.currentlyRunning
 
-
     def execute(self):
         """
         Execute the Graph instance.
@@ -323,84 +296,10 @@ class Graph(object):
         terminates.
         :return:
         """
-        if not self.connected:
-            self.spawnAndConnect()
-        self.push2Runner()
-        time.sleep(1)
-        self.unpauseRunner()
-        # running = True
-        # i = 0
-        # while running:
-        #     i += 1
-        #     print('\nExecuting iteration {}.'.format(i))
-        #     running = False
-        #     for node in self.nodes.values():
-        #         checked = node.check()
-        #         running = checked if not running else True
-        #         if checked:
-        #             node.run()
-        #             node.notify()
-
-    def runNodePar(self, node, cb=None, arg=None):
-        self.runningNodes.append(node.ID)
-        t = NodeThread(node, cb, arg)
-        # t.join()
-
-    # def testRun(self):
-    #     if not self.runner:
-    #         self.runner = Runner()
-    #     sendCommand('PAUSE', self.cmdHost, self.cmdPort)
-    #     data = self.serialize()
-    #     self.sendUpdate(data)
-    #     sendCommand('UPDATE', self.cmdHost, self.cmdPort)
-    #     import time
-    #     time.sleep(.5)
-    #     sendCommand('UNPAUSE', self.cmdHost, self.cmdPort)
-    #     return
-    #
-    #     import time
-    #     time.sleep(2)
-    #     sendCommand('PAUSE')
-    #     time.sleep(1)
-    #     sendCommand('KILL')
-    #     del r
+        # TODO(fukatani): compile and run
 
     def print(self, message):
         print(message)
-
-    def updateRunner(self):
-        """
-        Serializes the graph and sends it to the connected graph interpreter telling it to load the new data.
-        :return:
-        """
-        # self.executedBuffer = []
-        self.rgiConnection.send('PAUSE', self.print)
-        message = self.serialize()
-        # msg = struct.pack('>I', len(message)) + message.encode('utf-8')
-        # self.sendUpdate(data)
-        self.rgiConnection.send('UPDATE'+message, self.print)
-
-    def push2Runner(self):
-        """
-        Serializes the graph and sends it to the connected graph interpreter telling it to load the new data.
-        :return:
-        """
-        self.executedBuffer = []
-        self.STOREDVALUES = {}
-        self.rgiConnection.send('PAUSE', self.print)
-        message = self.serialize()
-        # msg = struct.pack('>I', len(message)) + message.encode('utf-8')
-        # self.sendUpdate(data)
-        self.rgiConnection.send('PUSH'+message, self.print)
-
-    def serialize(self):
-        """
-        Returns a serialized representation of the graph instance.
-        :return:
-        """
-        data = self.toJson()
-        return data
-        return zlib.compress(data.encode('utf-8'))
 
     def save(self, fileName):
         """
@@ -419,80 +318,18 @@ class Graph(object):
         :return:
         """
         if subgraph:
-            return json.dumps([(node.ID, node.save()) for node in self.nodes.values() if node.subgraph == subgraph])
-        return json.dumps([(node.ID, node.save()) for node in self.nodes.values()])
-        #return json.dumps({node.ID: node.save() for node in self.nodes.values()})
+            return json.dumps(
+                [(node.ID, node.save()) for node in self.nodes.values() if
+                 node.subgraph == subgraph])
+        return json.dumps(
+            [(node.ID, node.save()) for node in self.nodes.values()])
 
     def killRunner(self):
         """
         Send KILL command to the graph interpreter telling it to terminate itself.
         :return:
         """
-        if not self.slave:
-            return
-        self.rgiConnection.send('KILL', self.print)
-        # sendCommand('KILL', self.cmdHost, self.cmdPort)
-        # self.clientSocket.close()
-        del self.runner
-        self.runner = None
-        self.connected = False
-
-    def pauseRunner(self):
-        """
-        Send PAUSE command to the graph interpreter.
-        :return:
-        """
-        self.rgiConnection.send('PAUSE', self.print)
-        # sendCommand('PAUSE', self.cmdHost, self.cmdPort)
-
-    def unpauseRunner(self):
-        """
-        Send UNPAUSE command to the graph interpreter.
-        :return:
-        """
-        self.rgiConnection.send('UNPAUSE', self.print)
-        # sendCommand('UNPAUSE', self.cmdHost, self.cmdPort)
-
-    def stepRunner(self):
-        """
-        Send Step command to the graph interpreter causing it to execute one node and then reenter the PAUSED state.
-        :return:
-        """
-        self.rgiConnection.send('STEP', self.print)
-
-    def gotoRunner(self, nextID):
-        """
-        Send GOTO<Node> command to the graph interpreter causing it to execute the node with the given ID next.
-        :param nextID:
-        :return:
-        """
-        self.rgiConnection.send('GOTO1', self.print)
-
-    def dropGraph(self):
-        self.rgiConnection.send('DROP', self.print)
-
-    def setStatus(self, status):
-        self.status = json.loads(status[10:])
-
-    def requestRemoteStatus(self):
-        if self.connected:
-            try:
-                self.rgiConnection.send('STATUS***{}'.format(self._requestReport), self.setStatus)
-                # status = json.loads(status[10:])
-            except BrokenPipeError:
-                self.connected = False
-                return []
-            except ConnectionResetError:
-                self.connected = False
-                return []
-            except socket.timeout:
-                self.connected = False
-                return []
-            else:
-                # return json.loads(status[10:])
-                return []
-        else:
-            return []
+        pass
 
     def load(self, fileName, callback=None):
         with open(fileName, 'r') as fp:
@@ -723,41 +560,12 @@ class Graph(object):
             self.removeConnection(out.ID)
         del self.nodes[node.ID]
 
-    def configureInterpreter(self, options):
-        self.rgiConnection.send('CONFIGURE{}'.format(json.dumps(options)), print)
-
-
-class NodeThread(Thread):
-
-    def __init__(self, node, cb, arg):
-        # node.lock()
-        self.node = node
-        self.cb = cb
-
-        self.arg = arg
-        super(NodeThread, self).__init__()
-        self.daemon = True
-        self.start()
-
-    def run(self):
-        super(NodeThread, self).run()
-        try:
-            self.node.run()
-        except Exception as a:
-            print('Something bad happened in when executing {}.'.format(str(self.node)))
-            print(a)
-            self.node.unlock
-            return
-        self.node.notify()
-        if self.cb:
-            self.cb(self.arg)
-        self.node.unlock()
-
 
 class Connection(object):
     """
     Class representing a connection and storing information about involved Inputs and Outputs.
     """
+
     def __init__(self, outNode, outName, inpNode, inpName):
         self.outputNode = outNode
         self.outputName = outName
@@ -765,40 +573,8 @@ class Connection(object):
         self.inputName = inpName
 
     def __hash__(self):
-        return hash(''.join([str(i) for i in (self.outputNode, self.outputName, self.inputNode, self.inputName)]))
+        return hash(''.join([str(i) for i in (
+        self.outputNode, self.outputName, self.inputNode, self.inputName)]))
 
     def __getitem__(self, item):
         return self.__getattribute__(item)
-
-
-class StatusListener(Thread):
-    """
-    Thread for listening to the remote graph interpreter for status updates.
-    """
-    def __init__(self, master, socket, statusQueue, statusLock):
-        Thread.__init__(self)
-        self.alive = True
-        self.connection = socket
-        self.master = master
-        self.daemon = True
-        self.statusQueue = statusQueue
-        self.statusLock = statusLock
-        self.start()
-
-    # def kill(self):
-    #     self.alive = False
-    #     time.sleep(.1)
-    #     self.listenSocket.shutdown(SHUT_RDWR)
-
-    def run(self):
-        while self.alive:
-            try:
-                message = self.connection.recv(1024).decode()
-            except:
-                pass
-            else:
-                self.statusLock.acquire()
-                for ID in [i for i in message.split('#') if i]:
-                    self.master.executedBuffer.append(int(ID))
-                self.statusLock.release()
-                self.master.requestUpdate()
