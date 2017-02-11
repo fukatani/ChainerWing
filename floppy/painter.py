@@ -444,7 +444,7 @@ class Painter2D(Painter):
             self.lastReport = report
 
         lastDraws = []
-        halfPinSize = PINSIZE//2
+        halfPinSize = PINSIZE // 2
 
         for j, node in enumerate(self.nodes):
             if not self.selectedSubgraph[0] == node.subgraph:
@@ -664,7 +664,7 @@ class Painter2D(Painter):
                     p21 = start.x()+diffx
                     p22 = start.y()
                     p31 = end.x()
-                    p32 = end.y() - 100*self.scale
+                    p32 = end.y() - 100 * self.scale
                 elif rotate == 'output':
                     p21 = start.x()
                     p22 = start.y() + 100 * self.scale
@@ -674,7 +674,7 @@ class Painter2D(Painter):
                     p21 = start.x()
                     p22 = start.y() + 100 * self.scale
                     p31 = end.x()
-                    p32 = end.y() - 100*self.scale
+                    p32 = end.y() - 100 * self.scale
                 else:
                     p21 = start.x()+diffx
                     p22 = start.y()
