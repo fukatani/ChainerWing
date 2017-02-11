@@ -801,14 +801,7 @@ class StatusListener(Thread):
                 pass
             else:
                 self.statusLock.acquire()
-                for ID in [i for i in message.split('#')if i]:
+                for ID in [i for i in message.split('#') if i]:
                     self.master.executedBuffer.append(int(ID))
                 self.statusLock.release()
                 self.master.requestUpdate()
-
-
-
-
-
-
-

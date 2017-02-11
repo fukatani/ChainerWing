@@ -282,7 +282,6 @@ class Painter2D(Painter):
             self.selectFrame = event.pos() + (event.pos() - self.center) * (1-self.scale) * 1/self.scale
             self._selectFrame = event.pos()
 
-
     def getOutputPinAt(self, pos):
         for point, pin in self.outputPinPositions:
             if abs(pos.x() - point.x()) < 7 * self.scale and abs(pos.y() - point.y()) < 7 * self.scale:
@@ -612,7 +611,6 @@ class Painter2D(Painter):
             painter.translate(-self.width()/2. - self.globalOffset.x(), -self.height()/2. - self.globalOffset.y())
             painter.drawRect(x, y, xx, yy)
             painter.translate(self.width()/2. + self.globalOffset.x(), self.height()/2. + self.globalOffset.y())
-
 
     def drawConnections(self, painter):
         if not self.graph:
@@ -1072,6 +1070,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.drawer.unregisterNode(node)
             self.drawer.repaint()
 
+    def clearAllNodes(self):
+        while self.drawer.nodes:
+            node = self.drawer.nodes[0]
+            self.drawer.graph.deleteNode(node)
+            self.drawer.unregisterNode(node)
+            self.drawer.repaint()
+
     def stepRunner(self):
         try:
             self.drawer.graph.stepRunner()
@@ -1120,6 +1125,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             fileName = override
         if fileName:
             logger.debug('Attempting to load graph: {}'.format(fileName))
+            # TODO(fukatani) delete graph.
+            self.clearAllNodes()
             self.drawer.graph.load(fileName, callback=self.raiseErrorMessage)
             self.statusBar.showMessage('Graph loaded from {}.'.format(fileName), 2000)
             logger.info('Successfully loaded graph: {}'.format(fileName))
