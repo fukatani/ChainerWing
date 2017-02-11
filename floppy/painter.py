@@ -1119,7 +1119,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def loadGraph(self, *args, override=False):
         if not override:
-            fileName = QFileDialog.getOpenFileName(self, 'Open File', '~/',
+            #TODO(fukatani): serialize directory.
+            init_path = os.path.abspath(__file__) + '/../../examples'
+            fileName = QFileDialog.getOpenFileName(self, 'Open File', init_path,
                                                    filter='Floppy Files (*.ppy);; Any (*.*)')[0]
         else:
             fileName = override
