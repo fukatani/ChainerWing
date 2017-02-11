@@ -6,10 +6,10 @@ import numpy
 #TODO(fukatani) make abstract class
 
 class GetMNIST(Node):
-    Output('Train', numpy.ndarray)
-    Output('TEST', numpy.ndarray)
+    Output('train', numpy.ndarray)
+    Output('test', numpy.ndarray)
 
     def run(self):
         # TODO(fukatani) link
-        return datasets.get_mnist()
+        self._train, self._test = datasets.get_mnist()
 

@@ -1,14 +1,15 @@
 from floppy.node import Node, Input, Output
 
 import chainer
+from chainer import functions
+
 import numpy
 
 #TODO(fukatani) make abstract class
 
 class Accuracy(Node):
-    Input('InputArray', chainer.Variable)
-    Output('OutArray', numpy.ndarray)
+    Input('in_array', chainer.Variable)
+    Output('accuracy', numpy.ndarray)
 
     def run(self):
-        # TODO(fukatani) link
-        pass
+        self._accuracy = functions.accuracy(self._in_array)

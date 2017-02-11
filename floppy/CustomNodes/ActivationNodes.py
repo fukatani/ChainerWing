@@ -1,14 +1,13 @@
 from floppy.node import Node, Input, Output
 
 import chainer
-
+from chainer import functions
 
 #TODO(fukatani) make abstract class
 
 class Relu(Node):
-    Input('InputArray', chainer.Variable)
-    Output('OutArray', chainer.Variable)
+    Input('in_array', chainer.Variable)
+    Output('out_array', chainer.Variable)
 
     def run(self):
-        # TODO(fukatani) link
-        pass
+        self._out_array = functions.relu(self._in_array)
