@@ -8,7 +8,7 @@ The runner will report its status to the editor and the editor is able to send c
 from threading import Thread, Lock
 import time
 from queue import Queue
-from socket import AF_INET, SOCK_STREAM, socket, SHUT_RDWR, timeout, SHUT_RDWR, SO_REUSEADDR, SOL_SOCKET
+from socket import AF_INET, SOCK_STREAM, socket, SHUT_RDWR, timeout, SO_REUSEADDR, SOL_SOCKET
 import json
 import struct
 import logging
@@ -200,7 +200,6 @@ class ExecutionThread(Thread):
                 time.sleep(1)
                 continue
             if self.alive and self.graph:
-
                 # print(self.graph.nodes)
                 #print('Doing stuff.')
                 # self.executeGraphStep()
@@ -240,7 +239,6 @@ class ExecutionThread(Thread):
         #self.resetPointers()
 
     def updateGraph(self):
-        from floppy.graph import Graph
         # self.graph = Graph()
         # print(type(self.master.graph))
         logger.debug('Attempting to update graph instance.')
@@ -301,7 +299,6 @@ class ExecutionThread(Thread):
             if not running:
                 print('Nothing to do here @ {}'.format(time.time()))
                 time.sleep(.1)
-
 
 
 class Listener(Thread):
@@ -509,9 +506,7 @@ def terminate(clientSocket):
     message = 'Kill'
     clientSocket.send(message.encode())
     print('Kill command sent.')
-
     answer = clientSocket.recv(1024).decode()
-
     print(answer)
 
 
@@ -553,6 +548,7 @@ def spawnRunner(listenPort):
     print('Remote Graph Interpreter Initialized.'
           'Listening on port {}'.format(port))
     r.join()
+
 
 if __name__ == '__main__':
     spawnRunner()

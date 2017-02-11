@@ -1,15 +1,12 @@
 import json
 import zlib
-import io
 import time
 from collections import OrderedDict
 from floppy.node import ControlNode, Node, MetaNode
 from floppy.runner import Runner, sendCommand, RGIConnection
-from socket import AF_INET, SOCK_STREAM, socket #, SHUT_RDWR, timeout, SHUT_RDWR, SO_REUSEADDR, SOL_SOCKET
+from socket import AF_INET, SOCK_STREAM, socket
 from floppy.node import NODECLASSES
 from threading import Thread, Lock
-from queue import Queue
-import struct
 
 
 def dummy(nodeClass):

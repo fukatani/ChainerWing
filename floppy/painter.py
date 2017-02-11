@@ -72,7 +72,6 @@ class Painter2D(Painter):
         self.contextSensitive = False
         self.rightClickedNode = None
         self.lastReport = None
-
         self.mouseDownPos = None
         self.dialog = None
         self.relayTo = None
