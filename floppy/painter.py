@@ -863,7 +863,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.addAction(self.spawnRunnerAction)
         
         self.deleteNodeAction = QAction('Delete', self)
-        self.deleteNodeAction.setShortcut('Ctrl+D')
+        self.deleteNodeAction.setShortcut('Delete')
         self.deleteNodeAction.triggered.connect(self.deleteNode)
         self.deleteNodeAction.setIconVisibleInMenu(True)
         self.addAction(self.deleteNodeAction)
