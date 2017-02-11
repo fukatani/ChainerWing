@@ -760,8 +760,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.setWindowIcon(QIcon(os.path.join(self.iconRoot, 'appIcon.png')))
 
-        self.resize(900, 700)
-        self.setWindowTitle('Floppy')
+        self.resize(self.settings.value("size", (900, 700)))
+        self.move(self.settings.value("pos", QPoint(50, 50)))
+        self.setWindowTitle('ChainerWind')
 
         self.initActions()
         self.initMenus()
@@ -1164,6 +1165,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         logger.debug('Attempting to kill interpreter.')
         self.killRunner()
         logger.debug('MainWindow is shutting down.')
+        self.settings.setValue("size", self.size())
+        self.settings.setValue("pos", self.pos())
         super(MainWindow, self).closeEvent(event)
 
     def keyPressEvent(self, event):
