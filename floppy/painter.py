@@ -313,7 +313,10 @@ class Painter2D(Painter):
                 try:
                     self.graph.connect(outputNodeID, outputName, inputNodeID, inputName)
                 except TypeError:
-                    print('Cannot connect pins of different type')
+                    error = QErrorMessage()
+                    error.showMessage('Cannot connect pins of different type')
+                    error.exec_()
+
             else:
                 if not self.shiftDown and (abs((event.pos()-self.mouseDownPos).x()) > 10 or
                                                    abs((event.pos()-self.mouseDownPos).y()) > 10):
@@ -1026,7 +1029,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             self.drawer.graph.killRunner()
         except:
-            print('No runner to kill.')
+            error = QErrorMessage()
+            error.showMessage('No runner to kill.')
+            error.exec_()
         workDir = self.settings.value('WorkDir', type=str)
         for file in os.listdir(workDir):
             if file.startswith('_'):
