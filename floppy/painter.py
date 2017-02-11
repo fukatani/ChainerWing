@@ -1120,14 +1120,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def loadGraph(self, *args, override=False):
         if not override:
             #TODO(fukatani): serialize directory.
-            init_path = os.path.abspath(__file__) + '/../../examples'
+            init_path = os.path.abspath(__file__) + '/../../examples/'
             fileName = QFileDialog.getOpenFileName(self, 'Open File', init_path,
                                                    filter='Floppy Files (*.ppy);; Any (*.*)')[0]
         else:
             fileName = override
         if fileName:
             logger.debug('Attempting to load graph: {}'.format(fileName))
-            # TODO(fukatani) delete graph.
             self.clearAllNodes()
             self.drawer.graph.load(fileName, callback=self.raiseErrorMessage)
             self.statusBar.showMessage('Graph loaded from {}.'.format(fileName), 2000)

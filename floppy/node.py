@@ -684,7 +684,6 @@ class ForLoop(ControlNode):
         if inputName == 'Control':
             loopLevel = self.loopLevel
         super(ForLoop, self).setInput(inputName, value, override, loopLevel)
-        # print('                                   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
 
     def check(self):
         if self.fresh:
@@ -746,19 +745,6 @@ class ForLoop(ControlNode):
         ready = any((self.inputs['Control'].isAvailable(info=True), self.inputs['Start'].isAvailable(info=True)))
         r['ready'] = 'Ready' if ready else 'Waiting'
         return r
-
-
-class IsEqual(Node):
-    """
-    Sets output to object1 == object2.
-    """
-    Input('object1', object)
-    Input('object2', object)
-    Output('Equal', bool)
-
-    def run(self):
-        super(IsEqual, self).run()
-        self._Equal(self._object1 == self._object2)
 
 
 @abstractNode
