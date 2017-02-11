@@ -535,10 +535,10 @@ class Graph(object):
             idMap[int(id)] = restoredNode.ID
             inputs = nodeData['inputs']
             outputs = nodeData['outputs']
-            for input in inputs:
-                restoredNode.inputs[input[0]].setDefault(input[-1])
-            for output in outputs:
-                restoredNode.outputs[output[0]].setDefault(output[-1])
+            # for input in inputs:
+            #     restoredNode.inputs[input[0]].setDefault(input[-1])
+            # for output in outputs:
+            #     restoredNode.outputs[output[0]].setDefault(output[-1])
         for id, nodeData in saveState:
             id = int(id)
             for inputName, outputID in nodeData['inputConnections'].items():
