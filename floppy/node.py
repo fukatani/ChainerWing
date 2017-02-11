@@ -806,6 +806,3 @@ class MakeTable(Node):
                     table += '{} '.format(value)
         print(table)
         self._Table(table)
-
-
-# TODO Cleanup this mess. Prepare method and probably a lot of other stuff is no longer needed.
