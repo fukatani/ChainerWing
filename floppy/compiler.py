@@ -7,7 +7,7 @@ class Compiler(object):
         i = 0
         for node in nodes.values():
             if issubclass(type(node), Link):
-                links.append('l{0}={1}'.format(i, node.run()))
+                links.append('            l{0}={1}'.format(i, node.run()))
                 i += 1
 
         net_name = 'ExampleNet'

@@ -250,8 +250,10 @@ class NetTemplate(Template):
         class {net_name}(chainer.Chain):
 
             def __init__(self):
-                {init_impl}
+                __super__({net_name}, self).__init__(
+{init_impl}
+                )
 
             def __call__(self):
-                {call_impl}
+{call_impl}
         '''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
