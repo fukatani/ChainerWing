@@ -1,6 +1,7 @@
 import json
 import time
 from collections import OrderedDict
+from floppy import compiler
 from floppy.node import ControlNode, Node, MetaNode
 from floppy.node import NODECLASSES
 
@@ -297,6 +298,8 @@ class Graph(object):
         :return:
         """
         # TODO(fukatani): compile and run
+        # TODO(fukatani): subgraph
+        cmpl = compiler.Compiler()(self.nodes)
 
     def print(self, message):
         print(message)

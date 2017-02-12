@@ -236,3 +236,22 @@ class PlotTemplate(Template):
 
 class ProgramTemplate(DefaultTemplate):
     ELEMENTS = [IOElement, StdoutElement]
+
+
+class NetTemplate(Template):
+
+    def __call__(self, net_name, init_impl, call_impl):
+        return '''
+        import chainer
+        from chainer import functions
+        from chainer import links
+
+
+        class {net_name}(chainer.Chain):
+
+            def __init__(self):
+                {init_impl}
+
+            def __call__(self):
+                {call_impl}
+        '''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
