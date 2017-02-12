@@ -806,3 +806,18 @@ class MakeTable(Node):
                     table += '{} '.format(value)
         print(table)
         self._Table(table)
+
+
+@abstractNode
+class Link(Node):
+    pass
+
+
+@abstractNode
+class Function(Node):
+    pass
+
+
+@abstractNode
+class Loss(Function):
+    pass

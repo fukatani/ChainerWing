@@ -1,11 +1,10 @@
-from floppy.node import Node, Input, Output
+from floppy.node import Node, Input, Output, Loss
 
 import chainer
 from chainer import functions
 
-#TODO(fukatani) make abstract class
 
-class SoftmaxCrossEntropy(Node):
+class SoftmaxCrossEntropy(Loss):
     Input('in_array', chainer.Variable)
     Input('ground_truth', chainer.Variable)
     Output('out_array', chainer.Variable)

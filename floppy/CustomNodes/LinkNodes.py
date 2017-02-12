@@ -1,11 +1,10 @@
-from floppy.node import Node, Input, Output
+from floppy.node import Node, Input, Output, Link
 
 import chainer
 from chainer import links
 
-#TODO(fukatani) make abstract class
 
-class Linear(Node):
+class Linear(Link):
     Input('in_array', chainer.Variable)
     Input('out_size', int)
     Input('nobias', bool, select=[True, False])
@@ -15,7 +14,7 @@ class Linear(Node):
         self._out_array = links.Linear(None, self._out_size, nobias=self._nobias)
 
 
-class Convolution2D(Node):
+class Convolution2D(Link):
     Input('in_array', chainer.Variable)
     Input('in_channels', int)
     Input('out_channels', int)

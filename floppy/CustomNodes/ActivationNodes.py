@@ -1,9 +1,8 @@
-from floppy.node import Node, Input, Output
+from floppy.node import Node, Input, Output, Function
 
 import chainer
 from chainer import functions
 
-#TODO(fukatani) make abstract class
 
 class Relu(Node):
     Input('in_array', chainer.Variable)
