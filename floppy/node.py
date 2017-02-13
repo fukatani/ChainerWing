@@ -511,7 +511,7 @@ class Node(object, metaclass=MetaNode):
         reinstanciate the whole graph.
         :return:
         """
-        inputConns = [self.graph.getConnectionOfInput(inp) for inp in self.inputs.values()]
+        inputConns = self.get_input_connections()
         # print(inputConns)
         inputConns = {inputConn['inputName']: inputConn['outputNode'].getOutputID(inputConn['outputName']) for inputConn in inputConns if inputConn}
         outputConns = {out.name: self.graph.getConnectionsOfOutput(out) for out in self.outputs.values()}
@@ -527,6 +527,17 @@ class Node(object, metaclass=MetaNode):
                             for outputName, out in self.outputs.items()],
                 'outputConnections': outputConns,
                 'subgraph': self.subgraph}
+
+    def get_input_connections(self):
+        input_connect_list = [self.graph.getConnectionOfInput(inp) for inp in
+                              self.inputs.values()]
+        return input_connect_list
+        input_connect_dict = {}
+        for connect in input_connect_list:
+            if not connect: continue
+            input_connect_dict[connect['inputName']] = connect['outputNode'].\
+                getOutputID(connect['outputName'])
+        return input_connect_dict
 
     @classmethod
     def matchHint(cls, text: str):
