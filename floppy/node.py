@@ -511,7 +511,7 @@ class Node(object, metaclass=MetaNode):
         reinstanciate the whole graph.
         :return:
         """
-        inputConns = self.get_input_connections()
+        inputConns = self.get_input_connect_dict()
         outputConns = {out.name: self.graph.getConnectionsOfOutput(out) for out in self.outputs.values()}
         for key, conns in outputConns.items():
             conns = [outputConn['inputNode'].getInputID(outputConn['inputName']) for outputConn in conns]
@@ -527,11 +527,15 @@ class Node(object, metaclass=MetaNode):
                 'subgraph': self.subgraph}
 
     def get_input_connections(self):
-        input_connect_list = [self.graph.getConnectionOfInput(inp) for inp in
-                              self.inputs.values()]
+        connects = []
+        for inp in self.inputs.values():
+            if self.graph.getConnectionOfInput(inp) is not None:
+                connects.append(self.graph.getConnectionOfInput(inp))
+        return connects
+
+    def get_input_connect_dict(self):
         input_connect_dict = {}
-        for connect in input_connect_list:
-            if connect is None: continue
+        for connect in self.get_input_connections():
             input_connect_dict[connect['inputName']] = connect['outputNode'].\
                 getOutputID(connect['outputName'])
         return input_connect_dict
