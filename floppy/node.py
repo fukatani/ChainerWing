@@ -512,8 +512,6 @@ class Node(object, metaclass=MetaNode):
         :return:
         """
         inputConns = self.get_input_connections()
-        # print(inputConns)
-        inputConns = {inputConn['inputName']: inputConn['outputNode'].getOutputID(inputConn['outputName']) for inputConn in inputConns if inputConn}
         outputConns = {out.name: self.graph.getConnectionsOfOutput(out) for out in self.outputs.values()}
         for key, conns in outputConns.items():
             conns = [outputConn['inputNode'].getInputID(outputConn['inputName']) for outputConn in conns]
@@ -531,10 +529,9 @@ class Node(object, metaclass=MetaNode):
     def get_input_connections(self):
         input_connect_list = [self.graph.getConnectionOfInput(inp) for inp in
                               self.inputs.values()]
-        return input_connect_list
         input_connect_dict = {}
         for connect in input_connect_list:
-            if not connect: continue
+            if connect is None: continue
             input_connect_dict[connect['inputName']] = connect['outputNode'].\
                 getOutputID(connect['outputName'])
         return input_connect_dict
