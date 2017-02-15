@@ -9,5 +9,4 @@ class SoftmaxCrossEntropy(Loss):
     Input('ground_truth', chainer.Variable)
 
     def call(self):
-        return "functions.softmax_cross_entropy({0}, {1})".format(self._in_array, self._ground_truth)
-
+        return "functions.softmax_cross_entropy("

@@ -22,11 +22,12 @@ class Compiler(object):
         for node in nodes.values():
             if issubclass(type(node), Loss):
                 compiled_loss = self.compile_node(node, nodes)
+                compiled_loss.append(node.call_end)
                 call_all_loss.append(compiled_loss)
 
         call_impls = []
         for call_chain in call_all_loss:
-            call = "".join([func.call() for func in call_chain]) + "x" + ")" * len(call_chain)+ "x" + ")" * len(call_chain)
+            call = "".join([func.call() for func in call_chain]) + "x" + ")" * len(call_chain)
             call_impls.append(call)
 
         return ", ".join(call_impls)

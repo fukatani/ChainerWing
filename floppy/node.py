@@ -117,9 +117,9 @@ class InputInfo(Info):
         else:
             if noException:
                 return None
+            elif self.name == 'in_array':  # treat as start node.
+                return ""
             else:
-                #TODO
-                return "x"
                 raise InputNotAvailable('Input not set for node.')
 
     def set(self, value, override=False, loopLevel=0):
@@ -842,4 +842,5 @@ class Function(Node):
 
 @abstractNode
 class Loss(Function):
-    pass
+    def call_end(self):
+        return ", y)"
