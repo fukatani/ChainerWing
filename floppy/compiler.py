@@ -12,20 +12,28 @@ class Compiler(object):
 
     def compile_init(self, nodes):
         links = []
-        i = 0
         for node in nodes.values():
             if issubclass(type(node), Link):
-                links.append('            l{0}={1}'.format(i, node.run()))
-                i += 1
+                links.append('            l{0}={1}'.format(node.link_id, node.call_init()))
         return '\n'.join(links)
 
     def compile_call(self, nodes):
-        calls = []
+        call_all_loss = []
         for node in nodes.values():
             if issubclass(type(node), Loss):
-                compiled_loss = self.compile_loss(node, nodes)
-                calls.append(compiled_loss)
+                compiled_loss = self.compile_node(node, nodes)
+                call_all_loss.append(compiled_loss)
 
-    def compile_loss(self, loss, nodes):
-        #TODO
-        pass
+        call_impls = []
+        for call_chain in call_all_loss:
+            call = "".join([func.call() for func in call_chain]) + "x" + ")" * len(call_chain)+ "x" + ")" * len(call_chain)
+            call_impls.append(call)
+
+        return ", ".join(call_impls)
+
+    def compile_node(self, cursor, nodes, decode=[]):
+        decode.append(cursor)
+        for connect in cursor.get_input_connections():
+            if 'in_array' in connect['inputName']:
+                return self.compile_node(connect.outputNode, nodes, decode)
+        return decode

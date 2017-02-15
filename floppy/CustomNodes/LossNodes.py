@@ -8,7 +8,6 @@ class SoftmaxCrossEntropy(Loss):
     Input('in_array', chainer.Variable)
     Input('ground_truth', chainer.Variable)
 
-    def run(self):
-        self._out_array = functions.softmax_cross_entropy(self._in_array,
-                                                          self._ground_truth)
+    def call(self):
+        return "functions.softmax_cross_entropy({0}, {1})".format(self._in_array, self._ground_truth)
 

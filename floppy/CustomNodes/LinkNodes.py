@@ -10,11 +10,11 @@ class Linear(Link):
     Input('nobias', bool, select=[True, False])
     Output('out_array', chainer.Variable)
 
-    def run(self):
+    def call_init(self):
         #TODO(fukatani): implement systematically.
-        if not self._out_size or not self._out_size:
+        #if not self._out_size:
             #TODO(fukatani): error display
-            raise Exception
+        #    raise Exception
         return "links.Linear(None, {out_size}, nobias={nobias})" \
                     .format(out_size=self._out_size,
                             nobias=self._nobias)
@@ -30,7 +30,7 @@ class Convolution2D(Link):
     Input('nobias', bool, select=[True, False])
     Output('out_array', chainer.Variable)
 
-    def run(self):
+    def call_init(self):
         return "links.Convolution2D({in_channels}, {out_channels}, {ksize}, {nobias})"\
                     .format(in_channels=self._in_channels,
                             out_channels=self._out_channels,

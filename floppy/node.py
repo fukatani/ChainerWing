@@ -118,6 +118,8 @@ class InputInfo(Info):
             if noException:
                 return None
             else:
+                #TODO
+                return "x"
                 raise InputNotAvailable('Input not set for node.')
 
     def set(self, value, override=False, loopLevel=0):
@@ -822,7 +824,15 @@ class MakeTable(Node):
 
 @abstractNode
 class Link(Node):
-    pass
+    link_cnt = 0
+
+    def __init__(self, nodeID, graph):
+        super(Link, self).__init__(nodeID, graph)
+        self.link_id = self.link_cnt
+        self.link_cnt += 1
+
+    def call(self):
+        return "self.l{0}(".format(self.link_id)
 
 
 @abstractNode
