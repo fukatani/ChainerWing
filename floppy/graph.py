@@ -299,7 +299,7 @@ class Graph(object):
         """
         # TODO(fukatani): compile and run
         # TODO(fukatani): subgraph
-        cmpl = compiler.Compiler()(self.nodes)
+        compiler.Compiler()(self.nodes)
 
     def print(self, message):
         print(message)
