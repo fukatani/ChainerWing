@@ -257,3 +257,47 @@ class NetTemplate(Template):
             def __call__(self):
 {call_impl}
         '''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
+
+
+class TrainerTemplate(Template):
+    def __call__(self, **kwargs):
+        call_train = '''
+        optimizer = {0}
+        optimizer.setup(model)
+
+        train, test = chainer.datasets.get_mnist()
+
+        train_iter = chainer.iterators.SerialIterator(train, {1})
+        test_iter = chainer.iterators.SerialIterator(test, {1},
+                                                     repeat=False,
+                                                     shuffle=False)
+
+        # Set up a trainer
+        updater = training.StandardUpdater(train_iter, optimizer,
+                                           device={2})
+        '''.format(kwargs['optimizer'], kwargs['batch_size'], kwargs['gpu']) + '''
+        trainer = training.Trainer(updater, ({0}, 'epoch'))
+        '''.format(kwargs['epoch']) + '''
+        trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
+        '''.format(kwargs['gpu']) + '''
+        trainer.extend(extensions.snapshot(), trigger=({0}, 'epoch'))
+        '''.format(kwargs['epoch']) + '''
+        trainer.extend(extensions.LogReport())
+        trainer.extend(
+            extensions.PlotReport(['main/loss', 'validation/main/loss'],
+                                  'epoch',
+                                  file_name='loss.png'))
+        '''
+        if kwargs['disp_accuracy']:
+            call_train += '''
+        trainer.extend(
+            extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],
+                                  'epoch', file_name='accuracy.png'))
+        trainer.extend(extensions.PrintReport(
+            ['epoch', 'main/loss', 'validation/main/loss',
+             'main/accuracy', 'validation/main/accuracy', 'elapsed_time']))
+        '''
+        call_train += '''
+        trainer.run()
+        '''
+        return call_train

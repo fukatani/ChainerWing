@@ -3,12 +3,13 @@ from floppy.node import Link, Function, Loss
 
 
 class Compiler(object):
-    def __call__(self, nodes):
+    def __call__(self, nodes, **kwargs):
         net_name = 'ExampleNet'
         init_impl = self.compile_init(nodes)
         call_impl = self.compile_call(nodes)
         net_file = open(net_name + '.py', 'w')
         net_file.write(TEMPLATES['NetTemplate']()(net_name, init_impl, call_impl))
+        net_file.write(TEMPLATES['TrainerTemplate']()(**kwargs))
 
     def compile_init(self, nodes):
         links = []
@@ -28,7 +29,7 @@ class Compiler(object):
         call_impls = []
         for call_chain in call_all_loss:
             call = "".join([func.call() for func in call_chain]) + "x" + ")" * len(call_chain)
-            call_impls.append(call)
+            call_impls.append(call())
 
         return ", ".join(call_impls)
 
