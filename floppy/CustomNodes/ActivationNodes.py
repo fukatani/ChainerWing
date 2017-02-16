@@ -9,4 +9,4 @@ class Relu(Node):
     Output('out_array', chainer.Variable)
 
     def call(self):
-        return "functions.relu("
+        return "relu("
