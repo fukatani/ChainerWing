@@ -1,4 +1,4 @@
-import floppy.quickPlot as qp
+import floppy.quick_plot as qp
 
 class ColorDict(object):
 

@@ -1,8 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPoint, QSettings
 
-import platform
-
 
 class ParamServer(object):
     '''Singleton parameter server
@@ -112,8 +110,6 @@ class SettingsDialog(QDialog):
 
     def redraw(self):
         self.parent().drawer.repaint()
-        # self.parent().drawer.update()
-        # print('xxxx')
 
 
 class DefaultConnectionEdit(QLineEdit):

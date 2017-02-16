@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from copy import copy
-from floppy.FloppyTypes import Type, MetaType
+from floppy.floppy_types import Type, MetaType
 
 NODECLASSES = {}
 # STOREDVALUES = {}

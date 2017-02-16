@@ -2,8 +2,8 @@ import os
 from floppy.graph import Graph
 from floppy.node import InputNotAvailable, ControlNode
 from floppy.mainwindow import Ui_MainWindow
-from floppy.floppySettings import SettingsDialog, ParamServer
-from floppy.nodeLib import ContextNodeFilter, ContextNodeList
+from floppy.floppy_settings import SettingsDialog, ParamServer
+from floppy.node_lib import ContextNodeFilter, ContextNodeList
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPoint, QSettings
 from PyQt5.QtGui import *
