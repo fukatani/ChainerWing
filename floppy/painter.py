@@ -2,13 +2,12 @@ import os
 from floppy.graph import Graph
 from floppy.node import InputNotAvailable, ControlNode
 from floppy.mainwindow import Ui_MainWindow
-from floppy.floppySettings import SettingsDialog
+from floppy.floppySettings import SettingsDialog, ParamServer
 from floppy.nodeLib import ContextNodeFilter, ContextNodeList
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPoint, QSettings
 from PyQt5.QtGui import *
 from PyQt5.Qt import QTimer
-import platform
 import logging
 
 import chainer
@@ -18,16 +17,9 @@ import numpy
 logger = logging.getLogger('Floppy')
 
 
-LOCALPORT = 8080
 PINSIZE = 8
-NODETITLEFONTSIZE = 12
-CONNECTIONLINEWIDTH = 2
-NODEWIDTHSCALE = 100
 TEXTYOFFSET = 0
 LINEEDITFONTSIZE = 8
-if platform.system() is 'Windows':
-    TEXTYOFFSET = 4
-    LINEEDITFONTSIZE = 7
 
 
 class Painter(QWidget):
@@ -478,7 +470,7 @@ class Painter2D(Painter):
             path = QPainterPath()
             x = node.__pos__[0]# + self.globalOffset.x()
             y = node.__pos__[1]# + self.globalOffset.y()
-            w = node.__size__[0]*NODEWIDTHSCALE
+            w = node.__size__[0]*ParamServer()['NODEWIDTHSCALE']
             h = node.__size__[1]*(8+PINSIZE)+40
 
             path.addRoundedRect(x, y, w, h, 50, 5)
@@ -489,7 +481,7 @@ class Painter2D(Painter):
             # painter.drawRoundedRect(node.pos[0], node.pos[1], node.size[0], node.size[1], 50, 5)
             painter.drawPath(path)
             pen.setColor(QColor(150, 150, 150))
-            painter.setFont(QFont('Helvetica', NODETITLEFONTSIZE))
+            painter.setFont(QFont('Helvetica', ParamServer()['NODETITLEFONTSIZE']))
             painter.setPen(pen)
             painter.drawText(x, y+3, w, h, Qt.AlignHCenter, node.__class__.__name__)
             painter.setBrush(QColor(40, 40, 40))
@@ -653,7 +645,7 @@ class Painter2D(Painter):
     def drawBezier(self, start, end, color, painter, rotate=None):
                 pen = QPen()
                 pen.setColor(color)
-                pen.setWidth(CONNECTIONLINEWIDTH*self.scale)
+                pen.setWidth(ParamServer()['CONNECTIONLINEWIDTH']*self.scale)
                 painter.setPen(pen)
                 path = QPainterPath()
                 path.moveTo(start)
@@ -782,7 +774,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupNodeLib()
         # self.drawer.graph.spawnAndConnect()
         self.connectHint = self.settings.value('DefaultConnection', type=str)
-        settingsDialog = SettingsDialog(self, settings=self.settings, globals=globals())
+        settingsDialog = SettingsDialog(self, settings=self.settings)
         settingsDialog.close()
 
     def setArgs(self, args):
@@ -988,7 +980,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
     def openSettingsDialog(self):
-        settingsDialog = SettingsDialog(self, settings=self.settings, globals=globals())
+        settingsDialog = SettingsDialog(self, settings=self.settings)
         settingsDialog.show()
 
     def connect(self):
@@ -1110,7 +1102,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def spawnRunner(self):
         logger.debug('Spawning new Runner.')
         self.statusBar.showMessage('New Remote Interpreter spawned.', 2000)
-        self.drawer.graph.spawnAndConnect(LOCALPORT)
+        self.drawer.graph.spawnAndConnect(ParamServer()['LOCALPORT'])
         logger.debug('Connected to Runner.')
 
     def runCode(self, *args):
@@ -1221,9 +1213,12 @@ class DrawItem(object):
         painter.setPen(pen)
         painter.setBrush(QColor(40, 40, 40))
         xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
-        painter.setFont(QFont('Helvetica', LINEEDITFONTSIZE))
+        self.set_font(painter)
         painter.setPen(pen)
         painter.drawText(xx+5, yy-3 + TEXTYOFFSET, ww-10, hh+5, alignment, text)
+
+    def set_font(self, painter):
+        painter.setFont(QFont('Helvetica', ParamServer()['LINEEDITFONTSIZE']))
 
     def run(self):
         pass
@@ -1301,7 +1296,7 @@ class Selector(DrawItem):
             painter.setPen(pen)
             painter.setBrush(QColor(40, 40, 40))
             xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
-            painter.setFont(QFont('Helvetica', LINEEDITFONTSIZE))
+            self.set_font(painter)
             painter.setPen(pen)
             painter.drawText(xx+5, yy-3 + TEXTYOFFSET, ww-10, hh+5, alignment, text)
             return
@@ -1315,7 +1310,7 @@ class Selector(DrawItem):
             painter.setBrush(QColor(40, 40, 40))
             xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-25, 4+PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
-            painter.setFont(QFont('Helvetica', LINEEDITFONTSIZE))
+            self.set_font(painter)
             painter.setPen(pen)
             painter.drawText(xx+5, yy-3+TEXTYOFFSET, ww-20, hh+5, alignment, text)
             pen.setColor(Qt.gray)
@@ -1335,7 +1330,7 @@ class Selector(DrawItem):
             painter.setBrush(QColor(40, 40, 40))
             xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-26 + 12, self.w-25, (4+PINSIZE) * len(self.items)
             painter.drawRoundedRect(xx, yy+PINSIZE, ww, hh, 2, 20+PINSIZE)
-            painter.setFont(QFont('Helvetica', LINEEDITFONTSIZE))
+            self.set_font(painter)
             painter.setPen(pen)
 
             for i, item in enumerate(self.items):
@@ -1391,7 +1386,7 @@ class LineEdit(DrawItem):
             painter.setPen(pen)
             painter.setBrush(QColor(40, 40, 40))
             xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
-            painter.setFont(QFont('Helvetica', LINEEDITFONTSIZE))
+            self.set_font(painter)
             painter.setPen(pen)
             painter.drawText(xx+5, yy-3 + TEXTYOFFSET, ww-10, hh+5, alignment, text)
             return
@@ -1403,7 +1398,7 @@ class LineEdit(DrawItem):
             painter.setBrush(QColor(40, 40, 40))
             xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
-            painter.setFont(QFont('Helvetica', LINEEDITFONTSIZE))
+            self.set_font(painter)
             painter.setPen(pen)
             painter.drawText(xx+5, yy-3+TEXTYOFFSET, ww-10, hh+5, alignment, text)
         else:
@@ -1413,7 +1408,7 @@ class LineEdit(DrawItem):
             painter.setBrush(QColor(10, 10, 10))
             xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
-            painter.setFont(QFont('Helvetica', LINEEDITFONTSIZE))
+            self.set_font(painter)
             painter.setPen(pen)
             painter.drawText(xx+5, yy-3+TEXTYOFFSET, ww-10, hh+5, alignment, text)
 

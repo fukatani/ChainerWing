@@ -1,24 +1,44 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPoint, QSettings
 
+import platform
+
+
+class ParamServer(object):
+    '''Singleton parameter server
+    '''
+    __instance = None
+
+    def __new__(cls, *args, **keys):
+        if cls.__instance is None:
+            cls.__instance = object.__new__(cls)
+        return cls.__instance
+
+    def __getitem__(cls, key):
+        return cls.__dict__[key]
+
+    def __setitem__(cls, key, value):
+        cls.__dict__[key] = value
+        pass
+
+
 class SettingsDialog(QDialog):
-    def __init__(self, *args, settings=None, globals=None):
-        self.globals = globals
+    def __init__(self, *args, settings=None):
         self.settings= settings
         self.dialogs = [('Network Settings', None),
-                        ('Default Connection', DefaultConnectionEdit(settings, globals, self)),
-                        ('Local Interpreter Port', LocalInterpreterPortEdit(settings, globals, self)),
+                        ('Default Connection', DefaultConnectionEdit(settings, self)),
+                        ('Local Interpreter Port', LocalInterpreterPortEdit(settings, self)),
                         ('Node Graph Render Settings', None),
-                        ('Node Font Size', FontSizeEdit(settings, globals, self)),
-                        ('Node Font Offset', FontOffsetEdit(settings, globals, self)),
-                        ('Node Title Font Size', TitleFontSizeEdit(settings, globals, self)),
-                        ('Connection Line Width', ConnectionLineWidthEdit(settings, globals, self)),
-                        ('Node Width Scale', NodeWidthEdit(settings, globals, self)),
-                        ('Pin Size', PinSizeEdit(settings, globals, self)),
+                        ('Node Font Size', FontSizeEdit(settings, self)),
+                        ('Node Font Offset', FontOffsetEdit(settings, self)),
+                        ('Node Title Font Size', TitleFontSizeEdit(settings, self)),
+                        ('Connection Line Width', ConnectionLineWidthEdit(settings, self)),
+                        ('Node Width Scale', NodeWidthEdit(settings, self)),
+                        ('Pin Size', PinSizeEdit(settings, self)),
                         ('Temporary File Settings', None),
-                        ('Work File Directory', WorkFileDirEdit(settings, globals, self)),
+                        ('Work File Directory', WorkFileDirEdit(settings, self)),
                         ('Remote Interpreter Settings', None),
-                        ('Frame Rate', RGIFrameRateEdit(settings, globals, self)),
+                        ('Frame Rate', RGIFrameRateEdit(settings, self)),
                         ]
         super(SettingsDialog, self).__init__(*args)
         self.setStyleSheet('''SettingsDialog {
@@ -97,9 +117,8 @@ class SettingsDialog(QDialog):
 
 
 class DefaultConnectionEdit(QLineEdit):
-    def __init__(self, settings, globals, parent):
+    def __init__(self, settings, parent):
         self.parent = parent
-        self.globals = globals
         self.settings = settings
         super(DefaultConnectionEdit, self).__init__()
         v = settings.value('DefaultConnection', type=str)
@@ -108,12 +127,12 @@ class DefaultConnectionEdit(QLineEdit):
 
     def commit(self):
         self.settings.setValue('DefaultConnection', self.text())
+        ParamServer()['DefaultConnection'] = self.value()
 
 
 class AbstractEdit(QSpinBox):
-    def __init__(self, settings, globals, parent, default, valType=int):
+    def __init__(self, settings, parent, default, valType=int):
         self.parent = parent
-        self.globals = globals
         self.settings = settings
         super(AbstractEdit, self).__init__()
         v = settings.value(self.value_key, type=valType)
@@ -123,64 +142,63 @@ class AbstractEdit(QSpinBox):
 
     def commit(self):
         self.settings.setValue(self.value_key, self.value())
-        self.globals[self.globals_key] = self.value()
+        ParamServer()[self.globals_key] = self.value()
 
     def redraw(self):
-        self.globals[self.globals_key] = self.value()
+        ParamServer()[self.globals_key] = self.value()
         self.parent.redraw()
 
 
 class FontSizeEdit(AbstractEdit):
     globals_key = 'LINEEDITFONTSIZE'
     value_key = 'NodeFontSize'
-    def __init__(self, settings, globals, parent):
-        super(FontSizeEdit, self).__init__(settings, globals, parent, 8)
+    def __init__(self, settings, parent):
+        super(FontSizeEdit, self).__init__(settings, parent, 8)
 
 
 class FontOffsetEdit(AbstractEdit):
     globals_key = 'TEXTYOFFSET'
     value_key = 'NodeFontOffset'
-    def __init__(self, settings, globals, parent):
-        super(FontOffsetEdit, self).__init__(settings, globals, parent, 0)
+    def __init__(self, settings, parent):
+        super(FontOffsetEdit, self).__init__(settings, parent, 0)
         self.setRange(-10, 10)
 
 
 class TitleFontSizeEdit(AbstractEdit):
     globals_key = 'NODETITLEFONTSIZE'
     value_key = 'TitleFontSize'
-    def __init__(self, settings, globals, parent):
-        super(TitleFontSizeEdit, self).__init__(settings, globals, parent, 11)
+    def __init__(self, settings, parent):
+        super(TitleFontSizeEdit, self).__init__(settings, parent, 11)
         self.setRange(1, 20)
 
 
 class ConnectionLineWidthEdit(AbstractEdit):
     globals_key = 'CONNECTIONLINEWIDTH'
     value_key = 'ConnectionLineWidth'
-    def __init__(self, settings, globals, parent):
-        super(ConnectionLineWidthEdit, self).__init__(settings, globals, parent, 2)
+    def __init__(self, settings, parent):
+        super(ConnectionLineWidthEdit, self).__init__(settings, parent, 2)
         self.setRange(1, 20)
 
 
 class NodeWidthEdit(AbstractEdit):
     globals_key = 'NODEWIDTHSCALE'
     value_key = 'NodeWidthScale'
-    def __init__(self, settings, globals, parent):
-        super(NodeWidthEdit, self).__init__(settings, globals, parent, 100)
+    def __init__(self, settings, parent):
+        super(NodeWidthEdit, self).__init__(settings, parent, 100)
         self.setRange(50, 250)
 
 
 class PinSizeEdit(AbstractEdit):
     globals_key = 'PinSize'
     value_key = 'PINSIZE'
-    def __init__(self, settings, globals, parent):
-        super(PinSizeEdit, self).__init__(settings, globals, parent, 8)
+    def __init__(self, settings, parent):
+        super(PinSizeEdit, self).__init__(settings, parent, 8)
         self.setRange(1, 25)
 
 
 class WorkFileDirEdit(QPushButton):
-    def __init__(self, settings, globals, parent):
+    def __init__(self, settings,  parent):
         self.parent = parent
-        self.globals = globals
         self.settings = settings
         super(WorkFileDirEdit, self).__init__('Browse')
         v = settings.value('WorkDir', type=str)
@@ -197,9 +215,8 @@ class WorkFileDirEdit(QPushButton):
 
 
 class LocalInterpreterPortEdit(QSpinBox):
-    def __init__(self, settings, globals, parent):
+    def __init__(self, settings, parent):
         self.parent = parent
-        self.globals = globals
         self.settings = settings
         super(LocalInterpreterPortEdit, self).__init__()
         v = settings.value('LocalPort', type=int)
@@ -209,13 +226,12 @@ class LocalInterpreterPortEdit(QSpinBox):
 
     def commit(self):
         self.settings.setValue('LocalPort', self.value())
-        self.globals['LOCALPORT'] = self.value()
+        ParamServer()['LOCALPORT'] = self.value()
 
 
 class RGIFrameRateEdit(QLineEdit):
-    def __init__(self, settings, globals, parent):
+    def __init__(self, settings, parent):
         self.parent = parent
-        self.globals = globals
         self.settings = settings
         super(RGIFrameRateEdit, self).__init__()
         v = settings.value('FrameRate', type=float)
