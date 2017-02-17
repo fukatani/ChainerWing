@@ -1,15 +1,21 @@
 from floppy.templates import TEMPLATES
 from floppy.node import Link, Function, Loss
+from floppy.settings import ParamServer
 
 
 class Compiler(object):
     def __call__(self, nodes, **kwargs):
+        #TODO(fukatani)
         net_name = 'ExampleNet'
         init_impl = self.compile_init(nodes)
         call_impl = self.compile_call(nodes)
         net_file = open(net_name + '.py', 'w')
         net_file.write(TEMPLATES['NetTemplate']()(net_name, init_impl, call_impl))
-        net_file.write(TEMPLATES['TrainerTemplate']()(**kwargs))
+        train_dict = {'BatchSize': ParamServer()['BatchSize'],
+                      'Epoch': ParamServer()['EpochEdit'],
+                      'GPU': ParamServer()['GPU'],
+                      'Optimizer': ParamServer()['Optimizer']}
+        net_file.write(TEMPLATES['TrainerTemplate']()(train_dict))
 
     def compile_init(self, nodes):
         links = []
@@ -23,15 +29,11 @@ class Compiler(object):
         for node in nodes.values():
             if issubclass(type(node), Loss):
                 compiled_loss = self.compile_node(node, nodes)
-                compiled_loss.append(node.call_end)
+                compiled_loss = "".join([func.call() for func in compiled_loss]) + "x" + ")" * len(compiled_loss)
+                compiled_loss += node.call_end()
                 call_all_loss.append(compiled_loss)
 
-        call_impls = []
-        for call_chain in call_all_loss:
-            call = "".join([func.call() for func in call_chain]) + "x" + ")" * len(call_chain)
-            call_impls.append(call())
-
-        return ", ".join(call_impls)
+        return ", ".join(call_all_loss)
 
     def compile_node(self, cursor, nodes, decode=[]):
         decode.append(cursor)
