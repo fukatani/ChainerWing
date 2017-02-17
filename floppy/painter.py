@@ -1,17 +1,19 @@
 import os
+
 from floppy.graph import Graph
-from floppy.node import InputNotAvailable, ControlNode
 from floppy.mainwindow import Ui_MainWindow
-from floppy.settings import SettingsDialog, ParamServer
+from floppy.node import ControlNode
 from floppy.node_lib import ContextNodeFilter, ContextNodeList
+from floppy.settings import SettingsDialog, ParamServer
+from floppy.train_configuration import TrainDialog
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPoint, QSettings
 from PyQt5.QtGui import *
 from PyQt5.Qt import QTimer
-import logging
 
 import chainer
-
+import logging
 import numpy
 
 logger = logging.getLogger('Floppy')
@@ -871,11 +873,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.statusAction.setIconVisibleInMenu(True)
         self.addAction(self.statusAction)
 
-        self.dropAction = QAction(QIcon(os.path.join(self.iconRoot, 'drop.png')), 'Drop', self)
-        self.dropAction.setShortcut('Ctrl+I')
-        self.dropAction.triggered.connect(self.dropGraph)
-        self.dropAction.setIconVisibleInMenu(True)
-        self.addAction(self.dropAction)
+        self.train_configure_action = QAction(QIcon(os.path.join(self.iconRoot, 'drop.png')), 'Drop', self)
+        self.train_configure_action.setShortcut('Ctrl+I')
+        self.train_configure_action.triggered.connect(self.open_train_config)
+        self.train_configure_action.setIconVisibleInMenu(True)
+        self.addAction(self.train_configure_action)
 
         self.pushAction = QAction(QIcon(os.path.join(self.iconRoot, 'push.png')), 'Push', self)
         self.pushAction.setShortcut('Ctrl+X')
@@ -935,7 +937,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.mainToolBar.addAction(self.deleteNodeAction)
         self.mainToolBar.addAction(self.connectAction)
         # self.mainToolBar.addAction(self.statusAction)
-        self.mainToolBar.addAction(self.dropAction)
+        self.mainToolBar.addAction(self.train_configure_action)
         self.mainToolBar.addSeparator()
         self.mainToolBar.addAction(self.settingsAction)
         self.mainToolBar.addSeparator()
@@ -977,10 +979,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.drawer.createSubgraph(name)
         self.getSubgraphList()
 
-
     def openSettingsDialog(self):
-        settingsDialog = SettingsDialog(self, settings=self.settings)
-        settingsDialog.show()
+        SettingsDialog(self, settings=self.settings).show()
+
+    def open_train_config(self):
+        TrainDialog(self, settings=self.settings).show()
 
     def connect(self):
         self.connectHint = self.settings.value('DefaultConnection', type=str)
