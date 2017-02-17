@@ -113,6 +113,7 @@ class AbstractEdit(QSpinBox):
         self.parent = parent
         self.settings = settings
         super(AbstractEdit, self).__init__()
+        self.globals_key = self.__class__.__name__[:-4]
         v = settings.value(self.globals_key, type=valType)
         v = v if v else default
         self.setValue(v)
@@ -128,41 +129,35 @@ class AbstractEdit(QSpinBox):
 
 
 class FontSizeEdit(AbstractEdit):
-    globals_key = 'FontSize'
     def __init__(self, settings, parent):
         super(FontSizeEdit, self).__init__(settings, parent, 8)
 
 
 class FontOffsetEdit(AbstractEdit):
-    globals_key = 'TEXTYOFFSET'
     def __init__(self, settings, parent):
         super(FontOffsetEdit, self).__init__(settings, parent, 0)
         self.setRange(-10, 10)
 
 
 class NodeTitleFontSizeEdit(AbstractEdit):
-    globals_key = 'NodeTitleFontSize'
     def __init__(self, settings, parent):
         super(NodeTitleFontSizeEdit, self).__init__(settings, parent, 11)
         self.setRange(1, 20)
 
 
 class ConnectionLineWidthEdit(AbstractEdit):
-    globals_key = 'ConnectionLineWidth'
     def __init__(self, settings, parent):
         super(ConnectionLineWidthEdit, self).__init__(settings, parent, 2)
         self.setRange(1, 20)
 
 
 class NodeWidthEdit(AbstractEdit):
-    globals_key = 'NodeWidth'
     def __init__(self, settings, parent):
         super(NodeWidthEdit, self).__init__(settings, parent, 100)
         self.setRange(50, 250)
 
 
 class PinSizeEdit(AbstractEdit):
-    globals_key = 'PinSize'
     def __init__(self, settings, parent):
         super(PinSizeEdit, self).__init__(settings, parent, 8)
         self.setRange(1, 25)
