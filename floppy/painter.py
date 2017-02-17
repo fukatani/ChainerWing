@@ -775,8 +775,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupNodeLib()
         # self.drawer.graph.spawnAndConnect()
         self.connectHint = self.settings.value('DefaultConnection', type=str)
-        settingsDialog = SettingsDialog(self, settings=self.settings)
-        settingsDialog.close()
+
+        # to reflect initial configration
+        SettingsDialog(self, settings=self.settings).close()
+        TrainDialog(self, settings=self.settings).close()
 
     def setArgs(self, args):
         if args.test:

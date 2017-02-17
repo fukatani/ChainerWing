@@ -260,7 +260,7 @@ class NetTemplate(Template):
 
 
 class TrainerTemplate(Template):
-    def __call__(self, **kwargs):
+    def __call__(self, kwargs):
         call_train = '''
         optimizer = {0}
         optimizer.setup(model)
@@ -288,7 +288,7 @@ class TrainerTemplate(Template):
                                   'epoch',
                                   file_name='loss.png'))
         '''
-        if kwargs['disp_accuracy']:
+        if 'disp_accuracy' in kwargs:
             call_train += '''
         trainer.extend(
             extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],

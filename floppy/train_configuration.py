@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from floppy.settings import AbstractEdit
-
+from floppy.settings import ParamServer
 
 class TrainDialog(QDialog):
     def __init__(self, *args, settings=None):
@@ -111,3 +111,4 @@ class OptimizerEdit(QLineEdit):
 
     def commit(self):
         self.settings.setValue('Optimizer', self.text())
+        ParamServer()['Optimizer'] = self.text()
