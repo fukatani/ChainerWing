@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt, QPoint, QSettings
 
 
 class ParamServer(object):
@@ -23,10 +22,7 @@ class ParamServer(object):
 class SettingsDialog(QDialog):
     def __init__(self, *args, settings=None):
         self.settings= settings
-        self.dialogs = [('Network Settings', None),
-                        ('Default Connection', DefaultConnectionEdit(settings, self)),
-                        ('Local Interpreter Port', LocalInterpreterPortEdit(settings, self)),
-                        ('Node Graph Render Settings', None),
+        self.dialogs = [('Node Graph Render Settings', None),
                         ('Node Font Size', FontSizeEdit(settings, self)),
                         ('Node Font Offset', FontOffsetEdit(settings, self)),
                         ('Node Title Font Size', TitleFontSizeEdit(settings, self)),
@@ -112,32 +108,18 @@ class SettingsDialog(QDialog):
         self.parent().drawer.repaint()
 
 
-class DefaultConnectionEdit(QLineEdit):
-    def __init__(self, settings, parent):
-        self.parent = parent
-        self.settings = settings
-        super(DefaultConnectionEdit, self).__init__()
-        v = settings.value('DefaultConnection', type=str)
-        v = v if v else '127.0.0.1:7234'
-        self.setText(v)
-
-    def commit(self):
-        self.settings.setValue('DefaultConnection', self.text())
-        ParamServer()['DefaultConnection'] = self.value()
-
-
 class AbstractEdit(QSpinBox):
     def __init__(self, settings, parent, default, valType=int):
         self.parent = parent
         self.settings = settings
         super(AbstractEdit, self).__init__()
-        v = settings.value(self.value_key, type=valType)
+        v = settings.value(self.globals_key, type=valType)
         v = v if v else default
         self.setValue(v)
         self.valueChanged.connect(self.redraw)
 
     def commit(self):
-        self.settings.setValue(self.value_key, self.value())
+        self.settings.setValue(self.globals_key, self.value())
         ParamServer()[self.globals_key] = self.value()
 
     def redraw(self):
@@ -147,14 +129,12 @@ class AbstractEdit(QSpinBox):
 
 class FontSizeEdit(AbstractEdit):
     globals_key = 'LINEEDITFONTSIZE'
-    value_key = 'NodeFontSize'
     def __init__(self, settings, parent):
         super(FontSizeEdit, self).__init__(settings, parent, 8)
 
 
 class FontOffsetEdit(AbstractEdit):
     globals_key = 'TEXTYOFFSET'
-    value_key = 'NodeFontOffset'
     def __init__(self, settings, parent):
         super(FontOffsetEdit, self).__init__(settings, parent, 0)
         self.setRange(-10, 10)
@@ -162,7 +142,6 @@ class FontOffsetEdit(AbstractEdit):
 
 class TitleFontSizeEdit(AbstractEdit):
     globals_key = 'NODETITLEFONTSIZE'
-    value_key = 'TitleFontSize'
     def __init__(self, settings, parent):
         super(TitleFontSizeEdit, self).__init__(settings, parent, 11)
         self.setRange(1, 20)
@@ -170,7 +149,6 @@ class TitleFontSizeEdit(AbstractEdit):
 
 class ConnectionLineWidthEdit(AbstractEdit):
     globals_key = 'CONNECTIONLINEWIDTH'
-    value_key = 'ConnectionLineWidth'
     def __init__(self, settings, parent):
         super(ConnectionLineWidthEdit, self).__init__(settings, parent, 2)
         self.setRange(1, 20)
@@ -178,7 +156,6 @@ class ConnectionLineWidthEdit(AbstractEdit):
 
 class NodeWidthEdit(AbstractEdit):
     globals_key = 'NODEWIDTHSCALE'
-    value_key = 'NodeWidthScale'
     def __init__(self, settings, parent):
         super(NodeWidthEdit, self).__init__(settings, parent, 100)
         self.setRange(50, 250)
@@ -186,7 +163,6 @@ class NodeWidthEdit(AbstractEdit):
 
 class PinSizeEdit(AbstractEdit):
     globals_key = 'PinSize'
-    value_key = 'PINSIZE'
     def __init__(self, settings, parent):
         super(PinSizeEdit, self).__init__(settings, parent, 8)
         self.setRange(1, 25)
@@ -215,13 +191,13 @@ class LocalInterpreterPortEdit(QSpinBox):
         self.parent = parent
         self.settings = settings
         super(LocalInterpreterPortEdit, self).__init__()
-        v = settings.value('LocalPort', type=int)
+        v = settings.value('LOCALPORT', type=int)
         v = v if v else 8080
         self.setRange(1, 99999)
         self.setValue(v)
 
     def commit(self):
-        self.settings.setValue('LocalPort', self.value())
+        self.settings.setValue('LOCALPORT', self.value())
         ParamServer()['LOCALPORT'] = self.value()
 
 
