@@ -12,7 +12,7 @@ class Compiler(object):
         net_file = open(net_name + '.py', 'w')
         net_file.write(TEMPLATES['NetTemplate']()(net_name, init_impl, call_impl))
         train_dict = {'BatchSize': ParamServer()['BatchSize'],
-                      'Epoch': ParamServer()['EpochEdit'],
+                      'Epoch': ParamServer()['Epoch'],
                       'GPU': ParamServer()['GPU'],
                       'Optimizer': ParamServer()['Optimizer']}
         net_file.write(TEMPLATES['TrainerTemplate']()(train_dict))

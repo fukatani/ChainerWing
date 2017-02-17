@@ -275,13 +275,13 @@ class TrainerTemplate(Template):
         # Set up a trainer
         updater = training.StandardUpdater(train_iter, optimizer,
                                            device={2})
-        '''.format(kwargs['optimizer'], kwargs['batch_size'], kwargs['gpu']) + '''
+        '''.format(kwargs['Optimizer'], kwargs['BatchSize'], kwargs['GPU']) + '''
         trainer = training.Trainer(updater, ({0}, 'epoch'))
-        '''.format(kwargs['epoch']) + '''
+        '''.format(kwargs['Epoch']) + '''
         trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
-        '''.format(kwargs['gpu']) + '''
+        '''.format(kwargs['GPU']) + '''
         trainer.extend(extensions.snapshot(), trigger=({0}, 'epoch'))
-        '''.format(kwargs['epoch']) + '''
+        '''.format(kwargs['Epoch']) + '''
         trainer.extend(extensions.LogReport())
         trainer.extend(
             extensions.PlotReport(['main/loss', 'validation/main/loss'],
