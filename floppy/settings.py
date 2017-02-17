@@ -25,7 +25,7 @@ class SettingsDialog(QDialog):
         self.dialogs = [('Node Graph Render Settings', None),
                         ('Node Font Size', FontSizeEdit(settings, self)),
                         ('Node Font Offset', FontOffsetEdit(settings, self)),
-                        ('Node Title Font Size', TitleFontSizeEdit(settings, self)),
+                        ('Node Title Font Size', NodeTitleFontSizeEdit(settings, self)),
                         ('Connection Line Width', ConnectionLineWidthEdit(settings, self)),
                         ('Node Width Scale', NodeWidthEdit(settings, self)),
                         ('Pin Size', PinSizeEdit(settings, self)),
@@ -128,7 +128,7 @@ class AbstractEdit(QSpinBox):
 
 
 class FontSizeEdit(AbstractEdit):
-    globals_key = 'LINEEDITFONTSIZE'
+    globals_key = 'FontSize'
     def __init__(self, settings, parent):
         super(FontSizeEdit, self).__init__(settings, parent, 8)
 
@@ -140,22 +140,22 @@ class FontOffsetEdit(AbstractEdit):
         self.setRange(-10, 10)
 
 
-class TitleFontSizeEdit(AbstractEdit):
-    globals_key = 'NODETITLEFONTSIZE'
+class NodeTitleFontSizeEdit(AbstractEdit):
+    globals_key = 'NodeTitleFontSize'
     def __init__(self, settings, parent):
-        super(TitleFontSizeEdit, self).__init__(settings, parent, 11)
+        super(NodeTitleFontSizeEdit, self).__init__(settings, parent, 11)
         self.setRange(1, 20)
 
 
 class ConnectionLineWidthEdit(AbstractEdit):
-    globals_key = 'CONNECTIONLINEWIDTH'
+    globals_key = 'ConnectionLineWidth'
     def __init__(self, settings, parent):
         super(ConnectionLineWidthEdit, self).__init__(settings, parent, 2)
         self.setRange(1, 20)
 
 
 class NodeWidthEdit(AbstractEdit):
-    globals_key = 'NODEWIDTHSCALE'
+    globals_key = 'NodeWidth'
     def __init__(self, settings, parent):
         super(NodeWidthEdit, self).__init__(settings, parent, 100)
         self.setRange(50, 250)
@@ -184,21 +184,6 @@ class WorkFileDirEdit(QPushButton):
     def openDialog(self):
         dirName = QFileDialog.getExistingDirectory(self, 'Temporary file storage', self.value)
         self.value = dirName
-
-
-class LocalInterpreterPortEdit(QSpinBox):
-    def __init__(self, settings, parent):
-        self.parent = parent
-        self.settings = settings
-        super(LocalInterpreterPortEdit, self).__init__()
-        v = settings.value('LOCALPORT', type=int)
-        v = v if v else 8080
-        self.setRange(1, 99999)
-        self.setValue(v)
-
-    def commit(self):
-        self.settings.setValue('LOCALPORT', self.value())
-        ParamServer()['LOCALPORT'] = self.value()
 
 
 class RGIFrameRateEdit(QLineEdit):

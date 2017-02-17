@@ -19,7 +19,6 @@ logger = logging.getLogger('Floppy')
 
 PINSIZE = 8
 TEXTYOFFSET = 0
-LINEEDITFONTSIZE = 8
 
 
 class Painter(QWidget):
@@ -470,7 +469,7 @@ class Painter2D(Painter):
             path = QPainterPath()
             x = node.__pos__[0]# + self.globalOffset.x()
             y = node.__pos__[1]# + self.globalOffset.y()
-            w = node.__size__[0]*ParamServer()['NODEWIDTHSCALE']
+            w = node.__size__[0]*ParamServer()['NodeWidth']
             h = node.__size__[1]*(8+PINSIZE)+40
 
             path.addRoundedRect(x, y, w, h, 50, 5)
@@ -481,7 +480,7 @@ class Painter2D(Painter):
             # painter.drawRoundedRect(node.pos[0], node.pos[1], node.size[0], node.size[1], 50, 5)
             painter.drawPath(path)
             pen.setColor(QColor(150, 150, 150))
-            painter.setFont(QFont('Helvetica', ParamServer()['NODETITLEFONTSIZE']))
+            painter.setFont(QFont('Helvetica', ParamServer()['NodeTitleFontSize']))
             painter.setPen(pen)
             painter.drawText(x, y+3, w, h, Qt.AlignHCenter, node.__class__.__name__)
             painter.setBrush(QColor(40, 40, 40))
@@ -645,7 +644,7 @@ class Painter2D(Painter):
     def drawBezier(self, start, end, color, painter, rotate=None):
                 pen = QPen()
                 pen.setColor(color)
-                pen.setWidth(ParamServer()['CONNECTIONLINEWIDTH']*self.scale)
+                pen.setWidth(ParamServer()['ConnectionLineWidth']*self.scale)
                 painter.setPen(pen)
                 path = QPainterPath()
                 path.moveTo(start)
@@ -1218,7 +1217,7 @@ class DrawItem(object):
         painter.drawText(xx+5, yy-3 + TEXTYOFFSET, ww-10, hh+5, alignment, text)
 
     def set_font(self, painter):
-        painter.setFont(QFont('Helvetica', ParamServer()['LINEEDITFONTSIZE']))
+        painter.setFont(QFont('Helvetica', ParamServer()['FontSize']))
 
     def run(self):
         pass
