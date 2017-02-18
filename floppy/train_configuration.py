@@ -10,11 +10,12 @@ class TrainDialog(QDialog):
                         ('Batch Size', BatchSizeEdit(settings, self)),
                         ('Epoch', EpochEdit(settings, self)),
                         ('GPU', GPUEdit(settings, self)),
+                        ('Optimizer Settings', None),
                         ('Optimizer', OptimizerEdit(settings, self)),
                         ]
-        for param in Parameters().iter_for_opt_params:
-            dialog = (param, OptimizeParamEdit(param, self))
-            self.dialogs.append()
+        for param in ParamServer().iter_for_opt_params():
+            dialog = (param, OptimizeParamEdit(settings, self, param))
+            self.dialogs.append(dialog)
 
         super(TrainDialog, self).__init__(*args)
         self.draw(*args, settings=settings)
@@ -98,7 +99,6 @@ class TrainDialog(QDialog):
     def update_optimizer(self, e):
         ParamServer()['opt_learning_rate'] = 1e-1
         ParamServer()['opt_vvaaabbb'] = 1e-2
-        self.draw(self.settings, opt_params=opt_params)
 
 
 class BatchSizeEdit(AbstractEdit):

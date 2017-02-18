@@ -28,6 +28,7 @@ class ParamServer(object):
         for key in opt_keys:
             del cls.__dict__[key]
 
+
 class SettingsDialog(QDialog):
     def __init__(self, *args, settings=None):
         self.settings= settings
