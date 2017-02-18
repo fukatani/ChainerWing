@@ -242,62 +242,63 @@ class NetTemplate(Template):
 
     def __call__(self, net_name, init_impl, call_impl):
         return '''
-        import chainer
-        from chainer import functions
-        from chainer import links
+import chainer
+from chainer import functions
+from chainer import links
 
 
-        class {net_name}(chainer.Chain):
+class {net_name}(chainer.Chain):
 
-            def __init__(self):
-                __super__({net_name}, self).__init__(
-{init_impl}
-                )
+    def __init__(self):
+        __super__({net_name}, self).__init__(
+        {init_impl}
+        )
 
-            def __call__(self):
-{call_impl}
+    def __call__(self):
+        {call_impl}
         '''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
 
 
 class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
-        optimizer = {0}
-        optimizer.setup(model)
+if __name__ == '__main__':
+    optimizer = {0}
+    optimizer.setup(model)
 
-        train, test = chainer.datasets.get_mnist()
+    train, test = chainer.datasets.get_mnist()
 
-        train_iter = chainer.iterators.SerialIterator(train, {1})
-        test_iter = chainer.iterators.SerialIterator(test, {1},
-                                                     repeat=False,
-                                                     shuffle=False)
+    train_iter = chainer.iterators.SerialIterator(train, {1})
+    test_iter = chainer.iterators.SerialIterator(test, {1},
+                                                 repeat=False,
+                                                 shuffle=False)
 
-        # Set up a trainer
-        updater = training.StandardUpdater(train_iter, optimizer,
-                                           device={2})
-        '''.format(kwargs['Optimizer'], kwargs['BatchSize'], kwargs['GPU']) + '''
-        trainer = training.Trainer(updater, ({0}, 'epoch'))
-        '''.format(kwargs['Epoch']) + '''
-        trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
-        '''.format(kwargs['GPU']) + '''
-        trainer.extend(extensions.snapshot(), trigger=({0}, 'epoch'))
-        '''.format(kwargs['Epoch']) + '''
-        trainer.extend(extensions.LogReport())
-        trainer.extend(
-            extensions.PlotReport(['main/loss', 'validation/main/loss'],
-                                  'epoch',
-                                  file_name='loss.png'))
-        '''
+    # Set up a trainer
+    updater = training.StandardUpdater(train_iter, optimizer,
+                                       device={2})
+    '''.format(kwargs['Optimizer'], kwargs['BatchSize'], kwargs['GPU']) + '''
+    trainer = training.Trainer(updater, ({0}, 'epoch'))
+    '''.format(kwargs['Epoch']) + '''
+    trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
+    '''.format(kwargs['GPU']) + '''
+    trainer.extend(extensions.snapshot(), trigger=({0}, 'epoch'))
+    '''.format(kwargs['Epoch']) + '''
+    trainer.extend(extensions.LogReport())
+    trainer.extend(
+        extensions.PlotReport(['main/loss', 'validation/main/loss'],
+                               'epoch',
+                               file_name='loss.png'))
+    '''
         if 'disp_accuracy' in kwargs:
             call_train += '''
-        trainer.extend(
-            extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],
-                                  'epoch', file_name='accuracy.png'))
-        trainer.extend(extensions.PrintReport(
-            ['epoch', 'main/loss', 'validation/main/loss',
-             'main/accuracy', 'validation/main/accuracy', 'elapsed_time']))
-        '''
+    trainer.extend(
+        extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],
+                               'epoch', file_name='accuracy.png'))
+    trainer.extend(extensions.PrintReport(
+        ['epoch', 'main/loss', 'validation/main/loss',
+         'main/accuracy', 'validation/main/accuracy', 'elapsed_time']))
+    '''
         call_train += '''
-        trainer.run()
-        '''
+    trainer.run()
+    '''
         return call_train
