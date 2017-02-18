@@ -29,7 +29,7 @@ class Compiler(object):
         for node in nodes.values():
             if issubclass(type(node), Loss):
                 compiled_loss = self.compile_node(node, nodes)
-                compiled_loss = "".join([func.call() for func in compiled_loss]) + "x" + ")" * len(compiled_loss)
+                compiled_loss = "".join([func.call() for func in compiled_loss]) + "x" + ")" * (len(compiled_loss) - 1)
                 compiled_loss += node.call_end()
                 call_all_loss.append(compiled_loss)
 
