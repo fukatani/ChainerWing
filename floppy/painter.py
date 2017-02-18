@@ -433,7 +433,6 @@ class Painter2D(Painter):
         painter.setRenderHint(QPainter.HighQualityAntialiasing)
         # painter.drawEllipse(QPoint(0,0),5,5)
         history, last = self.graph.getExecutionHistory()
-        running = self.graph.getRunningNodes()
         report = self.graph.getReport()
         if report and not report == self.lastReport:
             self.reportWidget.updateReport(report)
@@ -464,8 +463,6 @@ class Painter2D(Painter):
                     dT = history[node.ID]
                     c = int(17*(15-dT))
                     pen.setColor(QColor(0, c, c))
-            elif node.ID in running:
-                pen.setColor(Qt.red)
             else:
                 pen.setColor(Qt.black)
 

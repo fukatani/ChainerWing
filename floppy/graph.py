@@ -25,7 +25,6 @@ class Graph(object):
         self._requestUpdate = False
         self._requestReport = ''
         self.executedBuffer = []
-        self.currentlyRunning = []
         self.currentReport = ''
         self.runningNodes = []
         self.statusLock = None
@@ -81,7 +80,6 @@ class Graph(object):
             status = self.status
             if status:
                 IDs = status['STATUS']['ran']
-                self.currentlyRunning = status['STATUS']['running']
                 self.currentReport = status['REPORT']
                 if IDs:
                     self.executedBuffer += IDs
@@ -281,9 +279,6 @@ class Graph(object):
             self.requestUpdate()
         # self.statusLock.release()
         return history, self.executedBuffer[-1] if self.executedBuffer else ('','')
-
-    def getRunningNodes(self):
-        return self.currentlyRunning
 
     def execute(self):
         """
