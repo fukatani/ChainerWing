@@ -88,9 +88,11 @@ class TrainDialog(QDialog):
         self.parent().drawer.repaint()
 
     def update_optimizer(self, e):
+        #TODO(fukatani): temporal.
         ParamServer()['opt_learning_rate'] = 1e-1
         ParamServer()['opt_vvaaabbb'] = 1e-2
-        # TODO(fukatani): update screen
+        self.parent().open_train_config()
+        self.close()
 
 
 class BatchSizeEdit(AbstractEdit):
