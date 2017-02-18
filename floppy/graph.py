@@ -334,7 +334,7 @@ class Graph(object):
         """
         pass
 
-    def load(self, fileName, callback=None):
+    def load_from_json(self, fileName, callback=None):
         with open(fileName, 'r') as fp:
             saveState = json.loads(fp.read())
         self.loadState(saveState, callback)

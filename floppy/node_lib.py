@@ -4,11 +4,9 @@ from PyQt5.QtGui import *
 from floppy.node import NODECLASSES
 import os
 from importlib.machinery import SourceFileLoader
+
+
 customNodesPath = os.path.join(os.path.dirname(__file__), 'CustomNodes')
-# try:
-#     [SourceFileLoader(str(i), os.path.join(customNodesPath, path)).load_module() for i, path in enumerate(os.listdir(customNodesPath)) if path.endswith('py')]
-# except Exception as e:
-#     print('Warning: error in custom node:\n{}'.format(str(e)))
 
 for i, path in enumerate(os.listdir(customNodesPath)):
     if path.endswith('py'):

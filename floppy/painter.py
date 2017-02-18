@@ -1124,7 +1124,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if fileName:
             logger.debug('Attempting to load graph: {}'.format(fileName))
             self.clearAllNodes()
-            self.drawer.graph.load(fileName, callback=self.raiseErrorMessage)
+            self.drawer.graph.load_from_json(fileName, callback=self.raiseErrorMessage)
             self.statusBar.showMessage('Graph loaded from {}.'.format(fileName), 2000)
             logger.info('Successfully loaded graph: {}'.format(fileName))
 
