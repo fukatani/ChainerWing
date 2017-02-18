@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import *
 from floppy.settings import AbstractEdit
 from floppy.settings import ParamServer
 
+
 class TrainDialog(QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
@@ -11,6 +12,10 @@ class TrainDialog(QDialog):
                         ('GPU', GPUEdit(settings, self)),
                         ('Optimizer', OptimizerEdit(settings, self)),
                         ]
+        for param in Parameters().iter_for_opt_params:
+            dialog = (param, OptimizeParamEdit(param, self))
+            self.dialogs.append()
+
         super(TrainDialog, self).__init__(*args)
         self.draw(*args, settings=settings)
         self.setStyleSheet('''TrainDialog {
@@ -35,11 +40,7 @@ class TrainDialog(QDialog):
                             }
         ''')
 
-    def draw(self, *args, settings=None, opt_params=None):
-        if opt_params is not None:
-            for key in opt_params:
-                self.dialogs.append(key, OptimizeParamEdit(settings, self, key, opt_params[key]))
-
+    def draw(self, *args, settings=None):
         mainLayout = QVBoxLayout()
         for name, widget in self.dialogs:
             if not widget:
@@ -65,8 +66,8 @@ class TrainDialog(QDialog):
                 # layout.addRow(name)
             else:
                 sectionLayout.addRow(name, widget)
-        edit_opt_detail_btn = QPushButton("Edit Opt Parameter")
-        edit_opt_detail_btn.clicked.connect(self.edit_opt_param)
+        edit_opt_detail_btn = QPushButton("Update Optimizer")
+        edit_opt_detail_btn.clicked.connect(self.update_optimizer)
         mainLayout.addWidget(edit_opt_detail_btn)
         closeButton = QPushButton('Close')
         closeButton.clicked.connect(self.close)
@@ -94,9 +95,9 @@ class TrainDialog(QDialog):
     def redraw(self):
         self.parent().drawer.repaint()
 
-    def edit_opt_param(self, e):
-        opt_params = {'learning_rate': 1e-1, 'vvaaabbb': 1e-2}
-        self.dialogs = self.dialogs[:5]
+    def update_optimizer(self, e):
+        ParamServer()['opt_learning_rate'] = 1e-1
+        ParamServer()['opt_vvaaabbb'] = 1e-2
         self.draw(self.settings, opt_params=opt_params)
 
 

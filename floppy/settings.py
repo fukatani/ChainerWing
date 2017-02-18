@@ -18,6 +18,15 @@ class ParamServer(object):
         cls.__dict__[key] = value
         pass
 
+    def iter_for_opt_params(cls):
+        for param in cls.__dict__:
+            if param[:4] == 'opt_':
+                yield param
+
+    def clear_opt_params(cls):
+        opt_keys = [key for key in cls.iter_for_opt_params()]
+        for key in opt_keys:
+            del cls.__dict__[key]
 
 class SettingsDialog(QDialog):
     def __init__(self, *args, settings=None):
