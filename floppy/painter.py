@@ -448,7 +448,10 @@ class Painter2D(Painter):
             j += 1
             pen = QPen()
             pen.setWidth(2)
-            painter.setBrush(QColor(55, 55, 55))
+            if hasattr(node, 'color'):
+                painter.setBrush(node.color())
+            else:
+                painter.setBrush(QColor(55, 55, 55))
             if self.clickedNode == node or node in self.groupSelection:
                 # pen.setColor(Qt.green)
                 painter.setBrush(QColor(75, 75, 75))

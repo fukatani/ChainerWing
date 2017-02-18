@@ -2,6 +2,9 @@ from collections import OrderedDict
 from copy import copy
 from floppy.floppy_types import Type, MetaType
 
+from PyQt5.QtGui import QColor
+
+
 NODECLASSES = {}
 # STOREDVALUES = {}
 
@@ -834,13 +837,21 @@ class Link(Node):
     def call(self):
         return "self.l{0}(".format(self.link_id)
 
+    def color(self):
+        return QColor(45, 95, 45)
+
 
 @abstractNode
 class Function(Node):
-    pass
+
+    def color(self):
+        return QColor(95, 45, 45)
 
 
 @abstractNode
 class Loss(Function):
     def call_end(self):
         return ", y)"
+
+    def color(self):
+        return QColor(45, 45, 95)
