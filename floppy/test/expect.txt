@@ -1,0 +1,46 @@
+
+import chainer
+from chainer import functions
+from chainer import links
+
+
+class ExampleNet(chainer.Chain):
+
+    def __init__(self):
+        __super__(ExampleNet, self).__init__(
+                    l0=links.Linear(None, , nobias=)
+            l0=links.Linear(None, , nobias=)
+        )
+
+    def __call__(self):
+        softmax_cross_entropy(relu(self.l0(relu(self.l0(x))))), y)
+        
+if __name__ == '__main__':
+    optimizer = AdaDelta
+    optimizer.setup(model)
+
+    train, test = chainer.datasets.get_mnist()
+
+    train_iter = chainer.iterators.SerialIterator(train, 20)
+    test_iter = chainer.iterators.SerialIterator(test, 20,
+                                                 repeat=False,
+                                                 shuffle=False)
+
+    # Set up a trainer
+    updater = training.StandardUpdater(train_iter, optimizer,
+                                       device=11)
+    
+    trainer = training.Trainer(updater, (0, 'epoch'))
+    
+    trainer.extend(extensions.Evaluator(test_iter, model, device=11))
+    
+    trainer.extend(extensions.snapshot(), trigger=(0, 'epoch'))
+    
+    trainer.extend(extensions.LogReport())
+    trainer.extend(
+        extensions.PlotReport(['main/loss', 'validation/main/loss'],
+                               'epoch',
+                               file_name='loss.png'))
+    
+    trainer.run()
+    
