@@ -1,32 +1,5 @@
 from PyQt5.QtWidgets import *
-
-
-class ParamServer(object):
-    '''Singleton parameter server
-    '''
-    __instance = None
-
-    def __new__(cls, *args, **keys):
-        if cls.__instance is None:
-            cls.__instance = object.__new__(cls)
-        return cls.__instance
-
-    def __getitem__(cls, key):
-        return cls.__dict__[key]
-
-    def __setitem__(cls, key, value):
-        cls.__dict__[key] = value
-        pass
-
-    def iter_for_opt_params(cls):
-        for param in cls.__dict__:
-            if param[:4] == 'opt_':
-                yield param
-
-    def clear_opt_params(cls):
-        opt_keys = [key for key in cls.iter_for_opt_params()]
-        for key in opt_keys:
-            del cls.__dict__[key]
+import json
 
 
 class SettingsDialog(QDialog):
@@ -108,6 +81,9 @@ class SettingsDialog(QDialog):
     def redraw(self):
         self.parent().drawer.repaint()
 
+    def to_json(self):
+        json.dump(self.__dict__)
+
 
 class AbstractEdit(QSpinBox):
     def __init__(self, settings, parent, default, valType=int):
@@ -122,10 +98,8 @@ class AbstractEdit(QSpinBox):
 
     def commit(self):
         self.settings.setValue(self.globals_key, self.value())
-        ParamServer()[self.globals_key] = self.value()
 
     def redraw(self):
-        ParamServer()[self.globals_key] = self.value()
         self.parent.redraw()
 
 

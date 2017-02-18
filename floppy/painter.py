@@ -4,7 +4,7 @@ from floppy.graph import Graph
 from floppy.mainwindow import Ui_MainWindow
 from floppy.node import ControlNode
 from floppy.node_lib import ContextNodeFilter, ContextNodeList
-from floppy.settings import SettingsDialog, ParamServer
+from floppy.settings import SettingsDialog
 from floppy.train_configuration import TrainDialog
 
 from PyQt5.QtWidgets import *
@@ -471,8 +471,8 @@ class Painter2D(Painter):
             path = QPainterPath()
             x = node.__pos__[0]# + self.globalOffset.x()
             y = node.__pos__[1]# + self.globalOffset.y()
-            w = node.__size__[0]*ParamServer()['NodeWidth']
-            h = node.__size__[1]*(8+PINSIZE)+40
+            w = node.__size__[0] * self.settings.value('NodeWidth')
+            h = node.__size__[1] * (8 + PINSIZE) + 40
 
             path.addRoundedRect(x, y, w, h, 50, 5)
             self.nodePoints.append((QPoint(x, y)*painter.transform(), QPoint(x+w, y+h)*painter.transform(), node))
@@ -482,7 +482,7 @@ class Painter2D(Painter):
             # painter.drawRoundedRect(node.pos[0], node.pos[1], node.size[0], node.size[1], 50, 5)
             painter.drawPath(path)
             pen.setColor(QColor(150, 150, 150))
-            painter.setFont(QFont('Helvetica', ParamServer()['NodeTitleFontSize']))
+            painter.setFont(QFont('Helvetica', self.settings.value('NodeTitleFontSize')))
             painter.setPen(pen)
             painter.drawText(x, y+3, w, h, Qt.AlignHCenter, node.__class__.__name__)
             painter.setBrush(QColor(40, 40, 40))
@@ -646,7 +646,7 @@ class Painter2D(Painter):
     def drawBezier(self, start, end, color, painter, rotate=None):
         pen = QPen()
         pen.setColor(color)
-        pen.setWidth(ParamServer()['ConnectionLineWidth']*self.scale)
+        pen.setWidth(self.settings.value('ConnectionLineWidth') * self.scale)
         painter.setPen(pen)
         path = QPainterPath()
         path.moveTo(start)
@@ -738,6 +738,9 @@ class Painter2D(Painter):
             # painter.drawLine(0, self.height()/2+self.globalOffset.y()-i*spacing, self.width(), self.height()/2+self.globalOffset.y()-i*spacing)
             painter.drawLine(0, self.height()/2-i*spacing, self.width(), self.height()/2-i*spacing)
 
+    def set_settings(self, settings):
+        self.settings = settings
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
 
@@ -762,6 +765,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         drawWidget = painter
         painter.reportWidget = self.BottomWidget
+        painter.set_settings(self.settings)
+
         drawWidget.setAutoFillBackground(True)
         p = self.palette()
         p.setColor(drawWidget.backgroundRole(), QColor(70, 70, 70))
@@ -1106,7 +1111,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def spawnRunner(self):
         logger.debug('Spawning new Runner.')
         self.statusBar.showMessage('New Remote Interpreter spawned.', 2000)
-        self.drawer.graph.spawnAndConnect(ParamServer()['LOCALPORT'])
+        self.drawer.graph.spawnAndConnect(self.settings.value('LOCALPORT'))
         logger.debug('Connected to Runner.')
 
     def runCode(self, *args):
@@ -1179,6 +1184,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 class DrawItem(object):
     alignment = Qt.AlignRight
     def __init__(self, parent, data, painter):
+        self.settings = painter.settings
         self.painter = painter
         self.state = False
         self.x = 0
@@ -1222,7 +1228,7 @@ class DrawItem(object):
         painter.drawText(xx+5, yy-3 + TEXTYOFFSET, ww-10, hh+5, alignment, text)
 
     def set_font(self, painter):
-        painter.setFont(QFont('Helvetica', ParamServer()['FontSize']))
+        painter.setFont(QFont('Helvetica', self.settings.value('FontSize')))
 
     def run(self):
         pass

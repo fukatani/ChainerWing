@@ -1,6 +1,6 @@
 from floppy.templates import TEMPLATES
 from floppy.node import Link, Function, Loss
-from floppy.settings import ParamServer
+from floppy.train_configuration import TrainParamServer
 
 
 class Compiler(object):
@@ -11,10 +11,10 @@ class Compiler(object):
         call_impl = self.compile_call(nodes)
         net_file = open(net_name + '.py', 'w')
         net_file.write(TEMPLATES['NetTemplate']()(net_name, init_impl, call_impl))
-        train_dict = {'BatchSize': ParamServer()['BatchSize'],
-                      'Epoch': ParamServer()['Epoch'],
-                      'GPU': ParamServer()['GPU'],
-                      'Optimizer': ParamServer()['Optimizer']}
+        train_dict = {'BatchSize': TrainParamServer()['BatchSize'],
+                      'Epoch': TrainParamServer()['Epoch'],
+                      'GPU': TrainParamServer()['GPU'],
+                      'Optimizer': TrainParamServer()['Optimizer']}
         net_file.write(TEMPLATES['TrainerTemplate']()(train_dict))
 
     def compile_init(self, nodes):
