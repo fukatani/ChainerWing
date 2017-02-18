@@ -4,7 +4,7 @@ from floppy.settings import ParamServer
 
 class TrainDialog(QDialog):
     def __init__(self, *args, settings=None):
-        self.settings= settings
+        self.settings = settings
         self.dialogs = [('Train Settings', None),
                         ('Batch Size', BatchSizeEdit(settings, self)),
                         ('Epoch', EpochEdit(settings, self)),
@@ -12,11 +12,12 @@ class TrainDialog(QDialog):
                         ('Optimizer', OptimizerEdit(settings, self)),
                         ]
         super(TrainDialog, self).__init__(*args)
+        self.draw(*args, settings=settings)
         self.setStyleSheet('''TrainDialog {
                                 background: rgb(75,75,75);
                             }
                             QLineEdit {
-                                background-color: rgb(195,95,95);
+                                background-color: rgb(95,95,95);
                                 border: 1px solid gray;
                                 color: white;
                             }
@@ -26,13 +27,19 @@ class TrainDialog(QDialog):
                                 border: 1px solid gray;
                             }
                             QPushButton {
-                                background-color: rgb(95,95,95);
+                                background-color: rgb(155,95,95);
                                 color: white;
                             }
                             QLabel {
                                 color: white;
                             }
         ''')
+
+    def draw(self, *args, settings=None, opt_params=None):
+        if opt_params is not None:
+            for key in opt_params:
+                self.dialogs.append(key, OptimizeParamEdit(settings, self, key, opt_params[key]))
+
         mainLayout = QVBoxLayout()
         for name, widget in self.dialogs:
             if not widget:
@@ -58,6 +65,9 @@ class TrainDialog(QDialog):
                 # layout.addRow(name)
             else:
                 sectionLayout.addRow(name, widget)
+        edit_opt_detail_btn = QPushButton("Edit Opt Parameter")
+        edit_opt_detail_btn.clicked.connect(self.edit_opt_param)
+        mainLayout.addWidget(edit_opt_detail_btn)
         closeButton = QPushButton('Close')
         closeButton.clicked.connect(self.close)
         mainLayout.addWidget(closeButton)
@@ -83,6 +93,11 @@ class TrainDialog(QDialog):
 
     def redraw(self):
         self.parent().drawer.repaint()
+
+    def edit_opt_param(self, e):
+        opt_params = {'learning_rate': 1e-1, 'vvaaabbb': 1e-2}
+        self.dialogs = self.dialogs[:5]
+        self.draw(self.settings, opt_params=opt_params)
 
 
 class BatchSizeEdit(AbstractEdit):
@@ -112,3 +127,9 @@ class OptimizerEdit(QLineEdit):
     def commit(self):
         self.settings.setValue('Optimizer', self.text())
         ParamServer()['Optimizer'] = self.text()
+
+
+class OptimizeParamEdit(AbstractEdit):
+    def __init__(self, settings, parent, key, default_value=1):
+        super(OptimizeParamEdit, self).__init__(settings, parent, default_value)
+        ParamServer()[key] = self.value()

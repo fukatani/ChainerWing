@@ -49,7 +49,7 @@ class SettingsDialog(QDialog):
                                 border: 1px solid gray;
                             }
                             QPushButton {
-                                background-color: rgb(95,95,95);
+                                background-color: rgb(155,95,95);
                                 color: white;
                             }
                             QLabel {
