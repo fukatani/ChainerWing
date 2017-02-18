@@ -1,3 +1,4 @@
 *.pyc
+*.npz
 ExampleNet.py
 
