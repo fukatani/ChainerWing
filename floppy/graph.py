@@ -336,18 +336,18 @@ class Graph(object):
 
     def load_from_json(self, fileName, callback=None):
         with open(fileName, 'r') as fp:
-            saveState = json.loads(fp.read())
-        self.loadState(saveState, callback)
-        # self.loadDict(saveState)
+            graph_state = json.loads(fp.readline())
+            # train_state = json.loads(fp.readline())
+        self.loadState(graph_state, callback)
 
-    def loadState(self, saveState, callback=None, reuseIDs=False):
+    def loadState(self, graph_state, callback=None, reuseIDs=False):
         """
         Reconstruct a Graph instance from a JSON string representation created by the Graph.toJson() method.
-        :param saveState:
+        :param graph_state:
         :return: Dictionary mapping the saved nodeIDs to the newly created nodes's IDs.
         """
         idMap = {}
-        for id, nodeData in saveState:
+        for id, nodeData in graph_state:
             useID = id if reuseIDs else False
             try:
                 restoredNode = self.spawnNode(NODECLASSES[nodeData['class']], position=nodeData['position'], silent=True, useID=useID)
@@ -376,7 +376,7 @@ class Graph(object):
             #     restoredNode.inputs[input[0]].setDefault(input[-1])
             # for output in outputs:
             #     restoredNode.outputs[output[0]].setDefault(output[-1])
-        for id, nodeData in saveState:
+        for id, nodeData in graph_state:
             id = int(id)
             for inputName, outputID in nodeData['inputConnections'].items():
                 if inputName == 'Control':
