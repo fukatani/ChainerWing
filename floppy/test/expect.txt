@@ -7,7 +7,7 @@ from chainer import links
 class ExampleNet(chainer.Chain):
 
     def __init__(self):
-        __super__(ExampleNet, self).__init__(
+        super(ExampleNet, self).__init__(
                     l0=links.Linear(None, , nobias=)
             l0=links.Linear(None, , nobias=)
         )
@@ -30,11 +30,11 @@ if __name__ == '__main__':
     updater = training.StandardUpdater(train_iter, optimizer,
                                        device=11)
     
-    trainer = training.Trainer(updater, (0, 'epoch'))
+    trainer = training.Trainer(updater, (20, 'epoch'))
     
     trainer.extend(extensions.Evaluator(test_iter, model, device=11))
     
-    trainer.extend(extensions.snapshot(), trigger=(0, 'epoch'))
+    trainer.extend(extensions.snapshot(), trigger=(20, 'epoch'))
     
     trainer.extend(extensions.LogReport())
     trainer.extend(

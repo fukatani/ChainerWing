@@ -3,9 +3,12 @@ import os
 from floppy.graph import Graph
 from floppy.mainwindow import Ui_MainWindow
 from floppy.node import ControlNode
-from floppy.node_lib import ContextNodeFilter, ContextNodeList
+from floppy.node_lib import ContextNodeFilter
+from floppy.node_lib import ContextNodeList
 from floppy.settings import SettingsDialog
 from floppy.train_configuration import TrainDialog
+from floppy.train_configuration import TrainParamServer
+
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPoint, QSettings
@@ -816,7 +819,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
         self.saveAction = QAction(QIcon(os.path.join(self.iconRoot, 'save.png')), 'save', self)
         self.saveAction.setShortcut('Ctrl+S')
-        self.saveAction.triggered.connect(self.saveGraph)
+        self.saveAction.triggered.connect(self.save_graph_and_train)
         self.saveAction.setIconVisibleInMenu(True)
         self.addAction(self.saveAction)
 
@@ -1122,37 +1125,44 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not override:
             #TODO(fukatani): serialize directory.
             init_path = os.path.abspath(__file__) + '/../../examples/'
-            fileName = QFileDialog.getOpenFileName(self, 'Open File', init_path,
+            file_name = QFileDialog.getOpenFileName(self, 'Open File', init_path,
                                                    filter='Floppy Files (*.json);; Any (*.*)')[0]
         else:
-            fileName = override
-        if fileName:
-            logger.debug('Attempting to load graph: {}'.format(fileName))
-            self.clearAllNodes()
-            self.drawer.graph.load_from_json(fileName, callback=self.raiseErrorMessage)
-            self.statusBar.showMessage('Graph loaded from {}.'.format(fileName), 2000)
-            logger.info('Successfully loaded graph: {}'.format(fileName))
+            file_name = override
+        if not file_name: return
+        logger.debug('Attempting to load graph: {}'.format(file_name))
+        self.clearAllNodes()
+        with open(file_name, 'r') as fp:
+            line = fp.readline()
+            self.drawer.graph.load_from_json(line, callback=self.raiseErrorMessage)
+            self.statusBar.showMessage('Graph loaded from {}.'.format(file_name), 2000)
+            logger.info('Successfully loaded graph: {}'.format(file_name))
+            line = fp.readline()
+            TrainParamServer().from_json(line)
 
     def raiseErrorMessage(self, message):
         err = QErrorMessage(self)
         err.showMessage(message)
         logger.error(message)
 
-    def saveGraph(self, *args):
+    def save_graph_and_train(self, *args):
         """
         Callback for the 'SaveAction'.
         :param args: throwaway arguments.
         :return: None
         """
-        fileName = QFileDialog.getSaveFileName(self, 'Save File', '~/')[0]
-        if not fileName:
+        file_name = QFileDialog.getSaveFileName(self, 'Save File', '~/')[0]
+        if not file_name:
             return
-        if not fileName.endswith('.json'):
-             fileName += '.json'
-        logger.debug('Attempting to save graph as {}'.format(fileName))
-        self.drawer.graph.save(fileName)
-        self.statusBar.showMessage('Graph saved as {}.'.format(fileName), 2000)
-        logger.info('Save graph as {}'.format(fileName))
+        if not file_name.endswith('.json'):
+             file_name += '.json'
+        logger.debug('Attempting to save graph as {}'.format(file_name))
+        with open(file_name, 'w') as fp:
+            self.drawer.graph.save(fp)
+            fp.write('\n')
+            TrainParamServer().save(fp)
+        self.statusBar.showMessage('Graph saved as {}.'.format(file_name), 2000)
+        logger.info('Save graph as {}'.format(file_name))
 
     def resizeEvent(self, event):
         super(MainWindow, self).resizeEvent(event)

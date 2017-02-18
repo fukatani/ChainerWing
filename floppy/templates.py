@@ -250,7 +250,7 @@ from chainer import links
 class {net_name}(chainer.Chain):
 
     def __init__(self):
-        __super__({net_name}, self).__init__(
+        super({net_name}, self).__init__(
         {init_impl}
         )
 

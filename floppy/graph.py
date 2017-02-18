@@ -304,15 +304,14 @@ class Graph(object):
     def print(self, message):
         print(message)
 
-    def save(self, file_name):
+    def save(self, fp):
         """
         Saves the graph as a JSON string to the disk
         :param file_name: string representing the file name.
         :return:
         """
-        with open(file_name, 'w') as fp:
-            net_state = self.to_json()
-            fp.write(net_state)
+        net_state = self.to_json()
+        fp.write(net_state)
 
     def to_json(self, subgraph=None):
         """
@@ -334,10 +333,13 @@ class Graph(object):
         """
         pass
 
-    def load_from_json(self, fileName, callback=None):
-        with open(fileName, 'r') as fp:
-            graph_state = json.loads(fp.readline())
-            # train_state = json.loads(fp.readline())
+    def load_from_json(self, line, callback=None):
+        """
+        :param line: string
+        :param callback:
+        :return:
+        """
+        graph_state = json.loads(line)
         self.loadState(graph_state, callback)
 
     def loadState(self, graph_state, callback=None, reuseIDs=False):

@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+import json
 
 
 class TrainParamServer(object):
@@ -16,7 +17,6 @@ class TrainParamServer(object):
 
     def __setitem__(cls, key, value):
         cls.__dict__[key] = value
-        pass
 
     def iter_for_opt_params(cls):
         for param in cls.__dict__:
@@ -27,6 +27,13 @@ class TrainParamServer(object):
         opt_keys = [key for key in cls.iter_for_opt_params()]
         for key in opt_keys:
             del cls.__dict__[key]
+
+    def save(cls, fp):
+        train_state = json.dumps(cls.__dict__)
+        fp.write(train_state)
+
+    def from_json(cls, line):
+        json.loads(line)
 
 
 class TrainDialog(QDialog):

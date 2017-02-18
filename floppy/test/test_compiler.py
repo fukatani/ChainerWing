@@ -18,7 +18,8 @@ if __name__ == '__main__':
     train_configuration.TrainDialog(test_window, settings=settings)
 
     graph = Graph(painter=painter)
-    graph.load_from_json('../../examples/mnist.json')
-    graph.execute()
+    with open('../../examples/mnist.json', 'r') as fp:
+        graph.load_from_json(fp.readline())
+        graph.execute()
 
     assert filecmp.cmp('ExampleNet.py', 'expect.txt')

@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import *
-import json
 
 
 class SettingsDialog(QDialog):
@@ -80,9 +79,6 @@ class SettingsDialog(QDialog):
 
     def redraw(self):
         self.parent().drawer.repaint()
-
-    def to_json(self):
-        json.dump(self.__dict__)
 
 
 class AbstractEdit(QSpinBox):
