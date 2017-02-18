@@ -2,6 +2,7 @@ from floppy.graph import Graph
 from floppy import node_lib
 from floppy import train_configuration
 from floppy.painter import MainWindow, Painter2D
+from floppy.train_configuration import TrainParamServer
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QSettings
 import sys
@@ -21,5 +22,10 @@ if __name__ == '__main__':
     with open('../../examples/mnist.json', 'r') as fp:
         graph.load_from_json(fp.readline())
         graph.execute()
+        TrainParamServer().from_json(fp.readline())
 
     assert filecmp.cmp('ExampleNet.py', 'expect.txt')
+    assert TrainParamServer().__dict__ == {'Optimizer': 'AdaDelta',
+                                           'BatchSize': 20,
+                                           'GPU': 11,
+                                           'Epoch': 20}
