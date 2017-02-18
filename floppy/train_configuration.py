@@ -70,7 +70,7 @@ class TrainDialog(QDialog):
         edit_opt_detail_btn = QPushButton("Update Optimizer")
         edit_opt_detail_btn.clicked.connect(self.update_optimizer)
         mainLayout.addWidget(edit_opt_detail_btn)
-        closeButton = QPushButton('Close')
+        closeButton = QPushButton('Apply')
         closeButton.clicked.connect(self.close)
         mainLayout.addWidget(closeButton)
         self.setLayout(mainLayout)
@@ -84,21 +84,13 @@ class TrainDialog(QDialog):
         self.settings.sync()
         super(TrainDialog, self).close()
 
-    def closeEvent(self, e):
-        for name, widget in self.dialogs:
-            try:
-                widget.commit()
-            except AttributeError:
-                pass
-        self.settings.sync()
-        super(TrainDialog, self).closeEvent(e)
-
     def redraw(self):
         self.parent().drawer.repaint()
 
     def update_optimizer(self, e):
         ParamServer()['opt_learning_rate'] = 1e-1
         ParamServer()['opt_vvaaabbb'] = 1e-2
+        # TODO(fukatani): update screen
 
 
 class BatchSizeEdit(AbstractEdit):

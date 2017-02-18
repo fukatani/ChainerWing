@@ -91,7 +91,7 @@ class SettingsDialog(QDialog):
                 # layout.addRow(name)
             else:
                 sectionLayout.addRow(name, widget)
-        closeButton = QPushButton('Close')
+        closeButton = QPushButton('Apply')
         closeButton.clicked.connect(self.close)
         mainLayout.addWidget(closeButton)
         self.setLayout(mainLayout)
@@ -104,15 +104,6 @@ class SettingsDialog(QDialog):
                 pass
         self.settings.sync()
         super(SettingsDialog, self).close()
-
-    def closeEvent(self, e):
-        for name, widget in self.dialogs:
-            try:
-                widget.commit()
-            except AttributeError:
-                pass
-        self.settings.sync()
-        super(SettingsDialog, self).closeEvent(e)
 
     def redraw(self):
         self.parent().drawer.repaint()
