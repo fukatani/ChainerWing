@@ -1134,10 +1134,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.clearAllNodes()
         with open(file_name, 'r') as fp:
             line = fp.readline()
+            if not line: return
             self.drawer.graph.load_from_json(line, callback=self.raiseErrorMessage)
             self.statusBar.showMessage('Graph loaded from {}.'.format(file_name), 2000)
             logger.info('Successfully loaded graph: {}'.format(file_name))
             line = fp.readline()
+            if not line: return
             TrainParamServer().from_json(line)
 
     def raiseErrorMessage(self, message):

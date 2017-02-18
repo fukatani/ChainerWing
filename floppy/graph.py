@@ -339,9 +339,11 @@ class Graph(object):
 
     def loadState(self, graph_state, callback=None, reuseIDs=False):
         """
-        Reconstruct a Graph instance from a JSON string representation created by the Graph.toJson() method.
+        Reconstruct a Graph instance from a JSON string representation
+        created by the Graph.to_json() method.
         :param graph_state:
-        :return: Dictionary mapping the saved nodeIDs to the newly created nodes's IDs.
+        :return: Dictionary mapping the saved nodeIDs to the newly created
+        nodes's IDs.
         """
         idMap = {}
         for id, nodeData in graph_state:
@@ -455,7 +457,8 @@ class Graph(object):
 
     def loadDict(self, saveState):
         """
-        Reconstruct a Graph instance from a JSON string representation created by the Graph.toJson() method.
+        Reconstruct a Graph instance from a JSON string representation
+        created by the Graph.to_json() method.
         :param saveState:
         :return: Dictionary mapping the saved nodeIDs to the newly created nodes's IDs.
         """
