@@ -310,8 +310,8 @@ class Graph(object):
         :param file_name: string representing the file name.
         :return:
         """
-        net_state = self.to_json()
         with open(file_name, 'w') as fp:
+            net_state = self.to_json()
             fp.write(net_state)
 
     def to_json(self, subgraph=None):
