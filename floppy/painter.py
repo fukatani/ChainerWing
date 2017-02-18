@@ -1118,7 +1118,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             #TODO(fukatani): serialize directory.
             init_path = os.path.abspath(__file__) + '/../../examples/'
             fileName = QFileDialog.getOpenFileName(self, 'Open File', init_path,
-                                                   filter='Floppy Files (*.ppy);; Any (*.*)')[0]
+                                                   filter='Floppy Files (*.json);; Any (*.*)')[0]
         else:
             fileName = override
         if fileName:
@@ -1142,8 +1142,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         fileName = QFileDialog.getSaveFileName(self, 'Save File', '~/')[0]
         if not fileName:
             return
-        if not fileName.endswith('.ppy'):
-             fileName += '.ppy'
+        if not fileName.endswith('.json'):
+             fileName += '.json'
         logger.debug('Attempting to save graph as {}'.format(fileName))
         self.drawer.graph.save(fileName)
         self.statusBar.showMessage('Graph saved as {}.'.format(fileName), 2000)
