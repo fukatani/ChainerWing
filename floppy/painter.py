@@ -644,37 +644,37 @@ class Painter2D(Painter):
         self.looseConnection = position
 
     def drawBezier(self, start, end, color, painter, rotate=None):
-                pen = QPen()
-                pen.setColor(color)
-                pen.setWidth(ParamServer()['ConnectionLineWidth']*self.scale)
-                painter.setPen(pen)
-                path = QPainterPath()
-                path.moveTo(start)
-                diffx = abs((start.x()-end.x())/2.)
-                if diffx < 100 * self.scale:
-                    diffx = 100 * self.scale
-                if rotate == 'input':
-                    p21 = start.x()+diffx
-                    p22 = start.y()
-                    p31 = end.x()
-                    p32 = end.y() - 100 * self.scale
-                elif rotate == 'output':
-                    p21 = start.x()
-                    p22 = start.y() + 100 * self.scale
-                    p31 = end.x()-diffx
-                    p32 = end.y()
-                elif rotate == 'both':
-                    p21 = start.x()
-                    p22 = start.y() + 100 * self.scale
-                    p31 = end.x()
-                    p32 = end.y() - 100 * self.scale
-                else:
-                    p21 = start.x()+diffx
-                    p22 = start.y()
-                    p31 = end.x()-diffx
-                    p32 = end.y()
-                path.cubicTo(p21, p22, p31, p32, end.x(), end.y())
-                painter.drawPath(path)
+        pen = QPen()
+        pen.setColor(color)
+        pen.setWidth(ParamServer()['ConnectionLineWidth']*self.scale)
+        painter.setPen(pen)
+        path = QPainterPath()
+        path.moveTo(start)
+        diffx = abs((start.x()-end.x())/2.)
+        if diffx < 100 * self.scale:
+            diffx = 100 * self.scale
+        if rotate == 'input':
+            p21 = start.x()+diffx
+            p22 = start.y()
+            p31 = end.x()
+            p32 = end.y() - 100 * self.scale
+        elif rotate == 'output':
+            p21 = start.x()
+            p22 = start.y() + 100 * self.scale
+            p31 = end.x()-diffx
+            p32 = end.y()
+        elif rotate == 'both':
+            p21 = start.x()
+            p22 = start.y() + 100 * self.scale
+            p31 = end.x()
+            p32 = end.y() - 100 * self.scale
+        else:
+            p21 = start.x()+diffx
+            p22 = start.y()
+            p31 = end.x()-diffx
+            p32 = end.y()
+        path.cubicTo(p21, p22, p31, p32, end.x(), end.y())
+        painter.drawPath(path)
 
 
     def registerNode(self, node, position, silent=False):
