@@ -138,7 +138,7 @@ class Painter2D(Painter):
         pos -= topLeft
         # pos -= self.center
         pos /= self.scale
-        newNode = self.graph.createSubGraphNode(name, self.graph.toJson(subgraph=name), relayInputs,
+        newNode = self.graph.createSubGraphNode(name, self.graph.to_json(subgraph=name), relayInputs,
                                                 relayOutputs, spawnAt=(pos.x(), pos.y()))
         self.update()
 

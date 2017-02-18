@@ -304,17 +304,17 @@ class Graph(object):
     def print(self, message):
         print(message)
 
-    def save(self, fileName):
+    def save(self, file_name):
         """
         Saves the graph as a JSON string to the disk
-        :param fileName: string representing the file name.
+        :param file_name: string representing the file name.
         :return:
         """
-        saveState = self.toJson()
-        with open(fileName, 'w') as fp:
-            fp.write(saveState)
+        net_state = self.to_json()
+        with open(file_name, 'w') as fp:
+            fp.write(net_state)
 
-    def toJson(self, subgraph=None):
+    def to_json(self, subgraph=None):
         """
         Encodes the graph as a JSON string and returns the string.
         :param subgraph: Returns whole graph is 'subgraph=None' else only the nodes corresponding to the subgraph.
