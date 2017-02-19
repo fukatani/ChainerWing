@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QVBoxLayout
 from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import Qt
 
 from floppy.runner import StopTraining
@@ -32,9 +33,16 @@ class CWProgressBar(extension.Extension, QDialog):
         self.pbar = QProgressBar()
         self.pbar.setGeometry(25, 40, 200, 25)
         mainLayout.addWidget(self.pbar)
+
+        self._stat_label = QLabel('')
+        mainLayout.addWidget(self._stat_label)
+        self._est_label = QLabel('')
+        mainLayout.addWidget(self._est_label)
+
         stopButton = QPushButton('Stop')
         stopButton.clicked.connect(self.finalize)
         mainLayout.addWidget(stopButton)
+
         self.setLayout(mainLayout)
 
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
@@ -46,7 +54,7 @@ class CWProgressBar(extension.Extension, QDialog):
                                 color: white;
                             }
                             QLabel {
-                                color: white;
+                                color: black;
                             }
         ''')
         self.show()
@@ -80,7 +88,7 @@ class CWProgressBar(extension.Extension, QDialog):
 
             self.pbar.setValue(epoch)
 
-            status = stat_template.format(trainer.updater)
+            self._stat_label.setText(stat_template.format(trainer.updater))
             # out.write(status)
 
             old_t, old_e, old_sec = recent_timing[0]
@@ -96,9 +104,9 @@ class CWProgressBar(extension.Extension, QDialog):
                 estimated_time = (length - iteration) / speed_t
             else:
                 estimated_time = (length - epoch) / speed_e
-            # out.write('{:10.5g} iters/sec. Estimated time to finish: {}.\n'
-            #           .format(speed_t,
-            #                   datetime.timedelta(seconds=estimated_time)))
+            self._est_label.setText('{:10.5g} iters/sec. Estimated time to finish: {}.\n'
+                                    .format(speed_t,
+                                    datetime.timedelta(seconds=estimated_time)))
 
             if len(recent_timing) > 100:
                 del recent_timing[0]
