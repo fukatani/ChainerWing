@@ -372,7 +372,7 @@ class Node(object, metaclass=MetaNode):
         self.loopLevel = max([self.loopLevel, loopLevel])
         self.inputs[input_name].set(value, override=override, loopLevel=loopLevel)
 
-    def check(self) -> bool:
+    def check(self):
         """
         Checks whether all prerequisites for executing the node instance are met.
         Override this to implement custom behavior.

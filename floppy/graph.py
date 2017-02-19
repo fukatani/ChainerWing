@@ -550,7 +550,6 @@ class Connection(object):
     Class representing a connection between nodes.
     Storing information about involved Inputs and Outputs.
     """
-
     def __init__(self, output_node, output_name, input_node, input_name):
         self.output_node = output_node
         self.output_name = output_name
