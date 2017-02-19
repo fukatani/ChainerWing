@@ -22,6 +22,4 @@ class Runner(object):
         del module
 
     def kill(self):
-        if self.is_running:
-            self.run_process.kill()
-        self.is_running = False
+        pass
