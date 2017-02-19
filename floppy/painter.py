@@ -116,7 +116,7 @@ class Painter2D(Painter):
             if con:
                 outNode = con.output_node
                 if not outNode in subgraph:
-                    relayInputs.add((inp, outNode, con.outputName))
+                    relayInputs.add((inp, outNode, con.output_name))
             else:
                 relayInputs.add((inp, None, None))
 
@@ -126,9 +126,9 @@ class Painter2D(Painter):
             cons = self.graph.getConnectionsOfOutput(out)
             if cons:
                 for con in cons:
-                    inpNode = con.inputNode
+                    inpNode = con.input_node
                     if not inpNode in subgraph:
-                        relayOutputs.add((out, inpNode, con.inputName))
+                        relayOutputs.add((out, inpNode, con.input_name))
                         break
             else:
                 relayOutputs.add((out, None, None))
@@ -292,20 +292,20 @@ class Painter2D(Painter):
         if event.button() == Qt.LeftButton and self.looseConnection and self.clickedPin:
             valid = True
             if ':I' in self.clickedPin:
-                inputNodeID, _, inputName = self.clickedPin.partition(':I')
+                input_nodeID, _, input_name = self.clickedPin.partition(':I')
                 try:
-                    output_nodeID, _, outputName = self.getOutputPinAt(event.pos()).partition(':O')
+                    output_nodeID, _, output_name = self.getOutputPinAt(event.pos()).partition(':O')
                 except AttributeError:
                     valid = False
             else:
-                output_nodeID, _, outputName = self.clickedPin.partition(':O')
+                output_nodeID, _, output_name = self.clickedPin.partition(':O')
                 try:
-                    inputNodeID, _, inputName = self.getInputPinAt(event.pos()).partition(':I')
+                    input_nodeID, _, input_name = self.getInputPinAt(event.pos()).partition(':I')
                 except AttributeError:
                     valid = False
             if valid:
                 try:
-                    self.graph.connect(output_nodeID, outputName, inputNodeID, inputName)
+                    self.graph.connect(output_nodeID, output_name, input_nodeID, input_name)
                 except TypeError:
                     error = QErrorMessage()
                     error.showMessage('Cannot connect pins of different type')
@@ -610,9 +610,9 @@ class Painter2D(Painter):
         for output_node, connList in self.graph.connections.items():
             for info in connList:
                 # print(info)
-                outputID = output_node.getOutputID(info.outputName)
-                inputID = info.inputNode.getInputID(info.inputName)
-                varType = output_node.getOutputInfo(info.outputName).varType
+                outputID = output_node.getOutputID(info.output_name)
+                inputID = info.input_node.getInputID(info.input_name)
+                varType = output_node.getOutputInfo(info.output_name).varType
                 start = self.pinPositions[outputID]
                 end = self.pinPositions[inputID]
                 try:
@@ -620,11 +620,11 @@ class Painter2D(Painter):
                 except KeyError:
                     color = QColor(*varType.color)
                 rotate = None
-                if issubclass(type(info.inputNode), ControlNode) and info.inputName == 'Control':
+                if issubclass(type(info.input_node), ControlNode) and info.input_name == 'Control':
                     rotate = 'input'
-                    if issubclass(type(info.output_node), ControlNode) and info.outputName == 'Final':
+                    if issubclass(type(info.output_node), ControlNode) and info.output_name == 'Final':
                         rotate = 'both'
-                elif issubclass(type(info.output_node), ControlNode) and info.outputName == 'Final':
+                elif issubclass(type(info.output_node), ControlNode) and info.output_name == 'Final':
                     rotate = 'output'
                 self.drawBezier(start, end, color, painter, rotate)
 

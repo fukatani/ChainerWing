@@ -341,24 +341,24 @@ class Node(object, metaclass=MetaNode):
         """
         for con in self.graph.getConnectionsFrom(self):
             self.buffered = False
-            outputName = con.outputName
-            nextNode = con.inputNode
-            nextInput = con.inputName
+            output_name = con.output_name
+            nextNode = con.input_node
+            nextInput = con.input_name
             # nextNode.prepare()
-            if self.outputs[outputName].valueSet:
-                nextNode.setInput(nextInput, self.outputs[outputName].value, override=True, loopLevel=self.loopLevel)
+            if self.outputs[output_name].valueSet:
+                nextNode.setInput(nextInput, self.outputs[output_name].value, override=True, loopLevel=self.loopLevel)
             else:
-                nextNode.setInput(nextInput, self.outputs[outputName].default, override=True, loopLevel=self.loopLevel)
+                nextNode.setInput(nextInput, self.outputs[output_name].default, override=True, loopLevel=self.loopLevel)
         if not self.graph.getConnectionsFrom(self):
             self.buffered = True
             for out in self.outputs.values():
                 self.outputBuffer[out.name] = out.value
         [Info.reset(inp, self.loopLevel) for inp in self.inputs.values()]
 
-    def setInput(self, inputName, value, override=False, loopLevel=False):
+    def setInput(self, input_name, value, override=False, loopLevel=False):
         """
         Sets the value of an input.
-        :param inputName: str representing the name of the input.
+        :param input_name: str representing the name of the input.
         :param value: object of the appropriate type for that input.
         :param override: boolean specifying whether the input should be overridden if it was set already.
         :param looped: boolean. Set to True if the input is set by a looped node. If True, the node becomes a looped
@@ -366,7 +366,7 @@ class Node(object, metaclass=MetaNode):
         :return: None
         """
         self.loopLevel = max([self.loopLevel, loopLevel])
-        self.inputs[inputName].set(value, override=override, loopLevel=loopLevel)
+        self.inputs[input_name].set(value, override=override, loopLevel=loopLevel)
 
     def check(self) -> bool:
         """
@@ -472,29 +472,29 @@ class Node(object, metaclass=MetaNode):
         else:
             return super(Node, self).__getattr__(item)
 
-    def getInputPin(self, inputName):
+    def getInputPin(self, input_name):
         """
         Returns a reference to the Pin instance associated with the input with the given name.
-        :param inputName: str; Name of the input.
+        :param input_name: str; Name of the input.
         :return: Pin instance
         :rtype: Pin
         """
-        return self.inputPins[inputName]
+        return self.inputPins[input_name]
 
-    def getOutputPin(self, outputName):
-        return self.outputPins[outputName]
+    def getOutputPin(self, output_name):
+        return self.outputPins[output_name]
 
-    def getInputInfo(self, inputName):
-        return self.inputs[inputName]
+    def getInputInfo(self, input_name):
+        return self.inputs[input_name]
 
-    def getOutputInfo(self, outputName):
-        return self.outputs[outputName]
+    def getOutputInfo(self, output_name):
+        return self.outputs[output_name]
 
-    def getInputID(self, inputName):
-        return '{}:I{}'.format(self.ID, inputName)
+    def getInputID(self, input_name):
+        return '{}:I{}'.format(self.ID, input_name)
 
-    def getOutputID(self, outputName):
-        return '{}:O{}'.format(self.ID, outputName)
+    def getOutputID(self, output_name):
+        return '{}:O{}'.format(self.ID, output_name)
 
     def getInputofType(self, varType):
         for inp in self.inputs.values():
@@ -516,15 +516,15 @@ class Node(object, metaclass=MetaNode):
         inputConns = self.get_input_connect_dict()
         outputConns = {out.name: self.graph.getConnectionsOfOutput(out) for out in self.outputs.values()}
         for key, conns in outputConns.items():
-            conns = [outputConn.inputNode.getInputID(outputConn.inputName) for outputConn in conns]
+            conns = [outputConn.input_node.getInputID(outputConn.input_name) for outputConn in conns]
             outputConns[key] = conns
         return {'class': self.__class__.__name__,
                 'position': self.__pos__,
-                'inputs': [(inputName, inp.varType.__name__, inp(True), inp.default)
-                           for inputName, inp in self.inputs.items()],
+                'inputs': [(input_name, inp.varType.__name__, inp(True), inp.default)
+                           for input_name, inp in self.inputs.items()],
                 'inputConnections': inputConns,
-                'outputs': [(outputName, out.varType.__name__, out.value, out.default)
-                            for outputName, out in self.outputs.items()],
+                'outputs': [(output_name, out.varType.__name__, out.value, out.default)
+                            for output_name, out in self.outputs.items()],
                 'outputConnections': outputConns,
                 'subgraph': self.subgraph}
 
@@ -538,8 +538,8 @@ class Node(object, metaclass=MetaNode):
     def get_input_connect_dict(self):
         input_connect_dict = {}
         for connect in self.get_input_connections():
-            input_connect_dict[connect.inputName] = connect.output_node.\
-                getOutputID(connect.outputName)
+            input_connect_dict[connect.input_name] = connect.output_node.\
+                getOutputID(connect.output_name)
         return input_connect_dict
 
     @classmethod
@@ -589,11 +589,11 @@ class ProxyNode(Node):
         self.__proxies__ = {}
         self.__ready__ = {inp: False for inp in self.inputs.keys()}
 
-    def setInput(self, inputName, value, override=False, loopLevel=False):
+    def setInput(self, input_name, value, override=False, loopLevel=False):
         self.loopLevel = max([self.loopLevel, loopLevel])
-        proxy = self.__proxies__[inputName]
-        proxy.setInput(inputName, value, override, loopLevel)
-        self.__ready__[inputName] = True
+        proxy = self.__proxies__[input_name]
+        proxy.setInput(input_name, value, override, loopLevel)
+        self.__ready__[input_name] = True
 
     def addProxyInput(self, name, output, input, varType):
         pass
@@ -694,10 +694,10 @@ class ForLoop(ControlNode):
         self.done = False
         self.loopLevel = 0
 
-    def setInput(self, inputName, value, override=False, loopLevel=0):
-        if inputName == 'Control':
+    def setInput(self, input_name, value, override=False, loopLevel=0):
+        if input_name == 'Control':
             loopLevel = self.loopLevel
-        super(ForLoop, self).setInput(inputName, value, override, loopLevel)
+        super(ForLoop, self).setInput(input_name, value, override, loopLevel)
 
     def check(self):
         if self.fresh:
@@ -731,20 +731,20 @@ class ForLoop(ControlNode):
                     continue
                 output = self.outputs[oName]
                 for con in self.graph.getConnectionsOfOutput(output):
-                    outputName = con.outputName
-                    nextNode = con.inputNode
-                    nextInput = con.inputName
+                    output_name = con.output_name
+                    nextNode = con.input_node
+                    nextInput = con.input_name
                     # nextNode.prepare()
-                    nextNode.setInput(nextInput, self.outputs[outputName].value, override=True, loopLevel=self.loopLevel+1)
+                    nextNode.setInput(nextInput, self.outputs[output_name].value, override=True, loopLevel=self.loopLevel+1)
             self.inputs['Control'].reset(force=True)
 
         else:
             output = self.outputs['Final']
             for con in self.graph.getConnectionsOfOutput(output):
-                outputName = con.outputName
-                nextNode = con.inputNode
-                nextInput = con.inputName
-                nextNode.setInput(nextInput, self.outputs[outputName].value, loopLevel=self.loopLevel)
+                output_name = con.output_name
+                nextNode = con.input_node
+                nextInput = con.input_name
+                nextNode.setInput(nextInput, self.outputs[output_name].value, loopLevel=self.loopLevel)
             # self.prepare()
             self.fresh = True
             for inp in self.inputs.values():
