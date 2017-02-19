@@ -1,4 +1,3 @@
-
 import chainer
 from chainer.functions import *
 from chainer.links import *
@@ -19,6 +18,7 @@ class MyNet1(chainer.Chain):
     def __call__(self, x, y):
         softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
         
+
 if __name__ == '__main__':
     model = MyNet1()
 

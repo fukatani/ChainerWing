@@ -241,8 +241,7 @@ class ProgramTemplate(DefaultTemplate):
 class NetTemplate(Template):
 
     def __call__(self, net_name, init_impl, call_impl):
-        return '''
-import chainer
+        return '''import chainer
 from chainer.functions import *
 from chainer.links import *
 from chainer.optimizers import *
@@ -266,6 +265,7 @@ class {net_name}(chainer.Chain):
 class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
+
 if __name__ == '__main__':
     model = {3}()
 
