@@ -258,7 +258,7 @@ class {net_name}(chainer.Chain):
         )
 
     def __call__(self, x, y):
-        {call_impl}
+        return {call_impl}
         '''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
 
 

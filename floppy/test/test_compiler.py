@@ -21,13 +21,13 @@ if __name__ == '__main__':
     graph = Graph(painter=painter)
     with open('../../examples/mnist.json', 'r') as fp:
         graph.load_from_json(fp.readline())
-        graph.execute()
+        graph.compile()
         TrainParamServer().from_json(fp.readline())
 
     assert filecmp.cmp('MyNet1.py', 'expect.txt')
-    assert TrainParamServer().__dict__ == {'Epoch': 20,
+    assert TrainParamServer().__dict__ == {'Epoch': 10,
                                            'NetName': 'MyNet1',
                                            'BatchSize': 20,
-                                           'GPU': 11,
+                                           'GPU': 0,
                                            'Optimizer': 'AdaDelta'}
 
