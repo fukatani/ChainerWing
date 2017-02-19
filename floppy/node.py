@@ -324,14 +324,12 @@ class Node(object, metaclass=MetaNode):
         self.locked = False
         self.graph.runningNodes.remove(self.ID)
 
-    def run(self) -> None:
+    def run(self):
         """
         Execute the node. Override this to implement logic.
         :rtype: None
         """
-        print('Executing node {}'.format(self))
-        # print('===============\nExecuting node {}'.format(self))
-        # print('{} is loopLevel ='.format(str(self)), self.loopLevel,'\n================')
+        raise NotImplementedError('This method should be override')
 
     def notify(self):
         """
