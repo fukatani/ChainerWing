@@ -161,7 +161,7 @@ class EpochEdit(AbstractTrainEdit):
 
 class GPUEdit(AbstractTrainEdit):
     def __init__(self, settings, parent):
-        super(GPUEdit, self).__init__(settings, parent, 11)
+        super(GPUEdit, self).__init__(settings, parent, -1)
 
 
 class OptimizerEdit(QLineEdit):

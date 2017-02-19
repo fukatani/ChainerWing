@@ -20,7 +20,7 @@ class MyNet1(chainer.Chain):
         softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
         
 if __name__ == '__main__':
-    model == MyNet1()
+    model = MyNet1()
 
     optimizer = AdaDelta()
     optimizer.setup(model)

@@ -267,7 +267,7 @@ class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
 if __name__ == '__main__':
-    model == {3}()
+    model = {3}()
 
     optimizer = {0}()
     optimizer.setup(model)
