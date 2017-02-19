@@ -826,8 +826,8 @@ class Link(Node):
 
     def __init__(self, nodeID, graph):
         super(Link, self).__init__(nodeID, graph)
-        self.link_id = self.link_cnt
-        self.link_cnt += 1
+        self.link_id = Link.link_cnt
+        Link.link_cnt += 1
 
     def call(self):
         return "self.l{0}(".format(self.link_id)

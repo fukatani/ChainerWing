@@ -10,11 +10,11 @@ class ExampleNet(chainer.Chain):
     def __init__(self):
         super(ExampleNet, self).__init__(
             l0=Linear(None, , nobias=True),
-            l0=Linear(None, 200, nobias=False),
+            l1=Linear(None, 200, nobias=False),
         )
 
     def __call__(self):
-        softmax_cross_entropy(relu(self.l0(relu(self.l0(x)))), y)
+        softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
         
 if __name__ == '__main__':
     optimizer = AdaDelta()
