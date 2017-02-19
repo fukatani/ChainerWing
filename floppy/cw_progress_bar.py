@@ -113,6 +113,6 @@ class CWProgressBar(extension.Extension, QDialog):
         QApplication.instance().processEvents()
 
     def finalize(self):
-        # delete the progress bar
+        # delete the progress bar and exit training
         super(CWProgressBar, self).close()
-        raise StopTraining
+        return
