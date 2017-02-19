@@ -304,6 +304,7 @@ def main():
     trainer.extend(extensions.PrintReport(
         ['epoch', 'main/loss', 'validation/main/loss',
          'main/accuracy', 'validation/main/accuracy', 'elapsed_time']))
+    trainer.extend(CWProgressBar())
     '''
         call_train += '''
     trainer.run()
