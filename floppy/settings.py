@@ -13,8 +13,6 @@ class SettingsDialog(QDialog):
                         ('Pin Size', PinSizeEdit(settings, self)),
                         ('Temporary File Settings', None),
                         ('Work File Directory', WorkFileDirEdit(settings, self)),
-                        ('Remote Interpreter Settings', None),
-                        ('Frame Rate', RGIFrameRateEdit(settings, self)),
                         ]
         super(SettingsDialog, self).__init__(*args)
         self.setStyleSheet('''SettingsDialog {
@@ -150,16 +148,3 @@ class WorkFileDirEdit(QPushButton):
     def openDialog(self):
         dirName = QFileDialog.getExistingDirectory(self, 'Temporary file storage', self.value)
         self.value = dirName
-
-
-class RGIFrameRateEdit(QLineEdit):
-    def __init__(self, settings, parent):
-        self.parent = parent
-        self.settings = settings
-        super(RGIFrameRateEdit, self).__init__()
-        v = settings.value('FrameRate', type=float)
-        v = v if v else .1
-        self.setText(str(v))
-
-    def commit(self):
-        self.settings.setValue('FrameRate', float(self.text()))
