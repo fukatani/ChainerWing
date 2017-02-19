@@ -243,15 +243,16 @@ class NetTemplate(Template):
     def __call__(self, net_name, init_impl, call_impl):
         return '''
 import chainer
-from chainer import functions
-from chainer import links
+from chainer.functions import *
+from chainer.links import *
+from chainer.optimizers import *
 
 
 class {net_name}(chainer.Chain):
 
     def __init__(self):
         super({net_name}, self).__init__(
-        {init_impl}
+{init_impl}
         )
 
     def __call__(self):
@@ -263,7 +264,7 @@ class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
 if __name__ == '__main__':
-    optimizer = {0}
+    optimizer = {0}()
     optimizer.setup(model)
 
     train, test = chainer.datasets.get_mnist()

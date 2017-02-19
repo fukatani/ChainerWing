@@ -1,22 +1,23 @@
 
 import chainer
-from chainer import functions
-from chainer import links
+from chainer.functions import *
+from chainer.links import *
+from chainer.optimizers import *
 
 
 class ExampleNet(chainer.Chain):
 
     def __init__(self):
         super(ExampleNet, self).__init__(
-                    l0=links.Linear(None, , nobias=)
-            l0=links.Linear(None, , nobias=)
+            l0=Linear(None, , nobias=True),
+            l0=Linear(None, 200, nobias=False),
         )
 
     def __call__(self):
         softmax_cross_entropy(relu(self.l0(relu(self.l0(x)))), y)
         
 if __name__ == '__main__':
-    optimizer = AdaDelta
+    optimizer = AdaDelta()
     optimizer.setup(model)
 
     train, test = chainer.datasets.get_mnist()
