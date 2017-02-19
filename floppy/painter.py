@@ -63,7 +63,7 @@ class Painter2D(Painter):
         self.pinPositions = {}
         self.drawItems = []
         self.drawItemsOfNode = {}
-        self.watchingItems = []
+        self.watchingItems = set()
         self.triggers = set()
         self.contextSensitive = False
         self.rightClickedNode = None
@@ -90,7 +90,7 @@ class Painter2D(Painter):
         self.pinPositions = {}
         self.drawItems = []
         self.drawItemsOfNode = {}
-        self.watchingItems = []
+        self.watchingItems = set()
         self.rightClickedNode = None
         self.lastReport = None
         self.contextSensitive = False
@@ -177,7 +177,7 @@ class Painter2D(Painter):
             self.relayTo = None
 
     def registerWatchingItem(self, item):
-        self.watchingItems.append(item)
+        self.watchingItems.add(item)
 
     def removeWatchingItem(self, item):
         self.watchingItems.remove(item)
@@ -230,11 +230,10 @@ class Painter2D(Painter):
                 self.drag = event.pos()
 
         if event.button() == Qt.LeftButton:
-
-            for item in self.watchingItems:
-                item.watchDown(event.pos())
-                item.collide(event.pos())
-                return
+            # for item in self.watchingItems:
+            #     item.watchDown(event.pos())
+            #     item.collide(event.pos())
+            #     return
 
             for drawItem in self.drawItems:
                 if issubclass(type(drawItem), Selector) or issubclass(type(drawItem), LineEdit):
