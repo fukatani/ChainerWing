@@ -16,7 +16,7 @@ class MyNet1(chainer.Chain):
         )
 
     def __call__(self, x, y):
-        softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
+        return softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
         
 
 if __name__ == '__main__':
@@ -34,13 +34,13 @@ if __name__ == '__main__':
 
     # Set up a trainer
     updater = training.StandardUpdater(train_iter, optimizer,
-                                       device=11)
+                                       device=0)
     
-    trainer = training.Trainer(updater, (20, 'epoch'))
+    trainer = training.Trainer(updater, (10, 'epoch'))
     
-    trainer.extend(extensions.Evaluator(test_iter, model, device=11))
+    trainer.extend(extensions.Evaluator(test_iter, model, device=0))
     
-    trainer.extend(extensions.snapshot(), trigger=(20, 'epoch'))
+    trainer.extend(extensions.snapshot(), trigger=(10, 'epoch'))
     
     trainer.extend(extensions.LogReport())
     trainer.extend(
