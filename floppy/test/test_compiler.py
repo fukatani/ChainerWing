@@ -24,8 +24,10 @@ if __name__ == '__main__':
         graph.execute()
         TrainParamServer().from_json(fp.readline())
 
-    assert filecmp.cmp('ExampleNet.py', 'expect.txt')
-    assert TrainParamServer().__dict__ == {'Optimizer': 'AdaDelta',
+    assert filecmp.cmp('TestNet.py', 'expect.txt')
+    assert TrainParamServer().__dict__ == {'Epoch': 20,
+                                           'NetName': 'TestNet',
                                            'BatchSize': 20,
                                            'GPU': 11,
-                                           'Epoch': 20}
+                                           'Optimizer': 'AdaDelta'}
+

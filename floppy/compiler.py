@@ -5,8 +5,7 @@ from floppy.train_configuration import TrainParamServer
 
 class Compiler(object):
     def __call__(self, nodes, **kwargs):
-        #TODO(fukatani)
-        net_name = 'ExampleNet'
+        net_name = TrainParamServer()['NetName']
         init_impl = self.compile_init(nodes)
         call_impl = self.compile_call(nodes)
         net_file = open(net_name + '.py', 'w')
@@ -14,7 +13,8 @@ class Compiler(object):
         train_dict = {'BatchSize': TrainParamServer()['BatchSize'],
                       'Epoch': TrainParamServer()['Epoch'],
                       'GPU': TrainParamServer()['GPU'],
-                      'Optimizer': TrainParamServer()['Optimizer']}
+                      'Optimizer': TrainParamServer()['Optimizer'],
+                      'net_name': net_name}
         net_file.write(TEMPLATES['TrainerTemplate']()(train_dict))
 
     def compile_init(self, nodes):

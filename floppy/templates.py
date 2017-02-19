@@ -267,6 +267,8 @@ class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
 if __name__ == '__main__':
+    model == {3}()
+
     optimizer = {0}()
     optimizer.setup(model)
 
@@ -280,7 +282,8 @@ if __name__ == '__main__':
     # Set up a trainer
     updater = training.StandardUpdater(train_iter, optimizer,
                                        device={2})
-    '''.format(kwargs['Optimizer'], kwargs['BatchSize'], kwargs['GPU']) + '''
+    '''.format(kwargs['Optimizer'], kwargs['BatchSize'],
+               kwargs['GPU'], kwargs['net_name']) + '''
     trainer = training.Trainer(updater, ({0}, 'epoch'))
     '''.format(kwargs['Epoch']) + '''
     trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
