@@ -1,4 +1,6 @@
-import subprocess
+import importlib
+import os
+import threading
 
 from floppy.train_configuration import TrainParamServer
 
@@ -10,8 +12,11 @@ class Runner(object):
 
     def run(self):
         self.is_running = True
-        net_file = TrainParamServer()['NetName'] + '.py'
-        self.run_process = subprocess.Popen(net_file)
+        #module_file = os.getcwd() + '/' + TrainParamServer()['NetName'] + '.py'
+        module_file = TrainParamServer()['NetName']
+        module = importlib.import_module(module_file)
+        module.main()
+        del module
 
     def kill(self):
         if self.is_running:

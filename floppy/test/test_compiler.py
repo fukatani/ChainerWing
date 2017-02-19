@@ -30,4 +30,3 @@ if __name__ == '__main__':
                                            'BatchSize': 20,
                                            'GPU': 0,
                                            'Optimizer': 'AdaDelta'}
-

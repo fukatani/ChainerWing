@@ -1060,7 +1060,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.drawer.repaint()
 
     def exe_runner(self):
-        self.graph.run()
+        self.drawer.graph.run()
 
     def gotoRunner(self):
         try:

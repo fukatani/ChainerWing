@@ -19,7 +19,7 @@ class MyNet1(chainer.Chain):
         return softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
         
 
-if __name__ == '__main__':
+def main():
     model = MyNet1()
 
     optimizer = AdaDelta()
@@ -49,4 +49,8 @@ if __name__ == '__main__':
                                file_name='loss.png'))
     
     trainer.run()
+
+
+if __name__ == '__main__':
+    main()
     

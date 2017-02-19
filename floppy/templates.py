@@ -266,7 +266,7 @@ class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
 
-if __name__ == '__main__':
+def main():
     model = {3}()
 
     optimizer = {0}()
@@ -307,5 +307,9 @@ if __name__ == '__main__':
     '''
         call_train += '''
     trainer.run()
+
+
+if __name__ == '__main__':
+    main()
     '''
         return call_train
