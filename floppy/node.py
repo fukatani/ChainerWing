@@ -340,13 +340,19 @@ class Node(object, metaclass=MetaNode):
         for con in self.graph.getConnectionsFrom(self):
             self.buffered = False
             output_name = con.output_name
-            nextNode = con.input_node
-            nextInput = con.input_name
-            # nextNode.prepare()
+            next_node = con.input_node
+            next_input = con.input_name
+            # next_node.prepare()
             if self.outputs[output_name].valueSet:
-                nextNode.setInput(nextInput, self.outputs[output_name].value, override=True, loopLevel=self.loopLevel)
+                next_node.setInput(next_input,
+                                   self.outputs[output_name].value,
+                                   override=True,
+                                   loopLevel=self.loopLevel)
             else:
-                nextNode.setInput(nextInput, self.outputs[output_name].default, override=True, loopLevel=self.loopLevel)
+                next_node.setInput(next_input,
+                                   self.outputs[output_name].default,
+                                   override=True,
+                                   loopLevel=self.loopLevel)
         if not self.graph.getConnectionsFrom(self):
             self.buffered = True
             for out in self.outputs.values():
