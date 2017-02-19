@@ -8,10 +8,10 @@ from chainer import training
 from chainer.training import extensions
 
 
-class TestNet(chainer.Chain):
+class MyNet1(chainer.Chain):
 
     def __init__(self):
-        super(TestNet, self).__init__(
+        super(MyNet1, self).__init__(
             l0=Linear(None, 300, nobias=True),
             l1=Linear(None, 200, nobias=False),
         )
@@ -20,7 +20,7 @@ class TestNet(chainer.Chain):
         softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
         
 if __name__ == '__main__':
-    model == TestNet()
+    model == MyNet1()
 
     optimizer = AdaDelta()
     optimizer.setup(model)

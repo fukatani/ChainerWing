@@ -24,9 +24,9 @@ if __name__ == '__main__':
         graph.execute()
         TrainParamServer().from_json(fp.readline())
 
-    assert filecmp.cmp('TestNet.py', 'expect.txt')
+    assert filecmp.cmp('MyNet1.py', 'expect.txt')
     assert TrainParamServer().__dict__ == {'Epoch': 20,
-                                           'NetName': 'TestNet',
+                                           'NetName': 'MyNet1',
                                            'BatchSize': 20,
                                            'GPU': 11,
                                            'Optimizer': 'AdaDelta'}
