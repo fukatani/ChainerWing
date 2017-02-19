@@ -341,9 +341,9 @@ class Node(object, metaclass=MetaNode):
         """
         for con in self.graph.getConnectionsFrom(self):
             self.buffered = False
-            outputName = con['outputName']
-            nextNode = con['inputNode']
-            nextInput = con['inputName']
+            outputName = con.outputName
+            nextNode = con.inputNode
+            nextInput = con.inputName
             # nextNode.prepare()
             if self.outputs[outputName].valueSet:
                 nextNode.setInput(nextInput, self.outputs[outputName].value, override=True, loopLevel=self.loopLevel)
@@ -367,7 +367,6 @@ class Node(object, metaclass=MetaNode):
         """
         self.loopLevel = max([self.loopLevel, loopLevel])
         self.inputs[inputName].set(value, override=override, loopLevel=loopLevel)
-        # print('%%%%%%%%%%%%%%%%', str(self), inputName, value)
 
     def check(self) -> bool:
         """
@@ -386,9 +385,7 @@ class Node(object, metaclass=MetaNode):
             if not inp.isAvailable():
                 if inp.optional and not inp.connected:
                     continue
-                # print('        {}: Prerequisites not met.'.format(str(self)))
                 return False
-        # print('        {}: ready.'.format(str(self)))
         return True
 
     def report(self):
@@ -519,7 +516,7 @@ class Node(object, metaclass=MetaNode):
         inputConns = self.get_input_connect_dict()
         outputConns = {out.name: self.graph.getConnectionsOfOutput(out) for out in self.outputs.values()}
         for key, conns in outputConns.items():
-            conns = [outputConn['inputNode'].getInputID(outputConn['inputName']) for outputConn in conns]
+            conns = [outputConn.inputNode.getInputID(outputConn.inputName) for outputConn in conns]
             outputConns[key] = conns
         return {'class': self.__class__.__name__,
                 'position': self.__pos__,
@@ -541,8 +538,8 @@ class Node(object, metaclass=MetaNode):
     def get_input_connect_dict(self):
         input_connect_dict = {}
         for connect in self.get_input_connections():
-            input_connect_dict[connect['inputName']] = connect['outputNode'].\
-                getOutputID(connect['outputName'])
+            input_connect_dict[connect.inputName] = connect.outputNode.\
+                getOutputID(connect.outputName)
         return input_connect_dict
 
     @classmethod
@@ -734,9 +731,9 @@ class ForLoop(ControlNode):
                     continue
                 output = self.outputs[oName]
                 for con in self.graph.getConnectionsOfOutput(output):
-                    outputName = con['outputName']
-                    nextNode = con['inputNode']
-                    nextInput = con['inputName']
+                    outputName = con.outputName
+                    nextNode = con.inputNode
+                    nextInput = con.inputName
                     # nextNode.prepare()
                     nextNode.setInput(nextInput, self.outputs[outputName].value, override=True, loopLevel=self.loopLevel+1)
             self.inputs['Control'].reset(force=True)
@@ -744,9 +741,9 @@ class ForLoop(ControlNode):
         else:
             output = self.outputs['Final']
             for con in self.graph.getConnectionsOfOutput(output):
-                outputName = con['outputName']
-                nextNode = con['inputNode']
-                nextInput = con['inputName']
+                outputName = con.outputName
+                nextNode = con.inputNode
+                nextInput = con.inputName
                 nextNode.setInput(nextInput, self.outputs[outputName].value, loopLevel=self.loopLevel)
             # self.prepare()
             self.fresh = True

@@ -610,9 +610,9 @@ class Painter2D(Painter):
         for outputNode, connList in self.graph.connections.items():
             for info in connList:
                 # print(info)
-                outputID = outputNode.getOutputID(info['outputName'])
-                inputID = info['inputNode'].getInputID(info['inputName'])
-                varType = outputNode.getOutputInfo(info['outputName']).varType
+                outputID = outputNode.getOutputID(info.outputName)
+                inputID = info.inputNode.getInputID(info.inputName)
+                varType = outputNode.getOutputInfo(info.outputName).varType
                 start = self.pinPositions[outputID]
                 end = self.pinPositions[inputID]
                 try:
@@ -620,11 +620,11 @@ class Painter2D(Painter):
                 except KeyError:
                     color = QColor(*varType.color)
                 rotate = None
-                if issubclass(type(info['inputNode']), ControlNode) and info['inputName'] == 'Control':
+                if issubclass(type(info.inputNode), ControlNode) and info.inputName == 'Control':
                     rotate = 'input'
-                    if issubclass(type(info['outputNode']), ControlNode) and info['outputName'] == 'Final':
+                    if issubclass(type(info.outputNode), ControlNode) and info.outputName == 'Final':
                         rotate = 'both'
-                elif issubclass(type(info['outputNode']), ControlNode) and info['outputName'] == 'Final':
+                elif issubclass(type(info.outputNode), ControlNode) and info.outputName == 'Final':
                     rotate = 'output'
                 self.drawBezier(start, end, color, painter, rotate)
 

@@ -202,9 +202,9 @@ class Graph(object):
         conn = Connection(outNode, out, inpNode, inp)
         if not issubclass(type(inpNode), ControlNode) or not inp == 'Control':
             for oldCon in self.reverseConnections[inpNode]:
-                if oldCon['inputName'] == inp:
+                if oldCon.inputName == inp:
                     self.reverseConnections[inpNode].remove(oldCon)
-                    self.connections[oldCon['outputNode']].remove(oldCon)
+                    self.connections[oldCon.outputNode].remove(oldCon)
                     break
         inpInfo.setConnected(True)
         self.connections[outNode].add(conn)
@@ -235,7 +235,7 @@ class Graph(object):
         :return: Connection instance.
         """
         for con in self.getConnectionsTo(self.nodes[int(inp.ID.partition(':')[0])]):
-            if con['inputName'] == inp.name:
+            if con.inputName == inp.name:
                 return con
 
     def getConnectionsOfOutput(self, output):
@@ -245,7 +245,7 @@ class Graph(object):
         :return: list of Connection instances.
         """
         node = self.nodes[int(output.ID.partition(':')[0])]
-        return [con for con in self.getConnectionsFrom(node) if con['outputName'] == output.name]
+        return [con for con in self.getConnectionsFrom(node) if con.outputName == output.name]
 
 
     def update(self):
@@ -556,10 +556,6 @@ class Connection(object):
         self.outputName = out_name
         self.inputNode = input_node
         self.inputName = input_name
-
-    def __hash__(self):
-        return hash(''.join([str(i) for i in (
-        self.outputNode, self.outputName, self.inputNode, self.inputName)]))
 
     def __getitem__(self, item):
         return self.__getattribute__(item)

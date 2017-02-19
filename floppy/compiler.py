@@ -38,6 +38,6 @@ class Compiler(object):
     def compile_node(self, cursor, nodes, decode=[]):
         decode.append(cursor)
         for connect in cursor.get_input_connections():
-            if 'in_array' in connect['inputName']:
+            if 'in_array' in connect.inputName:
                 return self.compile_node(connect.outputNode, nodes, decode)
         return decode
