@@ -29,7 +29,7 @@ class TrainParamServer(object):
             del cls.__dict__[key]
 
     def save(cls, fp):
-        train_state = json.dumps(cls.__dict__)
+        train_state = json.dumps(cls.__dict__, sort_keys=True)
         fp.write(train_state)
 
     def from_json(cls, line):

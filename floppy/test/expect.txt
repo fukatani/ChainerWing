@@ -16,7 +16,7 @@ class ExampleNet(chainer.Chain):
             l1=Linear(None, 200, nobias=False),
         )
 
-    def __call__(self):
+    def __call__(self, x, y):
         softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
         
 if __name__ == '__main__':

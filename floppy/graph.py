@@ -298,9 +298,10 @@ class Graph(object):
         if subgraph:
             return json.dumps(
                 [(node.ID, node.save()) for node in self.nodes.values() if
-                 node.subgraph == subgraph])
+                 node.subgraph == subgraph], sort_keys=True)
         return json.dumps(
-            [(node.ID, node.save()) for node in self.nodes.values()])
+            [(node.ID, node.save()) for node in self.nodes.values()],
+            sort_keys=True)
 
     def killRunner(self):
         """
