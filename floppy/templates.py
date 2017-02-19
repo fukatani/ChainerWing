@@ -241,13 +241,14 @@ class ProgramTemplate(DefaultTemplate):
 class NetTemplate(Template):
 
     def __call__(self, net_name, init_impl, call_impl):
-        return '''import chainer
+        rtn = '''import chainer
 from chainer.functions import *
 from chainer.links import *
 from chainer.optimizers import *
 
 from chainer import training
 from chainer.training import extensions
+from chainer import reporter
 
 from floppy.cw_progress_bar import CWProgressBar
 
@@ -260,15 +261,19 @@ class {net_name}(chainer.Chain):
         )
 
     def __call__(self, x, y):
-        return {call_impl}
-        '''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
+        self.loss = {call_impl}
+'''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
+        rtn += "        reporter.report({'loss': self.loss}, self)\n"
+        rtn += "        return self.loss"
+        return rtn
 
 
 class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
 
-def main():
+
+def main(call_by_gui=False):
     model = {3}()
 
     optimizer = {0}()
@@ -308,11 +313,14 @@ def main():
          'main/accuracy', 'validation/main/accuracy', 'elapsed_time']))
     '''
         call_train += '''
-    trainer.extend(CWProgressBar())
+    if call_by_gui:
+        trainer.extend(CWProgressBar())
+    else:
+        trainer.extend(extensions.ProgressBar())
     trainer.run()
 
 
 if __name__ == '__main__':
-    main()
+    main(False)
     '''
         return call_train

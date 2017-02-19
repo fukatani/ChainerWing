@@ -5,6 +5,7 @@ from chainer.optimizers import *
 
 from chainer import training
 from chainer.training import extensions
+from chainer import reporter
 
 from floppy.cw_progress_bar import CWProgressBar
 
@@ -18,10 +19,11 @@ class MyNet1(chainer.Chain):
         )
 
     def __call__(self, x, y):
-        return softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
-        
+        self.loss = softmax_cross_entropy(relu(self.l0(relu(self.l1(x)))), y)
+        reporter.report({'loss': self.loss}, self)
+        return self.loss
 
-def main():
+def main(call_by_gui=False):
     model = MyNet1()
 
     optimizer = AdaDelta()
@@ -50,10 +52,13 @@ def main():
                                'epoch',
                                file_name='loss.png'))
     
-    trainer.extend(CWProgressBar())
+    if call_by_gui:
+        trainer.extend(CWProgressBar())
+    else:
+        trainer.extend(extensions.ProgressBar())
     trainer.run()
 
 
 if __name__ == '__main__':
-    main()
+    main(False)
     

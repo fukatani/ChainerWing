@@ -18,7 +18,7 @@ class Runner(object):
         #module_file = os.getcwd() + '/' + TrainParamServer()['NetName'] + '.py'
         module_file = TrainParamServer()['NetName']
         module = importlib.import_module(module_file)
-        module.main()
+        module.main(True)
         del module
 
     def kill(self):
