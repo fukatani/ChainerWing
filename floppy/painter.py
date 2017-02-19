@@ -432,7 +432,6 @@ class Painter2D(Painter):
         #painter.translate(self.width()/2., self.height()/2.)
         painter.setRenderHint(QPainter.HighQualityAntialiasing)
         # painter.drawEllipse(QPoint(0,0),5,5)
-        history, last = self.graph.getExecutionHistory()
         report = self.graph.getReport()
         if report and not report == self.lastReport:
             self.reportWidget.updateReport(report)
@@ -453,21 +452,7 @@ class Painter2D(Painter):
             else:
                 painter.setBrush(QColor(55, 55, 55))
             if self.clickedNode == node or node in self.groupSelection:
-                # pen.setColor(Qt.green)
                 painter.setBrush(QColor(75, 75, 75))
-            if node.ID in history:
-                # if node.ID in history:
-                #     pen.setColor(QColor(175,175,175))
-                # else:
-                #     pen.setColor(QColor(125, 125, 125))
-                if node.ID == last[0]:
-                    pen.setColor(Qt.white)
-                else:
-                    dT = history[node.ID]
-                    c = int(17*(15-dT))
-                    pen.setColor(QColor(0, c, c))
-            else:
-                pen.setColor(Qt.black)
 
             font = QFont('Helvetica', 12)
             painter.setFont(font)

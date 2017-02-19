@@ -24,7 +24,6 @@ class Graph(object):
         self.slave = False
         self._requestUpdate = False
         self._requestReport = ''
-        self.executedBuffer = []
         self.currentReport = ''
         self.runningNodes = []
         self.statusLock = None
@@ -74,15 +73,11 @@ class Graph(object):
         :return:
         """
         if self.connected:
-            # IDs = self.requestRemoteStatus()
-            # status = self.requestRemoteStatus()
-            self.requestRemoteStatus()
             status = self.status
             if status:
                 IDs = status['STATUS']['ran']
                 self.currentReport = status['REPORT']
                 if IDs:
-                    self.executedBuffer += IDs
                     return True
         if self._requestUpdate:
             self._requestUpdate = False
@@ -265,20 +260,6 @@ class Graph(object):
             self.painter.update()
         except AttributeError:
             pass
-
-    def getExecutionHistory(self):
-        """
-        Returns the current execution history: a list of nodeIDs in the order they were executed in.
-        :return: list of nodIDs.
-        """
-        # self.statusLock.acquire()
-        tT = time.time()
-        history = {i: tT-t for i, t in self.executedBuffer if tT - t < 15}
-        self.executedBuffer = [(i, t) for i, t in self.executedBuffer if tT - t < 15]
-        if history:
-            self.requestUpdate()
-        # self.statusLock.release()
-        return history, self.executedBuffer[-1] if self.executedBuffer else ('','')
 
     def execute(self):
         """
@@ -566,14 +547,15 @@ class Graph(object):
 
 class Connection(object):
     """
-    Class representing a connection and storing information about involved Inputs and Outputs.
+    Class representing a connection between nodes.
+    Storing information about involved Inputs and Outputs.
     """
 
-    def __init__(self, outNode, outName, inpNode, inpName):
-        self.outputNode = outNode
-        self.outputName = outName
-        self.inputNode = inpNode
-        self.inputName = inpName
+    def __init__(self, out_node, out_name, input_node, input_name):
+        self.outputNode = out_node
+        self.outputName = out_name
+        self.inputNode = input_node
+        self.inputName = input_name
 
     def __hash__(self):
         return hash(''.join([str(i) for i in (
