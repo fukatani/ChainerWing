@@ -2,6 +2,7 @@ import json
 import time
 from collections import OrderedDict
 from floppy import compiler
+from floppy import runner
 from floppy.node import ControlNode, Node, MetaNode
 from floppy.node import NODECLASSES
 
@@ -32,7 +33,7 @@ class Graph(object):
         self.nodes = {}
         self.STOREDVALUES = {}
         self.connections = {}
-        self.runner = None
+        self.runner = runner.Runner()
         self.status = None
         self.reverseConnections = {}
         # self.statusLock = Lock()
@@ -261,21 +262,15 @@ class Graph(object):
         except AttributeError:
             pass
 
-    def execute(self):
+    def compile(self):
         """
-        Execute the Graph instance.
-
-        First, the execution loop will set itself up to terminate after the first iteration.
-        Next, every node is given the chance to run if all prerequisites are met.
-        If a node is executed, the loop termination criterion will be reset to allow an additional iteration over all
-        nodes.
-        If no node is execute during one iteration, the termination criterion will not be reset and the execution loop
-        terminates.
+        Compile the Graph as chainer code.
         :return:
         """
-        # TODO(fukatani): compile and run
-        # TODO(fukatani): subgraph
         compiler.Compiler()(self.nodes)
+
+    def run(self):
+        self.runner.run()
 
     def print(self, message):
         print(message)
@@ -308,7 +303,7 @@ class Graph(object):
         Send KILL command to the graph interpreter telling it to terminate itself.
         :return:
         """
-        pass
+        self.runner.kill()
 
     def load_from_json(self, line, callback=None):
         """

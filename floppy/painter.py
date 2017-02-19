@@ -770,7 +770,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if args.test:
             logger.info('Performing test.')
             self.loadGraph(override=args.test[0])
-            self.runCode()
+            self.compile_and_exe()
 
     def initActions(self):
         self.exitAction = QAction(QIcon(os.path.join(self.iconRoot, 'quit.png')), 'Quit', self)
@@ -783,11 +783,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.newAction.setStatusTip('New Graph')
         self.newAction.triggered.connect(self.new)
 
-        self.runAction = QAction(QIcon(os.path.join(self.iconRoot, 'run.png')), 'Run', self)
-        self.runAction.setShortcut('Ctrl+R')
-        self.runAction.triggered.connect(self.runCode)
-        self.runAction.setIconVisibleInMenu(True)
-        self.addAction(self.runAction)
+        self.compile_and_exe_action = QAction(QIcon(os.path.join(self.iconRoot, 'run.png')), 'Compile and Run', self)
+        self.compile_and_exe_action.setShortcut('Ctrl+R')
+        self.compile_and_exe_action.triggered.connect(self.compile_and_exe)
+        self.compile_and_exe_action.setIconVisibleInMenu(True)
+        self.addAction(self.compile_and_exe_action)
         
         self.loadAction = QAction(QIcon(os.path.join(self.iconRoot, 'load.png')), 'load', self)
         self.loadAction.setShortcut('Ctrl+O')
@@ -813,17 +813,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pauseRunnerAction.setIconVisibleInMenu(True)
         self.addAction(self.pauseRunnerAction)
         
-        self.unpauseRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'unpause.png')), 'Unpause', self)
-        self.unpauseRunnerAction.setShortcut('Ctrl+L')
-        self.unpauseRunnerAction.triggered.connect(self.unpauseRunner)
-        self.unpauseRunnerAction.setIconVisibleInMenu(True)
-        self.addAction(self.unpauseRunnerAction)
+        self.compile_action = QAction(QIcon(os.path.join(self.iconRoot, 'unpause.png')), 'Compile', self)
+        self.compile_action.setShortcut('Ctrl+L')
+        self.compile_action.triggered.connect(self.compile_runner)
+        self.compile_action.setIconVisibleInMenu(True)
+        self.addAction(self.compile_action)
         
-        self.stepRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'step.png')), 'Step', self)
-        self.stepRunnerAction.setShortcut('Ctrl+K')
-        self.stepRunnerAction.triggered.connect(self.stepRunner)
-        self.stepRunnerAction.setIconVisibleInMenu(True)
-        self.addAction(self.stepRunnerAction)
+        self.exe_action = QAction(QIcon(os.path.join(self.iconRoot, 'step.png')), 'Run', self)
+        self.exe_action.setShortcut('Ctrl+K')
+        self.exe_action.triggered.connect(self.exe_runner)
+        self.exe_action.setIconVisibleInMenu(True)
+        self.addAction(self.exe_action)
         
         self.gotoRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'goto.png')), 'GoTo', self)
         self.gotoRunnerAction.setShortcut('Ctrl+F')
@@ -895,7 +895,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         fileMenu = self.menuBar.addMenu('&File')
         fileMenu.addAction(self.exitAction)
         fileMenu.addAction(self.newAction)
-        fileMenu.addAction(self.runAction)
+        fileMenu.addAction(self.compile_and_exe_action)
 
         advancedMenu = self.menuBar.addMenu('&Advanced')
         advancedMenu.addAction(self.connectAction)
@@ -910,11 +910,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.mainToolBar.addAction(self.saveAction)
         self.mainToolBar.addAction(self.loadAction)
         self.mainToolBar.addSeparator()
-        self.mainToolBar.addAction(self.runAction)
+        self.mainToolBar.addAction(self.compile_and_exe_action)
         self.mainToolBar.addSeparator()
         self.mainToolBar.addAction(self.pauseRunnerAction)
-        self.mainToolBar.addAction(self.unpauseRunnerAction)
-        self.mainToolBar.addAction(self.stepRunnerAction)
+        self.mainToolBar.addAction(self.compile_action)
+        self.mainToolBar.addAction(self.exe_action)
         self.mainToolBar.addAction(self.gotoRunnerAction)
         self.mainToolBar.addSeparator()
         self.mainToolBar.addAction(self.spawnRunnerAction)
@@ -1059,11 +1059,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.drawer.unregisterNode(node)
             self.drawer.repaint()
 
-    def stepRunner(self):
-        try:
-            self.drawer.graph.stepRunner()
-        except AttributeError:
-            self.statusBar.showMessage('Cannot Execute Graph Step. No Interpreter Available.', 2000)
+    def exe_runner(self):
+        self.graph.run()
 
     def gotoRunner(self):
         try:
@@ -1083,11 +1080,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         except AttributeError:
             self.statusBar.showMessage('Cannot Pause Interpreter. No Interpreter Available.', 2000)
 
-    def unpauseRunner(self):
-        try:
-            self.drawer.graph.unpauseRunner()
-        except AttributeError:
-            self.statusBar.showMessage('Cannot Unpause Interpreter. No Interpreter Available.', 2000)
+    def compile_runner(self):
+        self.drawer.graph.compile()
+        self.statusBar.showMessage('Code execution started.', 2000)
 
     def spawnRunner(self):
         logger.debug('Spawning new Runner.')
@@ -1095,9 +1090,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.drawer.graph.spawnAndConnect(self.settings.value('LOCALPORT'))
         logger.debug('Connected to Runner.')
 
-    def runCode(self, *args):
-        self.drawer.graph.execute()
-        self.statusBar.showMessage('Code execution started.', 2000)
+    def compile_and_exe(self, *args):
+        self.compile_runner()
+        self.exe_runner()
 
     def loadGraph(self, *args, override=False):
         if not override:
