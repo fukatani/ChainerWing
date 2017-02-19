@@ -247,6 +247,9 @@ from chainer.functions import *
 from chainer.links import *
 from chainer.optimizers import *
 
+from chainer import training
+from chainer.training import extensions
+
 
 class {net_name}(chainer.Chain):
 
@@ -255,7 +258,7 @@ class {net_name}(chainer.Chain):
 {init_impl}
         )
 
-    def __call__(self):
+    def __call__(self, x, y):
         {call_impl}
         '''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
 

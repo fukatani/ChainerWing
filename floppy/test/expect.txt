@@ -4,12 +4,15 @@ from chainer.functions import *
 from chainer.links import *
 from chainer.optimizers import *
 
+from chainer import training
+from chainer.training import extensions
+
 
 class ExampleNet(chainer.Chain):
 
     def __init__(self):
         super(ExampleNet, self).__init__(
-            l0=Linear(None, , nobias=True),
+            l0=Linear(None, 300, nobias=True),
             l1=Linear(None, 200, nobias=False),
         )
 
