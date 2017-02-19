@@ -556,6 +556,3 @@ class Connection(object):
         self.output_name = output_name
         self.input_node = input_node
         self.input_name = input_name
-
-    def __getitem__(self, item):
-        return self.__getattribute__(item)
