@@ -443,8 +443,6 @@ class Painter2D(Painter):
         for j, node in enumerate(self.nodes):
             if not self.selectedSubgraph[0] == node.subgraph:
                 continue
-            j *= 3
-            j += 1
             pen = QPen()
             pen.setWidth(2)
             if hasattr(node, 'color'):
@@ -508,15 +506,12 @@ class Painter2D(Painter):
                     else:
                         painter.drawEllipse(x-halfPinSize, y+drawOffset+PINSIZE, PINSIZE, PINSIZE)
                     point = QPoint(x, y+drawOffset+4+PINSIZE) * painter.transform()
-                # self.pinPositions.append((point, i+j))
                 self.inputPinPositions.append((point, inputPin.ID))
-                # drawOffset += 16
                 drawOffset += (8 + PINSIZE)
                 drawItem.update(x, y+drawOffset+8, w, h, painter.transform())
                 if self.graph.getConnectionOfInput(inputPin):
                     text = inputPin.name
                     drawItem.draw(painter, asLabel=text)
-                    # self.drawLabel(x, y+drawOffset+8, w, h, text, painter, Qt.AlignLeft)
                 else:
                     item = drawItem.draw(painter)
                     if item:
@@ -663,7 +658,6 @@ class Painter2D(Painter):
             p32 = end.y()
         path.cubicTo(p21, p22, p31, p32, end.x(), end.y())
         painter.drawPath(path)
-
 
     def registerNode(self, node, position, silent=False):
         if not silent:

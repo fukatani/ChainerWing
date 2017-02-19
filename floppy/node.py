@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from copy import copy
-from floppy.floppy_types import Type, MetaType
 
 from PyQt5.QtGui import QColor
 
@@ -68,7 +67,7 @@ class Info(object):
         self.owner = owner
 
     def setDefault(self, value):
-        if not self.varType == object and not issubclass(self.varType, Type):
+        if not self.varType == object:
             try:
                 self.default = self.varType(value)
             except ValueError:
@@ -101,14 +100,9 @@ class InputInfo(Info):
     def __call__(self, noException=False):
         if self.valueSet:
             if not self.varType == object:
-                if isinstance(self.varType, MetaType):
-                    if self.list:
-                        return [self.varType.checkType(i) for i in self.value]
-                    return self.varType.checkType(self.value)
-                else:
-                    if self.list:
-                        return [self.varType(i) for i in self.value]
-                    return self.varType(self.value)
+                if self.list:
+                    return [self.varType(i) for i in self.value]
+                return self.varType(self.value)
             else:
                 return self.value
         elif self.default != None and not self.connected:
