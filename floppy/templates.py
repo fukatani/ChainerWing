@@ -249,6 +249,8 @@ from chainer.optimizers import *
 from chainer import training
 from chainer.training import extensions
 
+from floppy.cw_progress_bar import CWProgressBar
+
 
 class {net_name}(chainer.Chain):
 
@@ -304,9 +306,9 @@ def main():
     trainer.extend(extensions.PrintReport(
         ['epoch', 'main/loss', 'validation/main/loss',
          'main/accuracy', 'validation/main/accuracy', 'elapsed_time']))
-    trainer.extend(CWProgressBar())
     '''
         call_train += '''
+    trainer.extend(CWProgressBar())
     trainer.run()
 
 

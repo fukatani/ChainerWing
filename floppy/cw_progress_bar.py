@@ -15,8 +15,7 @@ from PyQt5.QtWidgets import QPushButton
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import Qt
 
-
-class StopTraining(Exception): pass
+from floppy.runner import StopTraining
 
 
 class CWProgressBar(extension.Extension, QDialog):
@@ -33,12 +32,23 @@ class CWProgressBar(extension.Extension, QDialog):
         self.pbar = QProgressBar()
         self.pbar.setGeometry(25, 40, 200, 25)
         mainLayout.addWidget(self.pbar)
-        #stopButton = QPushButton('Stop')
-        #stopButton.clicked.connect(self.finalize)
-        #mainLayout.addWidget(stopButton)
+        stopButton = QPushButton('Stop')
+        stopButton.clicked.connect(self.finalize)
+        mainLayout.addWidget(stopButton)
         self.setLayout(mainLayout)
 
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
+        self.setStyleSheet('''SettingsDialog {
+                                background: rgb(75,75,75);
+                            }
+                            QPushButton {
+                                background-color: rgb(205,85,85);
+                                color: white;
+                            }
+                            QLabel {
+                                color: white;
+                            }
+        ''')
         self.show()
         self.raise_()
 
@@ -94,7 +104,7 @@ class CWProgressBar(extension.Extension, QDialog):
                 del recent_timing[0]
         QApplication.instance().processEvents()
 
-    # def finalize(self):
-    #     # delete the progress bar
-    #     super(CWProgressBar, self).close()
-    #     raise StopTraining
+    def finalize(self):
+        # delete the progress bar
+        super(CWProgressBar, self).close()
+        raise StopTraining

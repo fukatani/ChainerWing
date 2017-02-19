@@ -6,6 +6,8 @@ from chainer.optimizers import *
 from chainer import training
 from chainer.training import extensions
 
+from floppy.cw_progress_bar import CWProgressBar
+
 
 class MyNet1(chainer.Chain):
 
@@ -48,6 +50,7 @@ def main():
                                'epoch',
                                file_name='loss.png'))
     
+    trainer.extend(CWProgressBar())
     trainer.run()
 
 

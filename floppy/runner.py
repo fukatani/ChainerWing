@@ -4,6 +4,9 @@ import threading
 
 from floppy.train_configuration import TrainParamServer
 
+class StopTraining(Exception): pass
+
+
 #TODO(fukatani): implement all
 class Runner(object):
     def __init__(self):
@@ -15,7 +18,10 @@ class Runner(object):
         #module_file = os.getcwd() + '/' + TrainParamServer()['NetName'] + '.py'
         module_file = TrainParamServer()['NetName']
         module = importlib.import_module(module_file)
-        module.main()
+        try:
+            module.main()
+        except StopTraining:
+            pass
         del module
 
     def kill(self):
