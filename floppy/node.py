@@ -538,7 +538,7 @@ class Node(object, metaclass=MetaNode):
     def get_input_connect_dict(self):
         input_connect_dict = {}
         for connect in self.get_input_connections():
-            input_connect_dict[connect.inputName] = connect.outputNode.\
+            input_connect_dict[connect.inputName] = connect.output_node.\
                 getOutputID(connect.outputName)
         return input_connect_dict
 

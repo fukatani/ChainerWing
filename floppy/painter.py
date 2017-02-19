@@ -114,7 +114,7 @@ class Painter2D(Painter):
                 continue
             con = self.graph.getConnectionOfInput(inp)
             if con:
-                outNode = con.outputNode
+                outNode = con.output_node
                 if not outNode in subgraph:
                     relayInputs.add((inp, outNode, con.outputName))
             else:
@@ -294,18 +294,18 @@ class Painter2D(Painter):
             if ':I' in self.clickedPin:
                 inputNodeID, _, inputName = self.clickedPin.partition(':I')
                 try:
-                    outputNodeID, _, outputName = self.getOutputPinAt(event.pos()).partition(':O')
+                    output_nodeID, _, outputName = self.getOutputPinAt(event.pos()).partition(':O')
                 except AttributeError:
                     valid = False
             else:
-                outputNodeID, _, outputName = self.clickedPin.partition(':O')
+                output_nodeID, _, outputName = self.clickedPin.partition(':O')
                 try:
                     inputNodeID, _, inputName = self.getInputPinAt(event.pos()).partition(':I')
                 except AttributeError:
                     valid = False
             if valid:
                 try:
-                    self.graph.connect(outputNodeID, outputName, inputNodeID, inputName)
+                    self.graph.connect(output_nodeID, outputName, inputNodeID, inputName)
                 except TypeError:
                     error = QErrorMessage()
                     error.showMessage('Cannot connect pins of different type')
@@ -607,12 +607,12 @@ class Painter2D(Painter):
                 end = self.looseConnection
             self.drawBezier(start, end, Qt.white, painter)
 
-        for outputNode, connList in self.graph.connections.items():
+        for output_node, connList in self.graph.connections.items():
             for info in connList:
                 # print(info)
-                outputID = outputNode.getOutputID(info.outputName)
+                outputID = output_node.getOutputID(info.outputName)
                 inputID = info.inputNode.getInputID(info.inputName)
-                varType = outputNode.getOutputInfo(info.outputName).varType
+                varType = output_node.getOutputInfo(info.outputName).varType
                 start = self.pinPositions[outputID]
                 end = self.pinPositions[inputID]
                 try:
@@ -622,9 +622,9 @@ class Painter2D(Painter):
                 rotate = None
                 if issubclass(type(info.inputNode), ControlNode) and info.inputName == 'Control':
                     rotate = 'input'
-                    if issubclass(type(info.outputNode), ControlNode) and info.outputName == 'Final':
+                    if issubclass(type(info.output_node), ControlNode) and info.outputName == 'Final':
                         rotate = 'both'
-                elif issubclass(type(info.outputNode), ControlNode) and info.outputName == 'Final':
+                elif issubclass(type(info.output_node), ControlNode) and info.outputName == 'Final':
                     rotate = 'output'
                 self.drawBezier(start, end, color, painter, rotate)
 

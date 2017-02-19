@@ -204,7 +204,7 @@ class Graph(object):
             for oldCon in self.reverseConnections[inpNode]:
                 if oldCon.inputName == inp:
                     self.reverseConnections[inpNode].remove(oldCon)
-                    self.connections[oldCon.outputNode].remove(oldCon)
+                    self.connections[oldCon.output_node].remove(oldCon)
                     break
         inpInfo.setConnected(True)
         self.connections[outNode].add(conn)
@@ -361,12 +361,12 @@ class Graph(object):
             for inputName, outputID in nodeData['inputConnections'].items():
                 if inputName == 'Control':
                     continue
-                outputNode, outputName = outputID.split(':O')
+                output_node, outputName = outputID.split(':O')
                 try:
-                    outputNode = idMap[int(outputNode)]
-                # print(id, nodeData['inputConnections'], outputNode, outputName)
+                    output_node = idMap[int(output_node)]
+                # print(id, nodeData['inputConnections'], output_node, outputName)
 
-                    self.connect(str(outputNode), outputName, str(idMap[id]), inputName)
+                    self.connect(str(output_node), outputName, str(idMap[id]), inputName)
                 except KeyError:
                     print('Warning: Could not create connection due to missing node.')
 
@@ -377,7 +377,7 @@ class Graph(object):
                     inputNode, inputName = inputID.split(':I')
                     try:
                         inputNode = idMap[int(inputNode)]
-                    # print(id, nodeData['inputConnections'], outputNode, outputName)
+                    # print(id, nodeData['inputConnections'], output_node, outputName)
                         self.connect(str(idMap[id]), outputName, str(inputNode), inputName)
                     except KeyError:
                         print('Warning: Could not create connection due to missing node.')
@@ -418,10 +418,10 @@ class Graph(object):
             for inputName, outputID in nodeData['inputConnections'].items():
                 if inputName == 'Control':
                     continue
-                outputNode, outputName = outputID.split(':O')
-                outputNode = idMap[int(outputNode)]
-                # print(id, nodeData['inputConnections'], outputNode, outputName)
-                self.connect(str(outputNode), outputName, str(idMap[id]), inputName)
+                output_node, outputName = outputID.split(':O')
+                output_node = idMap[int(output_node)]
+                # print(id, nodeData['inputConnections'], output_node, outputName)
+                self.connect(str(output_node), outputName, str(idMap[id]), inputName)
 
             for outputName, inputIDs in nodeData['outputConnections'].items():
                 for inputID in inputIDs:
@@ -429,7 +429,7 @@ class Graph(object):
                         continue
                     inputNode, inputName = inputID.split(':I')
                     inputNode = idMap[int(inputNode)]
-                    # print(id, nodeData['inputConnections'], outputNode, outputName)
+                    # print(id, nodeData['inputConnections'], output_node, outputName)
                     self.connect(str(idMap[id]), outputName, str(inputNode), inputName)
         for nodeID in removeNodes:
             self.deleteNode(self.nodes[nodeID])
@@ -458,10 +458,10 @@ class Graph(object):
             for inputName, outputID in nodeData['inputConnections'].items():
                 if inputName == 'Control':
                     continue
-                outputNode, outputName = outputID.split(':O')
-                outputNode = idMap[int(outputNode)]
-                # print(id, nodeData['inputConnections'], outputNode, outputName)
-                self.connect(str(outputNode), outputName, str(idMap[id]), inputName)
+                output_node, outputName = outputID.split(':O')
+                output_node = idMap[int(output_node)]
+                # print(id, nodeData['inputConnections'], output_node, outputName)
+                self.connect(str(output_node), outputName, str(idMap[id]), inputName)
 
             for outputName, inputIDs in nodeData['outputConnections'].items():
                 for inputID in inputIDs:
@@ -469,7 +469,7 @@ class Graph(object):
                         continue
                     inputNode, inputName = inputID.split(':I')
                     inputNode = idMap[int(inputNode)]
-                    # print(id, nodeData['inputConnections'], outputNode, outputName)
+                    # print(id, nodeData['inputConnections'], output_node, outputName)
                     self.connect(str(idMap[id]), outputName, str(inputNode), inputName)
 
         self.update()
@@ -521,7 +521,7 @@ class Graph(object):
                 break
         if thisConn:
             self.reverseConnections[node].remove(thisConn)
-            self.connections[conn.outputNode].remove(thisConn)
+            self.connections[conn.output_node].remove(thisConn)
             return
         thisConn = None
         for conn in self.connections[node]:
@@ -551,9 +551,9 @@ class Connection(object):
     Storing information about involved Inputs and Outputs.
     """
 
-    def __init__(self, out_node, out_name, input_node, input_name):
-        self.outputNode = out_node
-        self.outputName = out_name
+    def __init__(self, output_node, output_name, input_node, input_name):
+        self.output_node = output_node
+        self.outputName = output_name
         self.inputNode = input_node
         self.inputName = input_name
 
