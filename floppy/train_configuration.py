@@ -18,6 +18,9 @@ class TrainParamServer(object):
     def __setitem__(cls, key, value):
         cls.__dict__[key] = value
 
+    def __iter__(cls):
+        return cls.__dict__.keys()
+
     def iter_for_opt_params(cls):
         for param in cls.__dict__:
             if param[:4] == 'opt_':
@@ -46,6 +49,9 @@ class TrainDialog(QDialog):
                         ('GPU', GPUEdit(settings, self)),
                         ('Optimizer Settings', None),
                         ('Optimizer', OptimizerEdit(settings, self)),
+                        ('Temporary File Settings', None),
+                        ('Working Directory',
+                         WorkFileDirEdit(settings, self)),
                         ]
         for param in TrainParamServer().iter_for_opt_params():
             dialog = (param, OptimizeParamEdit(settings, self, param))
@@ -196,3 +202,24 @@ class OptimizeParamEdit(AbstractTrainEdit):
     def __init__(self, settings, parent, key, default_value=1):
         super(OptimizeParamEdit, self).__init__(settings, parent, default_value)
         TrainParamServer()[key] = self.value()
+
+
+class WorkFileDirEdit(QPushButton):
+    def __init__(self, settings, parent):
+        self.parent = parent
+        self.settings = settings
+        super(WorkFileDirEdit, self).__init__('Browse')
+        v = settings.value('WorkDir', type=str)
+        v = v if v else './'
+        self.value = v
+        self.clicked.connect(self.openDialog)
+
+    def commit(self):
+        self.settings.setValue('WorkDir', self.value)
+        TrainParamServer()['WorkDir'] = self.text()
+
+    def openDialog(self):
+        dirName = QFileDialog.getExistingDirectory(self,
+                                                   'Training result file storage',
+                                                   self.value)
+        self.value = dirName

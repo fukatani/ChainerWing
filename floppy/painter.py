@@ -1094,13 +1094,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             error = QErrorMessage()
             error.showMessage('No runner to kill.')
             error.exec_()
-        workDir = self.settings.value('WorkDir', type=str)
-        for file in os.listdir(workDir):
-            if file.startswith('_'):
-                try:
-                    os.remove(workDir + '/' + file)
-                except:
-                    pass
         qApp.quit()
 
     def updateStatus(self):

@@ -1,6 +1,5 @@
-from PyQt5.QtWidgets import QFrame
-from PyQt5.QtWidgets import QHBoxLayout
-from PyQt5.QtWidgets import QLabel
+from floppy.train_configuration import TrainParamServer
+
 from PyQt5.QtWidgets import QWidget
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtGui import QPainter
@@ -14,7 +13,11 @@ class ReportWidget(QWidget):
         super(ReportWidget, self).__init__(height=200, *args, **kwargs)
         self.setStyleSheet('''ReportWidget{background: rgb(55,55,55)}
         ''')
-        self.pixmap = QPixmap("result/loss.png")
+        try:
+            loss_image = TrainParamServer()['WorkDir'] + "result/loss.png"
+        except KeyError:
+            loss_image = "result/loss.png"
+        self.pixmap = QPixmap(loss_image)
         self.resize(200, 200)
 
     def paintEvent(self, event):
