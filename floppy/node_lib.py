@@ -127,8 +127,9 @@ class NodeList(QListView):
         if not self.down:
             super(NodeList, self).mousePressEvent(event)
             self.down = True
-            name = self.filter.listView.selectedIndexes()[0].data()
-            self.selectedClass = NODECLASSES[name]
+            if self.filter.listView.selectedIndexes():
+                name = self.filter.listView.selectedIndexes()[0].data()
+                self.selectedClass = NODECLASSES[name]
             # self.blockSignals(True)
             # self.selectionChanged()
 
