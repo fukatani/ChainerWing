@@ -1,13 +1,14 @@
-from floppy.graph import Graph
+import filecmp
+import sys
+
+from PyQt5.QtCore import QSettings
+from PyQt5.QtWidgets import QApplication
+
 from floppy import node_lib
 from floppy import train_configuration
+from floppy.graph import Graph
 from floppy.painter import MainWindow, Painter2D
 from floppy.train_configuration import TrainParamServer
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtCore import QSettings
-import sys
-import filecmp
-
 
 if __name__ == '__main__':
     # To initialize train_parameter.

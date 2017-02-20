@@ -1,6 +1,6 @@
 import json
-import time
 from collections import OrderedDict
+
 from floppy import compiler
 from floppy import runner
 from floppy.node import ControlNode, Node, MetaNode
@@ -84,7 +84,8 @@ class Graph(object):
             self._requestUpdate = False
             return True
 
-    def spawnNode(self, nodeClass, connections=None, position=(0, 0), silent=False, useID=False):
+    def spawnNode(self, nodeClass, connections=None, position=(0, 0),
+                  silent=False, useID=False):
         """
         Spawns a new node of a given class at a given position with optional connections to other nodes.
         :param nodeClass: subclass object of 'Node'.
@@ -111,7 +112,8 @@ class Graph(object):
 
         return newNode
 
-    def createSubGraphNode(self, name, subgraphSave, inputRelays, outputRelays, spawnAt=None):
+    def createSubGraphNode(self, name, subgraphSave, inputRelays, outputRelays,
+                           spawnAt=None):
         inps = []
         names = set()
         for info, x, y in inputRelays:
@@ -155,7 +157,6 @@ class Graph(object):
         NODECLASSES[name] = NodeClass
         return NodeClass
 
-
     def _spawnConnections(self, connections, newNode):
         try:
             outs = connections['outputs']
@@ -191,11 +192,14 @@ class Graph(object):
         outInfo = outNode.getOutputInfo(out)
         inpInfo = inpNode.getInputInfo(inp)
         # if not outInfo.varType == inpInfo.varType:
-        if not issubclass(outInfo.varType, inpInfo.varType) and not issubclass(inpInfo.varType, outInfo.varType):
-            raise TypeError('Output \'{}\' of node {} and input \'{}\' of not {} don\'t match.'.format(out,
-                                                                                                       str(outNode),
-                                                                                                       inp,
-                                                                                                       str(inpNode)))
+        if not issubclass(outInfo.varType, inpInfo.varType) and not issubclass(
+                inpInfo.varType, outInfo.varType):
+            raise TypeError(
+                'Output \'{}\' of node {} and input \'{}\' of not {} don\'t match.'.format(
+                    out,
+                    str(outNode),
+                    inp,
+                    str(inpNode)))
         # print('Connect output \'{1}\' of node {0} to input \'{3}\' of node {2}'.format(str(outNode),
         #                                                                                out,
         #                                                                                str(inpNode),
@@ -235,7 +239,8 @@ class Graph(object):
         :param inp: InputInfo instance.
         :return: Connection instance.
         """
-        for con in self.getConnectionsTo(self.nodes[int(inp.ID.partition(':')[0])]):
+        for con in self.getConnectionsTo(
+                self.nodes[int(inp.ID.partition(':')[0])]):
             if con.input_name == inp.name:
                 return con
 
@@ -246,8 +251,8 @@ class Graph(object):
         :return: list of Connection instances.
         """
         node = self.nodes[int(output.ID.partition(':')[0])]
-        return [con for con in self.getConnectionsFrom(node) if con.output_name == output.name]
-
+        return [con for con in self.getConnectionsFrom(node) if
+                con.output_name == output.name]
 
     def update(self):
         """
@@ -326,7 +331,9 @@ class Graph(object):
         for id, nodeData in graph_state:
             useID = id if reuseIDs else False
             try:
-                restoredNode = self.spawnNode(NODECLASSES[nodeData['class']], position=nodeData['position'], silent=True, useID=useID)
+                restoredNode = self.spawnNode(NODECLASSES[nodeData['class']],
+                                              position=nodeData['position'],
+                                              silent=True, useID=useID)
             except KeyError:
                 try:
                     dynamic = nodeData['dynamic']
@@ -334,9 +341,11 @@ class Graph(object):
                     dynamic = False
                 if not dynamic:
                     if callback:
-                        callback('Unknown Node class **{}**'.format(nodeData['class']))
+                        callback('Unknown Node class **{}**'.format(
+                            nodeData['class']))
                     else:
-                        raise Exception('Unknown Node class <{}>.'.format(nodeData['class']))
+                        raise Exception('Unknown Node class <{}>.'.format(
+                            nodeData['class']))
                     continue
                 else:
                     print('I need to create a custom class now.')
@@ -350,9 +359,9 @@ class Graph(object):
             for input in inputs:
                 if input[1] in ('bool', 'int', 'float'):
                     restoredNode.inputs[input[0]].setDefault(input[-1])
-            # outputs = nodeData['outputs']
-            # for output in outputs:
-            #     restoredNode.outputs[output[0]].setDefault(output[-1])
+                    # outputs = nodeData['outputs']
+                    # for output in outputs:
+                    #     restoredNode.outputs[output[0]].setDefault(output[-1])
         for id, nodeData in graph_state:
             id = int(id)
             for input_name, outputID in nodeData['inputConnections'].items():
@@ -361,23 +370,27 @@ class Graph(object):
                 output_node, output_name = outputID.split(':O')
                 try:
                     output_node = idMap[int(output_node)]
-                # print(id, nodeData['inputConnections'], output_node, output_name)
+                    # print(id, nodeData['inputConnections'], output_node, output_name)
 
-                    self.connect(str(output_node), output_name, str(idMap[id]), input_name)
+                    self.connect(str(output_node), output_name, str(idMap[id]),
+                                 input_name)
                 except KeyError:
-                    print('Warning: Could not create connection due to missing node.')
+                    print(
+                        'Warning: Could not create connection due to missing node.')
 
             for output_name, inputIDs in nodeData['outputConnections'].items():
                 for inputID in inputIDs:
-                    if not 'Control' in inputID:
+                    if 'Control' not in inputID:
                         continue
                     input_node, input_name = inputID.split(':I')
                     try:
                         input_node = idMap[int(input_node)]
-                    # print(id, nodeData['inputConnections'], output_node, output_name)
-                        self.connect(str(idMap[id]), output_name, str(input_node), input_name)
+                        # print(id, nodeData['inputConnections'], output_node, output_name)
+                        self.connect(str(idMap[id]), output_name,
+                                     str(input_node), input_name)
                     except KeyError:
-                        print('Warning: Could not create connection due to missing node.')
+                        print(
+                            'Warning: Could not create connection due to missing node.')
 
         self.update()
         return idMap
@@ -391,7 +404,8 @@ class Graph(object):
         :return:
         """
         self.connections = {key: set() for key in self.connections.keys()}
-        self.reverseConnections = {key: set() for key in self.reverseConnections.keys()}
+        self.reverseConnections = {key: set() for key in
+                                   self.reverseConnections.keys()}
         idMap = {}
         removeNodes = set(self.nodes.keys())
         for id, nodeData in data:
@@ -399,7 +413,8 @@ class Graph(object):
             idMap[int(id)] = int(id)
             if not int(id) in self.nodes.keys():
                 restoredNode = self.spawnNode(NODECLASSES[nodeData['class']],
-                                              position=nodeData['position'], silent=True, useID=useID)
+                                              position=nodeData['position'],
+                                              silent=True, useID=useID)
                 thisNode = restoredNode
             else:
                 thisNode = self.nodes[int(id)]
@@ -418,16 +433,18 @@ class Graph(object):
                 output_node, output_name = outputID.split(':O')
                 output_node = idMap[int(output_node)]
                 # print(id, nodeData['inputConnections'], output_node, output_name)
-                self.connect(str(output_node), output_name, str(idMap[id]), input_name)
+                self.connect(str(output_node), output_name, str(idMap[id]),
+                             input_name)
 
             for output_name, inputIDs in nodeData['outputConnections'].items():
                 for inputID in inputIDs:
-                    if not 'Control' in inputID:
+                    if 'Control' not in inputID:
                         continue
                     input_node, input_name = inputID.split(':I')
                     input_node = idMap[int(input_node)]
                     # print(id, nodeData['inputConnections'], output_node, output_name)
-                    self.connect(str(idMap[id]), output_name, str(input_node), input_name)
+                    self.connect(str(idMap[id]), output_name, str(input_node),
+                                 input_name)
         for nodeID in removeNodes:
             self.deleteNode(self.nodes[nodeID])
         self.update()
@@ -442,7 +459,9 @@ class Graph(object):
         """
         idMap = {}
         for id, nodeData in saveState.items():
-            restoredNode = self.spawnNode(NODECLASSES[nodeData['class']], position=nodeData['position'], silent=True)
+            restoredNode = self.spawnNode(NODECLASSES[nodeData['class']],
+                                          position=nodeData['position'],
+                                          silent=True)
             idMap[int(id)] = restoredNode.ID
             inputs = nodeData['inputs']
             outputs = nodeData['outputs']
@@ -458,16 +477,18 @@ class Graph(object):
                 output_node, output_name = outputID.split(':O')
                 output_node = idMap[int(output_node)]
                 # print(id, nodeData['inputConnections'], output_node, output_name)
-                self.connect(str(output_node), output_name, str(idMap[id]), input_name)
+                self.connect(str(output_node), output_name, str(idMap[id]),
+                             input_name)
 
             for output_name, inputIDs in nodeData['outputConnections'].items():
                 for inputID in inputIDs:
-                    if not 'Control' in inputID:
+                    if 'Control' not in inputID:
                         continue
                     input_node, input_name = inputID.split(':I')
                     input_node = idMap[int(input_node)]
                     # print(id, nodeData['inputConnections'], output_node, output_name)
-                    self.connect(str(idMap[id]), output_name, str(input_node), input_name)
+                    self.connect(str(idMap[id]), output_name, str(input_node),
+                                 input_name)
 
         self.update()
         return idMap
@@ -547,6 +568,7 @@ class Connection(object):
     Class representing a connection between nodes.
     Storing information about involved Inputs and Outputs.
     """
+
     def __init__(self, output_node, output_name, input_node, input_name):
         self.output_node = output_node
         self.output_name = output_name

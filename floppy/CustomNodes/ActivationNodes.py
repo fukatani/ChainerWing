@@ -1,7 +1,6 @@
-from floppy.node import Node, Input, Output, Function
-
 import chainer
-from chainer import functions
+
+from floppy.node import Input, Output, Function
 
 
 class Relu(Function):

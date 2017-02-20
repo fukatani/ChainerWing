@@ -1,10 +1,11 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt, QPoint, QModelIndex
-from PyQt5.QtGui import *
-from floppy.node import NODECLASSES
 import os
 from importlib.machinery import SourceFileLoader
 
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+
+from floppy.node import NODECLASSES
 
 customNodesPath = os.path.join(os.path.dirname(__file__), 'CustomNodes')
 

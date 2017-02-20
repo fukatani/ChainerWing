@@ -3,16 +3,19 @@ from PyQt5.QtWidgets import *
 
 class SettingsDialog(QDialog):
     def __init__(self, *args, settings=None):
-        self.settings= settings
+        self.settings = settings
         self.dialogs = [('Node Graph Render Settings', None),
                         ('Node Font Size', FontSizeEdit(settings, self)),
                         ('Node Font Offset', FontOffsetEdit(settings, self)),
-                        ('Node Title Font Size', NodeTitleFontSizeEdit(settings, self)),
-                        ('Connection Line Width', ConnectionLineWidthEdit(settings, self)),
+                        ('Node Title Font Size',
+                         NodeTitleFontSizeEdit(settings, self)),
+                        ('Connection Line Width',
+                         ConnectionLineWidthEdit(settings, self)),
                         ('Node Width Scale', NodeWidthEdit(settings, self)),
                         ('Pin Size', PinSizeEdit(settings, self)),
                         ('Temporary File Settings', None),
-                        ('Work File Directory', WorkFileDirEdit(settings, self)),
+                        (
+                        'Work File Directory', WorkFileDirEdit(settings, self)),
                         ]
         super(SettingsDialog, self).__init__(*args)
         self.setStyleSheet('''SettingsDialog {
@@ -133,7 +136,7 @@ class PinSizeEdit(AbstractEdit):
 
 
 class WorkFileDirEdit(QPushButton):
-    def __init__(self, settings,  parent):
+    def __init__(self, settings, parent):
         self.parent = parent
         self.settings = settings
         super(WorkFileDirEdit, self).__init__('Browse')
@@ -146,5 +149,7 @@ class WorkFileDirEdit(QPushButton):
         self.settings.setValue('WorkDir', self.value)
 
     def openDialog(self):
-        dirName = QFileDialog.getExistingDirectory(self, 'Temporary file storage', self.value)
+        dirName = QFileDialog.getExistingDirectory(self,
+                                                   'Temporary file storage',
+                                                   self.value)
         self.value = dirName

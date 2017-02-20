@@ -1,5 +1,5 @@
+from floppy.node import Link, Loss
 from floppy.templates import TEMPLATES
-from floppy.node import Link, Function, Loss
 from floppy.train_configuration import TrainParamServer
 
 
@@ -28,14 +28,14 @@ class Compiler(object):
         call_all_loss = []
         for node in nodes.values():
             if issubclass(type(node), Loss):
-                compiled_loss = self.compile_node(node, nodes)
+                compiled_loss = self.compile_node(node, nodes, [])
                 compiled_loss = "".join([func.call() for func in compiled_loss]) + "x" + ")" * (len(compiled_loss) - 1)
                 compiled_loss += node.call_end()
                 call_all_loss.append(compiled_loss)
 
         return ", ".join(call_all_loss)
 
-    def compile_node(self, cursor, nodes, decode=[]):
+    def compile_node(self, cursor, nodes, decode):
         decode.append(cursor)
         for connect in cursor.get_input_connections():
             if 'in_array' in connect.input_name:

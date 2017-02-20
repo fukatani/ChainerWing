@@ -3,8 +3,9 @@ from copy import copy
 
 from PyQt5.QtGui import QColor
 
-
 NODECLASSES = {}
+
+
 # STOREDVALUES = {}
 
 
@@ -44,7 +45,9 @@ class Info(object):
     """
     Class for handling all information related to both inputs and outputs.
     """
-    def __init__(self, name, varType, hints=None, default='', select=None, owner=False, list=False, optional=False):
+
+    def __init__(self, name, varType, hints=None, default='', select=None,
+                 owner=False, list=False, optional=False):
         self.name = name
         self.connected = False
         self.varType = varType
@@ -105,7 +108,7 @@ class InputInfo(Info):
                 return self.varType(self.value)
             else:
                 return self.value
-        elif self.default != None and not self.connected:
+        elif self.default is not None and not self.connected:
             self.usedDefault = True if self.loopLevel > 0 else False
             if not self.varType == object and self.default:
                 return self.varType(self.default)
@@ -121,7 +124,10 @@ class InputInfo(Info):
 
     def set(self, value, override=False, loopLevel=0):
         if self.valueSet and not override:
-            raise InputAlreadySet('Input \'{}\' of node \'{}\' is already set.'.format(self.name, str(self.owner)))
+            raise InputAlreadySet(
+                'Input \'{}\' of node \'{}\' is already set.'.format(self.name,
+                                                                     str(
+                                                                         self.owner)))
         self.value = value
         self.valueSet = True
         if not self.name == 'Control':
@@ -137,13 +143,13 @@ class InputInfo(Info):
         if info:
             if self.valueSet:
                 return True
-            elif self.default != None and not self.connected and not self.usedDefault and self.pure < 2:
+            elif self.default is not None and not self.connected and not self.usedDefault and self.pure < 2:
                 return True
             return False
         if self.valueSet:
             # print('^^^^^^^^^^^^^^^^^^', self.name, self.value, self.valueSet)
             return True
-        elif self.default != None and not self.connected and not self.usedDefault and self.pure < 2:
+        elif self.default is not None and not self.connected and not self.usedDefault and self.pure < 2:
             if self.pure == 1:
                 self.pure = 2
             # self.usedDefault = True
@@ -185,7 +191,6 @@ class MetaNode(type):
     def addTag(*args):
         for arg in args:
             MetaNode.tags.append(arg)
-
 
     def addInput(name: str,
                  varType: object,
@@ -364,7 +369,8 @@ class Node(object, metaclass=MetaNode):
         :return: None
         """
         self.loopLevel = max([self.loopLevel, loopLevel])
-        self.inputs[input_name].set(value, override=override, loopLevel=loopLevel)
+        self.inputs[input_name].set(value, override=override,
+                                    loopLevel=loopLevel)
 
     def check(self):
         """
@@ -377,7 +383,9 @@ class Node(object, metaclass=MetaNode):
         if self.locked:
             return False
         if self.buffered and self.outputs.keys():
-            print('Node {} has buffered output. Trying to notify outgoing connections.'.format(self))
+            print(
+                'Node {} has buffered output. Trying to notify outgoing connections.'.format(
+                    self))
             return self.notify()
         for inp in self.inputs.values():
             if not inp.isAvailable():
@@ -400,12 +408,19 @@ class Node(object, metaclass=MetaNode):
         The 'ready' item is set to True when all inputs are available. This is mainly useful for debugging graph
         applications.
         """
-        ready = all([inp.isAvailable(info=True) for inp in self.inputs.values()])
+        ready = all(
+            [inp.isAvailable(info=True) for inp in self.inputs.values()])
         return {'template': 'DefaultTemplate',
                 'class': self.__class__.__name__,
                 'ID': self.ID,
-                'inputs': [(i, v.varType.__name__, str(v.value) if len(str(v.value)) < 10 else str(v.value)[:10]+'...') for i, v in self.inputs.items()],
-                'outputs': [(i, v.varType.__name__, str(v.value) if len(str(v.value)) < 10 else str(v.value)[:10]+'...') for i, v in self.outputs.items()],
+                'inputs': [(i, v.varType.__name__,
+                            str(v.value) if len(str(v.value)) < 10 else str(
+                                v.value)[:10] + '...') for i, v in
+                           self.inputs.items()],
+                'outputs': [(i, v.varType.__name__,
+                             str(v.value) if len(str(v.value)) < 10 else str(
+                                 v.value)[:10] + '...') for i, v in
+                            self.outputs.items()],
                 'keep': None,
                 'ready': 'Ready' if ready else 'Waiting'}
 
@@ -465,8 +480,9 @@ class Node(object, metaclass=MetaNode):
                 try:
                     return self.outputs[item.lstrip('_')]
                 except KeyError:
-                    raise AttributeError('No I/O with name {} defined.'.format(item.lstrip('_')))
-                # raise AttributeError('No Input with name {} defined.'.format(item.lstrip('_')))
+                    raise AttributeError(
+                        'No I/O with name {} defined.'.format(item.lstrip('_')))
+                    # raise AttributeError('No Input with name {} defined.'.format(item.lstrip('_')))
         else:
             return super(Node, self).__getattr__(item)
 
@@ -496,12 +512,14 @@ class Node(object, metaclass=MetaNode):
 
     def getInputofType(self, varType):
         for inp in self.inputs.values():
-            if issubclass(varType, inp.varType) or issubclass(inp.varType, varType):
+            if issubclass(varType, inp.varType) or issubclass(inp.varType,
+                                                              varType):
                 return inp
 
     def getOutputofType(self, varType):
         for out in self.outputs.values():
-            if issubclass(varType, out.varType) or issubclass(out.varType, varType):
+            if issubclass(varType, out.varType) or issubclass(out.varType,
+                                                              varType):
                 return out
 
     def save(self):
@@ -512,17 +530,21 @@ class Node(object, metaclass=MetaNode):
         :return:
         """
         inputConns = self.get_input_connect_dict()
-        outputConns = {out.name: self.graph.getConnectionsOfOutput(out) for out in self.outputs.values()}
+        outputConns = {out.name: self.graph.getConnectionsOfOutput(out) for out
+                       in self.outputs.values()}
         for key, conns in outputConns.items():
-            conns = [outputConn.input_node.getInputID(outputConn.input_name) for outputConn in conns]
+            conns = [outputConn.input_node.getInputID(outputConn.input_name) for
+                     outputConn in conns]
             outputConns[key] = conns
         return {'class': self.__class__.__name__,
                 'position': self.__pos__,
-                'inputs': [(input_name, inp.varType.__name__, inp(True), inp.default)
-                           for input_name, inp in self.inputs.items()],
+                'inputs': [
+                    (input_name, inp.varType.__name__, inp(True), inp.default)
+                    for input_name, inp in self.inputs.items()],
                 'inputConnections': inputConns,
-                'outputs': [(output_name, out.varType.__name__, out.value, out.default)
-                            for output_name, out in self.outputs.items()],
+                'outputs': [
+                    (output_name, out.varType.__name__, out.value, out.default)
+                    for output_name, out in self.outputs.items()],
                 'outputConnections': outputConns,
                 'subgraph': self.subgraph}
 
@@ -536,13 +558,14 @@ class Node(object, metaclass=MetaNode):
     def get_input_connect_dict(self):
         input_connect_dict = {}
         for connect in self.get_input_connections():
-            input_connect_dict[connect.input_name] = connect.output_node.\
+            input_connect_dict[connect.input_name] = connect.output_node. \
                 getOutputID(connect.output_name)
         return input_connect_dict
 
     @classmethod
     def matchHint(cls, text: str):
-        return cls.matchInputHint(text) or cls.matchOutputHint(text) or cls.matchClassTag(text)
+        return cls.matchInputHint(text) or cls.matchOutputHint(
+            text) or cls.matchClassTag(text)
 
     @classmethod
     def matchClassTag(cls, text: str):
@@ -552,14 +575,16 @@ class Node(object, metaclass=MetaNode):
     def matchInputHint(cls, text: str):
         if text == 'object':
             return True
-        if any([any([hint.startswith(text) for hint in inp.hints]) for inp in cls.__inputs__.values()]):
+        if any([any([hint.startswith(text) for hint in inp.hints]) for inp in
+                cls.__inputs__.values()]):
             return True
 
     @classmethod
     def matchOutputHint(cls, text: str):
         if text == 'object':
             return True
-        if any([any([hint.startswith(text) for hint in out.hints]) for out in cls.__outputs__.values()]):
+        if any([any([hint.startswith(text) for hint in out.hints]) for out in
+                cls.__outputs__.values()]):
             return True
 
 
@@ -567,6 +592,7 @@ class Pin(object):
     """
     Class for storing all information required to represent a input/output pin.
     """
+
     def __init__(self, pinID, info, node):
         self.ID = pinID
         self.ID = pinID
@@ -642,6 +668,7 @@ class CreateInt(Node):
     """
     Input('Value', int, )
     Output('Integer', int)
+
     def run(self):
         super(CreateInt, self).run()
         self._Integer(self._Value)
@@ -682,6 +709,7 @@ class ForLoop(ControlNode):
     """
     Generic loop node that iterates over all elements in a list.
     """
+
     # Input('Start', object, list=True)
     # Output('ListElement', object)
 
@@ -733,7 +761,10 @@ class ForLoop(ControlNode):
                     nextNode = con.input_node
                     nextInput = con.input_name
                     # nextNode.prepare()
-                    nextNode.setInput(nextInput, self.outputs[output_name].value, override=True, loopLevel=self.loopLevel+1)
+                    nextNode.setInput(nextInput,
+                                      self.outputs[output_name].value,
+                                      override=True,
+                                      loopLevel=self.loopLevel + 1)
             self.inputs['Control'].reset(force=True)
 
         else:
@@ -742,7 +773,8 @@ class ForLoop(ControlNode):
                 output_name = con.output_name
                 nextNode = con.input_node
                 nextInput = con.input_name
-                nextNode.setInput(nextInput, self.outputs[output_name].value, loopLevel=self.loopLevel)
+                nextNode.setInput(nextInput, self.outputs[output_name].value,
+                                  loopLevel=self.loopLevel)
             # self.prepare()
             self.fresh = True
             for inp in self.inputs.values():
@@ -754,7 +786,8 @@ class ForLoop(ControlNode):
 
     def report(self):
         r = super(ForLoop, self).report()
-        ready = any((self.inputs['Control'].isAvailable(info=True), self.inputs['Start'].isAvailable(info=True)))
+        ready = any((self.inputs['Control'].isAvailable(info=True),
+                     self.inputs['Start'].isAvailable(info=True)))
         r['ready'] = 'Ready' if ready else 'Waiting'
         return r
 
@@ -838,7 +871,6 @@ class Link(Node):
 
 @abstractNode
 class Function(Node):
-
     def color(self):
         return QColor(95, 45, 45)
 

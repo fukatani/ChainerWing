@@ -1,22 +1,17 @@
 from __future__ import division
+
 import datetime
-import os
-import sys
 import time
 
-from chainer.training import extension
-from chainer.training.extensions import util
-from chainer.training import trigger
-
-from PyQt5.QtWidgets import QProgressBar
-from PyQt5.QtWidgets import QDialog
-from PyQt5.QtWidgets import QVBoxLayout
-from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QLabel
 from PyQt5.QtCore import Qt
-
-from floppy.runner import StopTraining
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QProgressBar
+from PyQt5.QtWidgets import QPushButton
+from PyQt5.QtWidgets import QVBoxLayout
+from chainer.training import extension
+from chainer.training import trigger
 
 
 class CWProgressBar(extension.Extension, QDialog):
@@ -104,7 +99,8 @@ class CWProgressBar(extension.Extension, QDialog):
                 estimated_time = (length - iteration) / speed_t
             else:
                 estimated_time = (length - epoch) / speed_e
-            self._est_label.setText('{:10.5g} iters/sec. Estimated time to finish: {}.\n'
+            self._est_label.setText('{:10.5g} iters/sec. '
+                                    'Estimated time to finish: {}.\n'
                                     .format(speed_t,
                                     datetime.timedelta(seconds=estimated_time)))
 

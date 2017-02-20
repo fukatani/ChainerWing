@@ -9,7 +9,6 @@ from floppy.settings import SettingsDialog
 from floppy.train_configuration import TrainDialog
 from floppy.train_configuration import TrainParamServer
 
-
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QPoint, QSettings
 from PyQt5.QtGui import *
@@ -20,7 +19,6 @@ import logging
 import numpy
 
 logger = logging.getLogger('Floppy')
-
 
 PINSIZE = 8
 TEXTYOFFSET = 0
@@ -38,7 +36,7 @@ class Painter2D(Painter):
                  object: QColor(190, 190, 190),
                  bool: QColor(190, 0, 0),
                  chainer.Variable: QColor(100, 0, 100),
-                 numpy.ndarray: QColor(100, 0, 200),}
+                 numpy.ndarray: QColor(100, 0, 200), }
     nodes = []
     scale = 1.
     globalOffset = QPoint(0, 0)
@@ -48,7 +46,7 @@ class Painter2D(Painter):
     clickedNode = None
     nodePoints = []
     downOverNode = False
-    
+
     def __init__(self, parent=None):
         super(Painter2D, self).__init__(parent)
         self.setMouseTracking(True)
@@ -115,7 +113,7 @@ class Painter2D(Painter):
             con = self.graph.getConnectionOfInput(inp)
             if con:
                 outNode = con.output_node
-                if not outNode in subgraph:
+                if outNode not in subgraph:
                     relayInputs.add((inp, outNode, con.output_name))
             else:
                 relayInputs.add((inp, None, None))
@@ -127,7 +125,7 @@ class Painter2D(Painter):
             if cons:
                 for con in cons:
                     inpNode = con.input_node
-                    if not inpNode in subgraph:
+                    if inpNode not in subgraph:
                         relayOutputs.add((out, inpNode, con.input_name))
                         break
             else:
@@ -141,8 +139,10 @@ class Painter2D(Painter):
         pos -= topLeft
         # pos -= self.center
         pos /= self.scale
-        newNode = self.graph.createSubGraphNode(name, self.graph.to_json(subgraph=name), relayInputs,
-                                                relayOutputs, spawnAt=(pos.x(), pos.y()))
+        newNode = self.graph.createSubGraphNode(name, self.graph.to_json(
+            subgraph=name), relayInputs,
+                                                relayOutputs,
+                                                spawnAt=(pos.x(), pos.y()))
         self.update()
 
     def setSelectedSubgraph(self, graph, parent=None):
@@ -156,13 +156,15 @@ class Painter2D(Painter):
     def getAllInputsOfSubgraph(self, subgraph=None):
         if not subgraph:
             subgraph = self.selectedSubgraph[0]
-        inputs = {node.inputs.values() for node in self.nodes if node.subgraph == subgraph}
+        inputs = {node.inputs.values() for node in self.nodes if
+                  node.subgraph == subgraph}
         return [j for i in inputs for j in i]
 
     def getAllOutputsOfSubgraph(self, subgraph=None):
         if not subgraph:
             subgraph = self.selectedSubgraph[0]
-        outputs = {node.outputs.values() for node in self.nodes if node.subgraph == subgraph}
+        outputs = {node.outputs.values() for node in self.nodes if
+                   node.subgraph == subgraph}
         return [j for i in outputs for j in i]
 
     def checkGraph(self):
@@ -199,7 +201,7 @@ class Painter2D(Painter):
 
     def wheelEvent(self, event):
         # self.scale += event.deltaX()
-        up = event.angleDelta().y()>0
+        up = event.angleDelta().y() > 0
         if up:
             x = 1.1
         else:
@@ -217,9 +219,9 @@ class Painter2D(Painter):
             self.rightClickedNode = None
             for nodePoints in self.nodePoints:
                 x1 = nodePoints[0].x()
-                x2 = nodePoints[1].x() #+ x1
+                x2 = nodePoints[1].x()  # + x1
                 y1 = nodePoints[0].y()
-                y2 = nodePoints[1].y() #+ y1
+                y2 = nodePoints[1].y()  # + y1
                 xx = event.pos()
                 yy = xx.y()
                 xx = xx.x()
@@ -236,13 +238,16 @@ class Painter2D(Painter):
             #     return
 
             for drawItem in self.drawItems:
-                if issubclass(type(drawItem), Selector) or issubclass(type(drawItem), LineEdit):
+                if issubclass(type(drawItem), Selector) or issubclass(
+                        type(drawItem), LineEdit):
                     if drawItem.collide(event.pos()):
                         break
 
             for point, i in self.inputPinPositions:
                 # print(event.pos(), point, i)
-                if abs(event.pos().x() - point.x()) < PINSIZE * self.scale and abs(event.pos().y() - point.y()) < PINSIZE * self.scale:
+                if abs(
+                                event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
+                            event.pos().y() - point.y()) < PINSIZE * self.scale:
                     self.clickedPin = i
                     if self.shiftDown:
                         self.graph.removeConnection(i)
@@ -251,7 +256,9 @@ class Painter2D(Painter):
             for point, i in self.outputPinPositions:
                 # print(event.pos(), point, i)
                 # w = node.__size__[0]*100
-                if abs(event.pos().x() - point.x()) < PINSIZE * self.scale and abs(event.pos().y() - point.y()) < PINSIZE * self.scale:
+                if abs(
+                                event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
+                            event.pos().y() - point.y()) < PINSIZE * self.scale:
                     self.clickedPin = i
                     if self.shiftDown:
                         self.graph.removeConnection(i)
@@ -259,9 +266,9 @@ class Painter2D(Painter):
                     return
             for nodePoints in self.nodePoints:
                 x1 = nodePoints[0].x()
-                x2 = nodePoints[1].x() #+ x1
+                x2 = nodePoints[1].x()  # + x1
                 y1 = nodePoints[0].y()
-                y2 = nodePoints[1].y() #+ y1
+                y2 = nodePoints[1].y()  # + y1
                 xx = event.pos()
                 yy = xx.y()
                 xx = xx.x()
@@ -273,17 +280,20 @@ class Painter2D(Painter):
                     self.downOverNode = event.pos()
                     return
             self.groupSelection = []
-            self.selectFrame = event.pos() + (event.pos() - self.center) * (1-self.scale) * 1/self.scale
+            self.selectFrame = event.pos() + (event.pos() - self.center) * (
+                1 - self.scale) * 1 / self.scale
             self._selectFrame = event.pos()
 
     def getOutputPinAt(self, pos):
         for point, pin in self.outputPinPositions:
-            if abs(pos.x() - point.x()) < 7 * self.scale and abs(pos.y() - point.y()) < 7 * self.scale:
+            if abs(pos.x() - point.x()) < 7 * self.scale and abs(
+                            pos.y() - point.y()) < 7 * self.scale:
                 return pin
 
     def getInputPinAt(self, pos):
         for point, pin in self.inputPinPositions:
-            if abs(pos.x() - point.x()) < 7 * self.scale and abs(pos.y() - point.y()) < 7 * self.scale:
+            if abs(pos.x() - point.x()) < 7 * self.scale and abs(
+                            pos.y() - point.y()) < 7 * self.scale:
                 return pin
 
     def mouseReleaseEvent(self, event):
@@ -293,26 +303,32 @@ class Painter2D(Painter):
             if ':I' in self.clickedPin:
                 input_nodeID, _, input_name = self.clickedPin.partition(':I')
                 try:
-                    output_nodeID, _, output_name = self.getOutputPinAt(event.pos()).partition(':O')
+                    output_nodeID, _, output_name = self.getOutputPinAt(
+                        event.pos()).partition(':O')
                 except AttributeError:
                     valid = False
             else:
                 output_nodeID, _, output_name = self.clickedPin.partition(':O')
                 try:
-                    input_nodeID, _, input_name = self.getInputPinAt(event.pos()).partition(':I')
+                    input_nodeID, _, input_name = self.getInputPinAt(
+                        event.pos()).partition(':I')
                 except AttributeError:
                     valid = False
             if valid:
                 try:
-                    self.graph.connect(output_nodeID, output_name, input_nodeID, input_name)
+                    self.graph.connect(output_nodeID, output_name, input_nodeID,
+                                       input_name)
                 except TypeError:
                     error = QErrorMessage()
                     error.showMessage('Cannot connect pins of different type')
                     error.exec_()
 
             else:
-                if not self.shiftDown and (abs((event.pos()-self.mouseDownPos).x()) > 10 or
-                                                   abs((event.pos()-self.mouseDownPos).y()) > 10):
+                if not self.shiftDown and (
+                                abs((
+                                                event.pos() - self.mouseDownPos).x()) > 10 or
+                                abs((
+                                                event.pos() - self.mouseDownPos).y()) > 10):
                     # print('Do something. NOW!!!')
                     self.openDialog(event)
             self.looseConnection = False
@@ -343,9 +359,9 @@ class Painter2D(Painter):
         nodes = []
         for nodePoints in self.nodePoints:
             x1 = nodePoints[0].x()
-            x2 = nodePoints[1].x() #+ x1
+            x2 = nodePoints[1].x()  # + x1
             y1 = nodePoints[0].y()
-            y2 = nodePoints[1].y() #+ y1
+            y2 = nodePoints[1].y()  # + y1
             if x < x1 < xx and y < y1 < yy and x < x2 < xx and y < y2 < yy:
                 nodes.append(nodePoints[-1])
                 # print(self.clickedNode)
@@ -362,14 +378,15 @@ class Painter2D(Painter):
         super(Painter2D, self).mouseMoveEvent(event)
 
         if self.drag:
-            self.globalOffset += event.pos()-self.drag
+            self.globalOffset += event.pos() - self.drag
             self.drag = event.pos()
             # self.repaint()
             self.update()
         if self.downOverNode:
             if self.groupSelection:
                 for node in self.groupSelection:
-                    newPos = (event.pos() - self.downOverNode)*self.scale**-1
+                    newPos = (
+                                 event.pos() - self.downOverNode) * self.scale ** -1
                     oldPos = QPoint(node.__pos__[0], node.__pos__[1])
                     newPos = oldPos + newPos
                     node.__pos__ = (newPos.x(), newPos.y())
@@ -377,7 +394,7 @@ class Painter2D(Painter):
                 self.update()
             else:
                 node = self.clickedNode
-                newPos = (event.pos() - self.downOverNode)*self.scale**-1
+                newPos = (event.pos() - self.downOverNode) * self.scale ** -1
                 oldPos = QPoint(node.__pos__[0], node.__pos__[1])
                 newPos = oldPos + newPos
                 node.__pos__ = (newPos.x(), newPos.y())
@@ -388,7 +405,8 @@ class Painter2D(Painter):
             self.drawLooseConnection(event.pos())
             self.update()
         if self.selectFrame:
-            self.selectFrame_End = event.pos() + (event.pos() - self.center) * (1-self.scale) * 1/self.scale
+            self.selectFrame_End = event.pos() + (event.pos() - self.center) * (
+                1 - self.scale) * 1 / self.scale
             self._selectFrame_End = event.pos()
 
     def getSelectedNode(self):
@@ -399,7 +417,7 @@ class Painter2D(Painter):
         if not node:
             return None
         menu = QMenu(self)
-        if not node in self.triggers:
+        if node not in self.triggers:
             triggerAction = menu.addAction('Add Trigger')
             action = menu.exec_(self.mapToGlobal(event.pos()))
             if action == triggerAction:
@@ -425,10 +443,12 @@ class Painter2D(Painter):
         except KeyError:
             pass
 
-        painter.translate(self.width()/2. + self.globalOffset.x(), self.height()/2. + self.globalOffset.y())
-        self.center = QPoint(self.width()/2. + self.globalOffset.x(), self.height()/2. + self.globalOffset.y())
+        painter.translate(self.width() / 2. + self.globalOffset.x(),
+                          self.height() / 2. + self.globalOffset.y())
+        self.center = QPoint(self.width() / 2. + self.globalOffset.x(),
+                             self.height() / 2. + self.globalOffset.y())
         painter.scale(self.scale, self.scale)
-        #painter.translate(self.width()/2., self.height()/2.)
+        # painter.translate(self.width()/2., self.height()/2.)
         painter.setRenderHint(QPainter.HighQualityAntialiasing)
         # painter.drawEllipse(QPoint(0,0),5,5)
         report = self.graph.getReport()
@@ -454,30 +474,35 @@ class Painter2D(Painter):
             font = QFont('Helvetica', 12)
             painter.setFont(font)
             path = QPainterPath()
-            x = node.__pos__[0]# + self.globalOffset.x()
-            y = node.__pos__[1]# + self.globalOffset.y()
+            x = node.__pos__[0]  # + self.globalOffset.x()
+            y = node.__pos__[1]  # + self.globalOffset.y()
             w = node.__size__[0] * self.settings.value('NodeWidth')
             h = node.__size__[1] * (8 + PINSIZE) + 40
 
             path.addRoundedRect(x, y, w, h, 50, 5)
-            self.nodePoints.append((QPoint(x, y)*painter.transform(), QPoint(x+w, y+h)*painter.transform(), node))
+            self.nodePoints.append((QPoint(x, y) * painter.transform(),
+                                    QPoint(x + w, y + h) * painter.transform(),
+                                    node))
             painter.setPen(pen)
 
-            painter.fillPath(path, QColor(55,55,55))
+            painter.fillPath(path, QColor(55, 55, 55))
             # painter.drawRoundedRect(node.pos[0], node.pos[1], node.size[0], node.size[1], 50, 5)
             painter.drawPath(path)
             pen.setColor(QColor(150, 150, 150))
-            painter.setFont(QFont('Helvetica', self.settings.value('NodeTitleFontSize')))
+            painter.setFont(
+                QFont('Helvetica', self.settings.value('NodeTitleFontSize')))
             painter.setPen(pen)
-            painter.drawText(x, y+3, w, h, Qt.AlignHCenter, node.__class__.__name__)
+            painter.drawText(x, y + 3, w, h, Qt.AlignHCenter,
+                             node.__class__.__name__)
             painter.setBrush(QColor(40, 40, 40))
             drawOffset = 25
             # for i, inputPin in enumerate(node.inputPins.values()):
             for i, drawItem in enumerate(self.drawItemsOfNode[node]['inp']):
                 inputPin = drawItem.data
                 if inputPin.name == 'TRIGGER':
-                    if not node in self.triggers and not inputPin.info.connected:
-                        drawItem.update(x, y+drawOffset+8, w, h, painter.transform())
+                    if node not in self.triggers and not inputPin.info.connected:
+                        drawItem.update(x, y + drawOffset + 8, w, h,
+                                        painter.transform())
                         drawItem.deactivate()
                         drawOffset += (8 + PINSIZE)
                         continue
@@ -495,19 +520,26 @@ class Painter2D(Painter):
                     pen.setColor(Qt.red)
                     painter.setPen(pen)
                 if inputPin.name == 'Control':
-                    painter.drawEllipse(x-halfPinSize+w/2., y-halfPinSize, PINSIZE, PINSIZE)
-                    point = QPoint(x+w/2., y) * painter.transform()
+                    painter.drawEllipse(x - halfPinSize + w / 2.,
+                                        y - halfPinSize, PINSIZE, PINSIZE)
+                    point = QPoint(x + w / 2., y) * painter.transform()
                     self.inputPinPositions.append((point, inputPin.ID))
                     continue
                 else:
                     if inputPin.info.list:
-                        painter.drawRect(x-halfPinSize, y+drawOffset+PINSIZE, PINSIZE, PINSIZE)
+                        painter.drawRect(x - halfPinSize,
+                                         y + drawOffset + PINSIZE, PINSIZE,
+                                         PINSIZE)
                     else:
-                        painter.drawEllipse(x-halfPinSize, y+drawOffset+PINSIZE, PINSIZE, PINSIZE)
-                    point = QPoint(x, y+drawOffset+4+PINSIZE) * painter.transform()
+                        painter.drawEllipse(x - halfPinSize,
+                                            y + drawOffset + PINSIZE, PINSIZE,
+                                            PINSIZE)
+                    point = QPoint(x,
+                                   y + drawOffset + 4 + PINSIZE) * painter.transform()
                 self.inputPinPositions.append((point, inputPin.ID))
                 drawOffset += (8 + PINSIZE)
-                drawItem.update(x, y+drawOffset+8, w, h, painter.transform())
+                drawItem.update(x, y + drawOffset + 8, w, h,
+                                painter.transform())
                 if self.graph.getConnectionOfInput(inputPin):
                     text = inputPin.name
                     drawItem.draw(painter, asLabel=text)
@@ -539,10 +571,15 @@ class Painter2D(Painter):
                     # continue
                 else:
                     if outputPin.info.list:
-                        painter.drawRect(x + w-halfPinSize, y+drawOffset+PINSIZE, PINSIZE, PINSIZE)
+                        painter.drawRect(x + w - halfPinSize,
+                                         y + drawOffset + PINSIZE, PINSIZE,
+                                         PINSIZE)
                     else:
-                        painter.drawEllipse(x + w-halfPinSize, y+drawOffset+PINSIZE, PINSIZE, PINSIZE)
-                    point = QPoint(x + w-4, y+drawOffset+4+PINSIZE) * painter.transform()
+                        painter.drawEllipse(x + w - halfPinSize,
+                                            y + drawOffset + PINSIZE, PINSIZE,
+                                            PINSIZE)
+                    point = QPoint(x + w - 4,
+                                   y + drawOffset + 4 + PINSIZE) * painter.transform()
                 # drawOffset += 16
                 drawOffset += (8 + PINSIZE)
                 self.outputPinPositions.append((point, outputPin.ID))
@@ -552,7 +589,8 @@ class Painter2D(Painter):
                 else:
                     text = outputPin.name
                     # self.drawSelector(x, y+drawOffset+8, w, h, text, painter, Qt.AlignRight)
-                drawItem.update(x, y+drawOffset+8, w, h, painter.transform())
+                drawItem.update(x, y + drawOffset + 8, w, h,
+                                painter.transform())
                 drawItem.draw(painter)
             if finalBuffer:
                 k, drawItem = finalBuffer
@@ -563,12 +601,16 @@ class Painter2D(Painter):
                 if outputPin.ID == self.clickedPin:
                     pen.setColor(Qt.red)
                     painter.setPen(pen)
-                painter.drawEllipse(x-halfPinSize+w/2., y+10-int(PINSIZE/10)+drawOffset, PINSIZE, PINSIZE)
-                point = QPoint(x+w/2., y+drawOffset+14) * painter.transform()
+                painter.drawEllipse(x - halfPinSize + w / 2.,
+                                    y + 10 - int(PINSIZE / 10) + drawOffset,
+                                    PINSIZE, PINSIZE)
+                point = QPoint(x + w / 2.,
+                               y + drawOffset + 14) * painter.transform()
                 self.outputPinPositions.append((point, outputPin.ID))
 
-            # trans = painter.transform()
-        self.pinPositions = {value[1]: value[0] for value in self.inputPinPositions+self.outputPinPositions}
+                # trans = painter.transform()
+        self.pinPositions = {value[1]: value[0] for value in
+                             self.inputPinPositions + self.outputPinPositions}
         # self.drawConnections(painter)
         self.transform = painter.transform()
         self.transform = painter.transform()
@@ -576,15 +618,17 @@ class Painter2D(Painter):
             item.draw(painter, last=True)
 
         if self.selectFrame and self.selectFrame_End:
-            painter.setBrush(QColor(255,255,255,25))
+            painter.setBrush(QColor(255, 255, 255, 25))
             painter.setPen(Qt.white)
             x = self.selectFrame.x()
             y = self.selectFrame.y()
             xx = self.selectFrame_End.x() - x
             yy = self.selectFrame_End.y() - y
-            painter.translate(-self.width()/2. - self.globalOffset.x(), -self.height()/2. - self.globalOffset.y())
+            painter.translate(-self.width() / 2. - self.globalOffset.x(),
+                              -self.height() / 2. - self.globalOffset.y())
             painter.drawRect(x, y, xx, yy)
-            painter.translate(self.width()/2. + self.globalOffset.x(), self.height()/2. + self.globalOffset.y())
+            painter.translate(self.width() / 2. + self.globalOffset.x(),
+                              self.height() / 2. + self.globalOffset.y())
 
     def drawConnections(self, painter):
         if not self.graph:
@@ -614,11 +658,14 @@ class Painter2D(Painter):
                 except KeyError:
                     color = QColor(*varType.color)
                 rotate = None
-                if issubclass(type(info.input_node), ControlNode) and info.input_name == 'Control':
+                if issubclass(type(info.input_node),
+                              ControlNode) and info.input_name == 'Control':
                     rotate = 'input'
-                    if issubclass(type(info.output_node), ControlNode) and info.output_name == 'Final':
+                    if issubclass(type(info.output_node),
+                                  ControlNode) and info.output_name == 'Final':
                         rotate = 'both'
-                elif issubclass(type(info.output_node), ControlNode) and info.output_name == 'Final':
+                elif issubclass(type(info.output_node),
+                                ControlNode) and info.output_name == 'Final':
                     rotate = 'output'
                 self.drawBezier(start, end, color, painter, rotate)
 
@@ -632,18 +679,18 @@ class Painter2D(Painter):
         painter.setPen(pen)
         path = QPainterPath()
         path.moveTo(start)
-        diffx = abs((start.x()-end.x())/2.)
+        diffx = abs((start.x() - end.x()) / 2.)
         if diffx < 100 * self.scale:
             diffx = 100 * self.scale
         if rotate == 'input':
-            p21 = start.x()+diffx
+            p21 = start.x() + diffx
             p22 = start.y()
             p31 = end.x()
             p32 = end.y() - 100 * self.scale
         elif rotate == 'output':
             p21 = start.x()
             p22 = start.y() + 100 * self.scale
-            p31 = end.x()-diffx
+            p31 = end.x() - diffx
             p32 = end.y()
         elif rotate == 'both':
             p21 = start.x()
@@ -651,21 +698,24 @@ class Painter2D(Painter):
             p31 = end.x()
             p32 = end.y() - 100 * self.scale
         else:
-            p21 = start.x()+diffx
+            p21 = start.x() + diffx
             p22 = start.y()
-            p31 = end.x()-diffx
+            p31 = end.x() - diffx
             p32 = end.y()
         path.cubicTo(p21, p22, p31, p32, end.x(), end.y())
         painter.drawPath(path)
 
     def registerNode(self, node, position, silent=False):
         if not silent:
-            self.parent().parent().parent().parent().statusBar.showMessage('Spawned node of class \'{}\'.'
-                                                                           .format(type(node).__name__), 2000)
+            self.parent().parent().parent().parent().statusBar.showMessage(
+                'Spawned node of class \'{}\'.'
+                    .format(type(node).__name__), 2000)
         node.__painter__ = {'position': position}
         node.__pos__ = position
         node.__size__ = (1, len(node.inputs) + len(node.outputs))
-        node.__size__ = (1, node.__size__[1] if not issubclass(type(node), ControlNode) else node.__size__[1]-2)
+        node.__size__ = (1, node.__size__[1] if not issubclass(type(node),
+                                                               ControlNode) else
+        node.__size__[1] - 2)
         self.nodes.append(node)
         self.drawItemsOfNode[node] = {'inp': [], 'out': []}
         for out in node.outputPins.values():
@@ -697,7 +747,7 @@ class Painter2D(Painter):
         spacing = 100 * self.scale
         while spacing < 25:
             spacing *= 9
-            color = 70 + (color-70) / 2.5
+            color = 70 + (color - 70) / 2.5
         if color < 0:
             return
 
@@ -709,27 +759,32 @@ class Painter2D(Painter):
         horizontalN = int(self.height() / spacing / 2) + 1
         for i in range(verticalN):
             # painter.drawLine(self.width()/2 + self.globalOffset.x()+i*spacing, 0, self.width()/2+ self.globalOffset.x() + i*spacing, self.height())
-            painter.drawLine(self.width()/2 +i*spacing, 0, self.width()/2 + i*spacing, self.height())
+            painter.drawLine(self.width() / 2 + i * spacing, 0,
+                             self.width() / 2 + i * spacing, self.height())
             # painter.drawLine(QPoint(self.width()/2 + self.globalOffset.x()-i*spacing, 0), QPoint(self.width()/2+ self.globalOffset.x() - i*spacing, self.height()))
-            painter.drawLine(QPoint(self.width()/2 -i*spacing, 0), QPoint(self.width()/2 - i*spacing, self.height()))
+            painter.drawLine(QPoint(self.width() / 2 - i * spacing, 0),
+                             QPoint(self.width() / 2 - i * spacing,
+                                    self.height()))
 
         for i in range(horizontalN):
             # painter.drawLine(0, self.height()/2+self.globalOffset.y()+i*spacing, self.width(), self.height()/2+self.globalOffset.y()+i*spacing)
-            painter.drawLine(0, self.height()/2+i*spacing, self.width(), self.height()/2+i*spacing)
+            painter.drawLine(0, self.height() / 2 + i * spacing, self.width(),
+                             self.height() / 2 + i * spacing)
             # painter.drawLine(0, self.height()/2+self.globalOffset.y()-i*spacing, self.width(), self.height()/2+self.globalOffset.y()-i*spacing)
-            painter.drawLine(0, self.height()/2-i*spacing, self.width(), self.height()/2-i*spacing)
+            painter.drawLine(0, self.height() / 2 - i * spacing, self.width(),
+                             self.height() / 2 - i * spacing)
 
     def set_settings(self, settings):
         self.settings = settings
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-
     def __init__(self, parent=None, painter=None):
         super(MainWindow, self).__init__(parent)
 
         iconRoot = os.path.realpath(__file__)
-        iconRoot = os.path.join(os.path.dirname(os.path.dirname(iconRoot)), 'floppy')
+        iconRoot = os.path.join(os.path.dirname(os.path.dirname(iconRoot)),
+                                'floppy')
         self.iconRoot = os.path.join(iconRoot, 'resources')
         self.settings = QSettings('Floppy', 'Floppy')
 
@@ -773,119 +828,138 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.compile_and_exe()
 
     def initActions(self):
-        self.exitAction = QAction(QIcon(os.path.join(self.iconRoot, 'quit.png')), 'Quit', self)
+        self.exitAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'quit.png')), 'Quit', self)
         self.exitAction.setShortcut('Ctrl+Q')
         self.exitAction.setStatusTip('Exit application')
         self.exitAction.triggered.connect(self.close)
 
-        self.newAction = QAction(QIcon(os.path.join(self.iconRoot, 'new.png')), 'New', self)
+        self.newAction = QAction(QIcon(os.path.join(self.iconRoot, 'new.png')),
+                                 'New', self)
         self.newAction.setShortcut('Ctrl+N')
         self.newAction.setStatusTip('New Graph')
         self.newAction.triggered.connect(self.new)
 
-        self.compile_and_exe_action = QAction(QIcon(os.path.join(self.iconRoot, 'run.png')), 'Compile and Run', self)
+        self.compile_and_exe_action = QAction(
+            QIcon(os.path.join(self.iconRoot, 'run.png')), 'Compile and Run',
+            self)
         self.compile_and_exe_action.setShortcut('Ctrl+R')
         self.compile_and_exe_action.triggered.connect(self.compile_and_exe)
         self.compile_and_exe_action.setIconVisibleInMenu(True)
         self.addAction(self.compile_and_exe_action)
-        
-        self.loadAction = QAction(QIcon(os.path.join(self.iconRoot, 'load.png')), 'load', self)
+
+        self.loadAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'load.png')), 'load', self)
         self.loadAction.setShortcut('Ctrl+O')
         self.loadAction.triggered.connect(self.loadGraph)
         self.loadAction.setIconVisibleInMenu(True)
         self.addAction(self.loadAction)
-        
-        self.saveAction = QAction(QIcon(os.path.join(self.iconRoot, 'save.png')), 'save', self)
+
+        self.saveAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'save.png')), 'save', self)
         self.saveAction.setShortcut('Ctrl+S')
         self.saveAction.triggered.connect(self.save_graph_and_train)
         self.saveAction.setIconVisibleInMenu(True)
         self.addAction(self.saveAction)
 
-        self.clear_all_action = QAction(QIcon(os.path.join(self.iconRoot, 'kill.png')), 'Clear All', self)
+        self.clear_all_action = QAction(
+            QIcon(os.path.join(self.iconRoot, 'kill.png')), 'Clear All', self)
         # self.killRunnerAction.setShortcut('Ctrl+K')
         self.clear_all_action.triggered.connect(self.clearAllNodes)
         self.clear_all_action.setIconVisibleInMenu(True)
         self.addAction(self.clear_all_action)
 
-        self.pauseRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'pause.png')), 'Pause', self)
+        self.pauseRunnerAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'pause.png')), 'Pause', self)
         self.pauseRunnerAction.setShortcut('Ctrl+P')
         self.pauseRunnerAction.triggered.connect(self.pauseRunner)
         self.pauseRunnerAction.setIconVisibleInMenu(True)
         self.addAction(self.pauseRunnerAction)
-        
-        self.compile_action = QAction(QIcon(os.path.join(self.iconRoot, 'unpause.png')), 'Compile', self)
+
+        self.compile_action = QAction(
+            QIcon(os.path.join(self.iconRoot, 'unpause.png')), 'Compile', self)
         self.compile_action.setShortcut('Ctrl+L')
         self.compile_action.triggered.connect(self.compile_runner)
         self.compile_action.setIconVisibleInMenu(True)
         self.addAction(self.compile_action)
-        
-        self.exe_action = QAction(QIcon(os.path.join(self.iconRoot, 'step.png')), 'Run', self)
+
+        self.exe_action = QAction(
+            QIcon(os.path.join(self.iconRoot, 'step.png')), 'Run', self)
         self.exe_action.setShortcut('Ctrl+K')
         self.exe_action.triggered.connect(self.exe_runner)
         self.exe_action.setIconVisibleInMenu(True)
         self.addAction(self.exe_action)
-        
+
         # self.gotoRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'goto.png')), 'GoTo', self)
         # self.gotoRunnerAction.setShortcut('Ctrl+F')
         # self.gotoRunnerAction.triggered.connect(self.gotoRunner)
         # self.gotoRunnerAction.setIconVisibleInMenu(True)
         # self.addAction(self.gotoRunnerAction)
-        
+
         # self.updateRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'update.png')), 'Update', self)
         # self.updateRunnerAction.setShortcut('Ctrl+U')
         # self.updateRunnerAction.triggered.connect(self.updateRunner)
         # self.updateRunnerAction.setIconVisibleInMenu(True)
         # self.addAction(self.updateRunnerAction)
-        
+
         # self.spawnRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'spawn.png')), 'Spawn', self)
         # self.spawnRunnerAction.setShortcut('Ctrl+H')
         # self.spawnRunnerAction.triggered.connect(self.spawnRunner)
         # self.spawnRunnerAction.setIconVisibleInMenu(True)
         # self.addAction(self.spawnRunnerAction)
-        
+
         self.deleteNodeAction = QAction('Delete', self)
         self.deleteNodeAction.setShortcut('Delete')
         self.deleteNodeAction.triggered.connect(self.deleteNode)
         self.deleteNodeAction.setIconVisibleInMenu(True)
         self.addAction(self.deleteNodeAction)
-        
-        self.connectAction = QAction(QIcon(os.path.join(self.iconRoot, 'connect.png')), 'Connect', self)
+
+        self.connectAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'connect.png')), 'Connect', self)
         self.connectAction.setShortcut('Ctrl+C')
         self.connectAction.triggered.connect(self.connect)
         self.connectAction.setIconVisibleInMenu(True)
         self.addAction(self.connectAction)
-        
+
         self.statusAction = QAction('Status', self)
         # self.statusAction.setShortcut('Ctrl+R')
         self.statusAction.triggered.connect(self.updateStatus)
         self.statusAction.setIconVisibleInMenu(True)
         self.addAction(self.statusAction)
 
-        self.train_configure_action = QAction(QIcon(os.path.join(self.iconRoot, 'drop.png')), 'Drop', self)
+        self.train_configure_action = QAction(
+            QIcon(os.path.join(self.iconRoot, 'drop.png')), 'Drop', self)
         self.train_configure_action.setShortcut('Ctrl+I')
         self.train_configure_action.triggered.connect(self.open_train_config)
         self.train_configure_action.setIconVisibleInMenu(True)
         self.addAction(self.train_configure_action)
 
-        self.pushAction = QAction(QIcon(os.path.join(self.iconRoot, 'push.png')), 'Push', self)
+        self.pushAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'push.png')), 'Push', self)
         self.pushAction.setShortcut('Ctrl+X')
         self.pushAction.triggered.connect(self.pushGraph)
         self.pushAction.setIconVisibleInMenu(True)
         self.addAction(self.pushAction)
-        
-        self.settingsAction = QAction(QIcon(os.path.join(self.iconRoot, 'settings.png')), 'Settings', self)
+
+        self.settingsAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'settings.png')), 'Settings',
+            self)
         self.settingsAction.setShortcut('Ctrl+T')
         self.settingsAction.triggered.connect(self.openSettingsDialog)
         self.settingsAction.setIconVisibleInMenu(False)
         self.addAction(self.settingsAction)
-        
-        self.createSubgraphAction = QAction(QIcon(os.path.join(self.iconRoot, 'macro.png')), 'Create Macro', self)
+
+        self.createSubgraphAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'macro.png')), 'Create Macro',
+            self)
         self.createSubgraphAction.setShortcut('Ctrl+G')
         self.createSubgraphAction.triggered.connect(self.openMacroDialog)
         self.createSubgraphAction.setIconVisibleInMenu(False)
         self.addAction(self.createSubgraphAction)
-        
-        self.configureAction = QAction(QIcon(os.path.join(self.iconRoot, 'configure.png')), 'configure', self)
+
+        self.configureAction = QAction(
+            QIcon(os.path.join(self.iconRoot, 'configure.png')), 'configure',
+            self)
         self.configureAction.setShortcut('Ctrl+Y')
         self.configureAction.triggered.connect(self.configureInterpreter)
         self.configureAction.setIconVisibleInMenu(False)
@@ -903,7 +977,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         settingsMenu = self.menuBar.addMenu('&Settings')
         settingsMenu.addAction(self.settingsAction)
-        
+
         self.mainToolBar.addAction(self.exitAction)
         self.mainToolBar.addSeparator()
         self.mainToolBar.addAction(self.newAction)
@@ -945,7 +1019,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.drawer.update()
 
     def configureInterpreter(self):
-        self.drawer.graph.configureInterpreter({'framerate': 0.01, 'foo': 'bar'})
+        self.drawer.graph.configureInterpreter(
+            {'framerate': 0.01, 'foo': 'bar'})
 
     def getSubgraphList(self):
         new = self.drawer.getAllSubgraphs()
@@ -960,7 +1035,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def openMacroDialog(self):
         if not self.drawer.groupSelected():
-            self.statusBar.showMessage('You Must Select a Group to Create a Macro.', 2000)
+            self.statusBar.showMessage(
+                'You Must Select a Group to Create a Macro.', 2000)
             return
         name, state = QInputDialog.getText(self, 'Create Macro', 'Macro Name:')
         if not state:
@@ -978,12 +1054,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.connectHint = self.settings.value('DefaultConnection', type=str)
         text = ''
         while not text:
-            text, ok = QInputDialog.getItem(self, 'Connect to remote Interpreter',
+            text, ok = QInputDialog.getItem(self,
+                                            'Connect to remote Interpreter',
                                             'IP Address/Port: (xxx.xxx.xxx:Port)',
                                             [self.connectHint])
             if not ok:
                 return
-        if not ':' in text:
+        if ':' not in text:
             ip = text
             port = ''
             while not port:
@@ -999,12 +1076,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.drawer.graph.connect2RemoteRunner(ip, port)
         except ConnectionRefusedError:
             err = QErrorMessage(self)
-            err.showMessage('Connection to {} on port {} refused.'.format(ip, port))
+            err.showMessage(
+                'Connection to {} on port {} refused.'.format(ip, port))
         except socket.timeout:
             err = QErrorMessage(self)
-            err.showMessage('Connection to {} on port {} timed out.'.format(ip, port))
+            err.showMessage(
+                'Connection to {} on port {} timed out.'.format(ip, port))
         else:
-            self.statusBar.showMessage('Connection to {} on port {} established.'.format(ip, port), 2000)
+            self.statusBar.showMessage(
+                'Connection to {} on port {} established.'.format(ip, port),
+                2000)
 
     def close(self):
         try:
@@ -1017,7 +1098,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for file in os.listdir(workDir):
             if file.startswith('_'):
                 try:
-                    os.remove(workDir+'/'+file)
+                    os.remove(workDir + '/' + file)
                 except:
                     pass
         qApp.quit()
@@ -1026,19 +1107,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             self.drawer.graph.requestRemoteStatus()
         except AttributeError:
-            self.statusBar.showMessage('Cannot Update Graph. No Interpreter Available..', 2000)
+            self.statusBar.showMessage(
+                'Cannot Update Graph. No Interpreter Available..', 2000)
 
     def dropGraph(self):
         try:
             self.drawer.graph.dropGraph()
         except AttributeError:
-            self.statusBar.showMessage('Cannot Drop Graph. No Interpreter Available..', 2000)
+            self.statusBar.showMessage(
+                'Cannot Drop Graph. No Interpreter Available..', 2000)
 
     def pushGraph(self):
         try:
             self.drawer.graph.push2Runner()
         except AttributeError:
-            self.statusBar.showMessage('Cannot Push Graph. No Interpreter Available.', 2000)
+            self.statusBar.showMessage(
+                'Cannot Push Graph. No Interpreter Available.', 2000)
 
     def killRunner(self):
         try:
@@ -1067,19 +1151,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             self.drawer.graph.gotoRunner(1)
         except AttributeError:
-            self.statusBar.showMessage('Cannot Go To Node. No Interpreter Available.', 2000)
+            self.statusBar.showMessage(
+                'Cannot Go To Node. No Interpreter Available.', 2000)
 
     def updateRunner(self):
         try:
             self.drawer.graph.updateRunner()
         except AttributeError:
-            self.statusBar.showMessage('Cannot Update Interpreter. No Interpreter Available.', 2000)
+            self.statusBar.showMessage(
+                'Cannot Update Interpreter. No Interpreter Available.', 2000)
 
     def pauseRunner(self):
         try:
             self.drawer.graph.pauseRunner()
         except AttributeError:
-            self.statusBar.showMessage('Cannot Pause Interpreter. No Interpreter Available.', 2000)
+            self.statusBar.showMessage(
+                'Cannot Pause Interpreter. No Interpreter Available.', 2000)
 
     def compile_runner(self):
         self.drawer.graph.compile()
@@ -1097,10 +1184,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def loadGraph(self, *args, override=False):
         if not override:
-            #TODO(fukatani): serialize directory.
+            # TODO(fukatani): serialize directory.
             init_path = os.path.abspath(__file__) + '/../../examples/'
-            file_name = QFileDialog.getOpenFileName(self, 'Open File', init_path,
-                                                   filter='Floppy Files (*.json);; Any (*.*)')[0]
+            file_name = \
+                QFileDialog.getOpenFileName(self, 'Open File', init_path,
+                                            filter='Floppy Files (*.json);; Any (*.*)')[
+                    0]
         else:
             file_name = override
         if not file_name: return
@@ -1109,8 +1198,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         with open(file_name, 'r') as fp:
             line = fp.readline()
             if not line: return
-            self.drawer.graph.load_from_json(line, callback=self.raiseErrorMessage)
-            self.statusBar.showMessage('Graph loaded from {}.'.format(file_name), 2000)
+            self.drawer.graph.load_from_json(line,
+                                             callback=self.raiseErrorMessage)
+            self.statusBar.showMessage(
+                'Graph loaded from {}.'.format(file_name), 2000)
             logger.info('Successfully loaded graph: {}'.format(file_name))
             line = fp.readline()
             if not line: return
@@ -1131,7 +1222,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not file_name:
             return
         if not file_name.endswith('.json'):
-             file_name += '.json'
+            file_name += '.json'
         logger.debug('Attempting to save graph as {}'.format(file_name))
         with open(file_name, 'w') as fp:
             self.drawer.graph.save(fp)
@@ -1169,6 +1260,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 class DrawItem(object):
     alignment = Qt.AlignRight
+
     def __init__(self, parent, data, painter):
         self.settings = painter.settings
         self.painter = painter
@@ -1193,10 +1285,10 @@ class DrawItem(object):
         self.y = y
         self.w = w - 10
         self.h = h
-        point = QPoint(x+12, y-16)*transform
+        point = QPoint(x + 12, y - 16) * transform
         self._x = point.x()
         self._y = point.y()
-        point = QPoint(x+w-24, y+h-60)*transform
+        point = QPoint(x + w - 24, y + h - 60) * transform
         self._xx = point.x()
         self._yy = point.y()
 
@@ -1208,10 +1300,12 @@ class DrawItem(object):
         pen = QPen(Qt.darkGray)
         painter.setPen(pen)
         painter.setBrush(QColor(40, 40, 40))
-        xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
+        xx, yy, ww, hh = self.x + self.w / 2. - (
+            self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
         self.set_font(painter)
         painter.setPen(pen)
-        painter.drawText(xx+5, yy-3 + TEXTYOFFSET, ww-10, hh+5, alignment, text)
+        painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
+                         alignment, text)
 
     def set_font(self, painter):
         painter.setFont(QFont('Helvetica', self.settings.value('FontSize')))
@@ -1240,6 +1334,7 @@ class DrawItem(object):
 
 class Selector(DrawItem):
     alignment = Qt.AlignLeft
+
     def __init__(self, *args, **kwargs):
         super(Selector, self).__init__(*args, **kwargs)
         self.highlight = 0
@@ -1257,19 +1352,20 @@ class Selector(DrawItem):
 
     def watch(self, pos):
         scale = self.painter.scale
-        for i in range(1, len(self.items)+1):
-            if self._x < pos.x() < self._xx and self._y+4*scale + PINSIZE*i*scale < pos.y() < (self._y+4*scale + (i+1)*scale*PINSIZE):
+        for i in range(1, len(self.items) + 1):
+            if self._x < pos.x() < self._xx and self._y + 4 * scale + PINSIZE * i * scale < pos.y() < (
+                            self._y + 4 * scale + (i + 1) * scale * PINSIZE):
                 self.highlight = i
                 return
 
     def watchDown(self, pos):
-        self.select = str(self.items[self.highlight-1])
+        self.select = str(self.items[self.highlight - 1])
         self.parent.inputs[self.data.name].setDefault(self.select)
         # self.parent._Boolean.setDefault(self.select)
         # self.painter.removeWatchingItem(self)
 
     def collide(self, pos):
-        if self._x < pos.x() < self._xx+16 and self._y < pos.y() < self._yy:
+        if self._x < pos.x() < self._xx + 16 and self._y < pos.y() < self._yy:
             self.state = (self.state + 1) % 2
             try:
                 self.painter.registerWatchingItem(self)
@@ -1291,10 +1387,12 @@ class Selector(DrawItem):
             pen = QPen(Qt.darkGray)
             painter.setPen(pen)
             painter.setBrush(QColor(40, 40, 40))
-            xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
+            xx, yy, ww, hh = self.x + self.w / 2. - (
+                self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
             self.set_font(painter)
             painter.setPen(pen)
-            painter.drawText(xx+5, yy-3 + TEXTYOFFSET, ww-10, hh+5, alignment, text)
+            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
+                             alignment, text)
             return
         if not self.state:
             alignment = self.alignment
@@ -1304,16 +1402,20 @@ class Selector(DrawItem):
             pen = QPen(Qt.darkGray)
             painter.setPen(pen)
             painter.setBrush(QColor(40, 40, 40))
-            xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-25, 4+PINSIZE
+            xx, yy, ww, hh = self.x + self.w / 2. - (
+                self.w - 25) / 2., self.y - 18, self.w - 25, 4 + PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
             self.set_font(painter)
             painter.setPen(pen)
-            painter.drawText(xx+5, yy-3+TEXTYOFFSET, ww-20, hh+5, alignment, text)
+            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 20, hh + 5,
+                             alignment, text)
             pen.setColor(Qt.gray)
             # pen.setWidth(3)
             painter.setPen(pen)
             painter.setBrush(QBrush(Qt.gray))
-            points = QPoint(xx+self.w-40, yy-2+PINSIZE/2), QPoint(xx+10-40 + self.w, yy-2+PINSIZE/2), QPoint(xx+5+self.w-40, yy+4+PINSIZE/2)
+            points = QPoint(xx + self.w - 40, yy - 2 + PINSIZE / 2), QPoint(
+                xx + 10 - 40 + self.w, yy - 2 + PINSIZE / 2), QPoint(
+                xx + 5 + self.w - 40, yy + 4 + PINSIZE / 2)
             painter.drawPolygon(*points)
             painter.setBrush(QColor(40, 40, 40))
         else:
@@ -1324,29 +1426,35 @@ class Selector(DrawItem):
             pen = QPen(Qt.darkGray)
             painter.setPen(pen)
             painter.setBrush(QColor(40, 40, 40))
-            xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-26 + 12, self.w-25, (4+PINSIZE) * len(self.items)
-            painter.drawRoundedRect(xx, yy+PINSIZE, ww, hh, 2, 20+PINSIZE)
+            xx, yy, ww, hh = self.x + self.w / 2. - (
+                self.w - 25) / 2., self.y - 26 + 12, self.w - 25, (
+                                 4 + PINSIZE) * len(self.items)
+            painter.drawRoundedRect(xx, yy + PINSIZE, ww, hh, 2, 20 + PINSIZE)
             self.set_font(painter)
             painter.setPen(pen)
 
             for i, item in enumerate(self.items):
                 item = str(item)
-                if i+1 == self.highlight:
+                if i + 1 == self.highlight:
                     pen.setColor(Qt.white)
                     painter.setPen(pen)
                 else:
                     pen = QPen(Qt.darkGray)
                     painter.setPen(pen)
-                painter.drawText(xx+5, yy+PINSIZE-3+i*(4+PINSIZE)+TEXTYOFFSET, ww-20, hh+5+PINSIZE, alignment, item)
+                painter.drawText(xx + 5, yy + PINSIZE - 3 + i * (
+                    4 + PINSIZE) + TEXTYOFFSET, ww - 20, hh + 5 + PINSIZE,
+                                 alignment, item)
             # painter.drawText(xx-5, yy-3+0, ww-20, hh+5, alignment, 'True')
             # painter.drawText(xx-5, yy-3+12, ww-20, hh+5, alignment, 'False')
 
             pen = QPen(Qt.darkGray)
             painter.setPen(pen)
             painter.setBrush(QColor(60, 60, 60))
-            xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-25, 4+PINSIZE
+            xx, yy, ww, hh = self.x + self.w / 2. - (
+                self.w - 25) / 2., self.y - 18, self.w - 25, 4 + PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
-            painter.drawText(xx+5, yy-3+TEXTYOFFSET, ww-20, hh+5, alignment, text)
+            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 20, hh + 5,
+                             alignment, text)
 
 
 class LineEdit(DrawItem):
@@ -1381,10 +1489,12 @@ class LineEdit(DrawItem):
             pen = QPen(Qt.darkGray)
             painter.setPen(pen)
             painter.setBrush(QColor(40, 40, 40))
-            xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
+            xx, yy, ww, hh = self.x + self.w / 2. - (
+                self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
             self.set_font(painter)
             painter.setPen(pen)
-            painter.drawText(xx+5, yy-3 + TEXTYOFFSET, ww-10, hh+5, alignment, text)
+            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
+                             alignment, text)
             return
         text = str(text)
         if not self.state:
@@ -1392,21 +1502,25 @@ class LineEdit(DrawItem):
             pen = QPen(Qt.darkGray)
             painter.setPen(pen)
             painter.setBrush(QColor(40, 40, 40))
-            xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
+            xx, yy, ww, hh = self.x + self.w / 2. - (
+                self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
             self.set_font(painter)
             painter.setPen(pen)
-            painter.drawText(xx+5, yy-3+TEXTYOFFSET, ww-10, hh+5, alignment, text)
+            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
+                             alignment, text)
         else:
             alignment = self.__class__.alignment
             pen = QPen(Qt.darkGray)
             painter.setPen(pen)
             painter.setBrush(QColor(10, 10, 10))
-            xx, yy, ww, hh = self.x+(self.w)/2.-(self.w-25)/2., self.y-18, self.w-18, 4+PINSIZE
+            xx, yy, ww, hh = self.x + self.w / 2. - (
+                self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
             self.set_font(painter)
             painter.setPen(pen)
-            painter.drawText(xx+5, yy-3+TEXTYOFFSET, ww-10, hh+5, alignment, text)
+            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
+                             alignment, text)
 
     def keyPressEvent(self, event):
         if event.key() == 16777219:  # Backspace
@@ -1439,15 +1553,18 @@ class NodeDialog(QDockWidget):
     Container Widget handling the set up of a ContextNodeFilter widget and a ContextNodeList when connections are
     dragged into open space.
     """
+
     def __init__(self, painter, event, pin, graph, parent=None):
         self.graph = graph
         self.painter = painter
         self.pin = pin
         super(NodeDialog, self).__init__(parent)
         self.setTitleBarWidget(QWidget(self))
-        self.setStyleSheet("NodeDialog {background-color:rgb(45,45,45) ;border:1px solid rgb(0, 0, 0); "
-                           "border-color:black}")
-        self.setWindowFlags(Qt.Window | Qt.WindowStaysOnTopHint |Qt.X11BypassWindowManagerHint | Qt.FramelessWindowHint)
+        self.setStyleSheet(
+            "NodeDialog {background-color:rgb(45,45,45) ;border:1px solid rgb(0, 0, 0); "
+            "border-color:black}")
+        self.setWindowFlags(
+            Qt.Window | Qt.WindowStaysOnTopHint | Qt.X11BypassWindowManagerHint | Qt.FramelessWindowHint)
         self.setFeatures(QDockWidget.DockWidgetMovable)
         self.setFloating(True)
         pos = event.globalPos()
@@ -1490,15 +1607,19 @@ class NodeDialog(QDockWidget):
             if not self.back:
                 endPin = newNode.getInputofType(pin.info.varType)
                 if endPin:
-                    self.graph.connect(self.graph.getNodeFromPinID(self.pin), self.pin.split(':')[1][1:], newNode, endPin.name)
+                    self.graph.connect(self.graph.getNodeFromPinID(self.pin),
+                                       self.pin.split(':')[1][1:], newNode,
+                                       endPin.name)
             else:
                 endPin = newNode.getOutputofType(pin.info.varType)
                 if endPin:
                     # self.graph.connect(self.graph.getNodeFromPinID(self.pin), self.pin.split(':')[1][1:], newNode, endPin.name)
-                    self.graph.connect(newNode, endPin.name, self.graph.getNodeFromPinID(self.pin), self.pin.split(':')[1][1:])
+                    self.graph.connect(newNode, endPin.name,
+                                       self.graph.getNodeFromPinID(self.pin),
+                                       self.pin.split(':')[1][1:])
 
-                # self.painter.app.connectionManager.registerStart(pin, pin.node)
-                # self.painter.app.connectionManager.registerEnd(endPin, newNode)
+                    # self.painter.app.connectionManager.registerStart(pin, pin.node)
+                    # self.painter.app.connectionManager.registerEnd(endPin, newNode)
 
         # painter.contextSensitive = self.cB.checkState()
         self.painter.update()

@@ -5,7 +5,8 @@ from chainer import functions
 
 import numpy
 
-#TODO(fukatani) make abstract class
+
+# TODO(fukatani) make abstract class
 
 class Accuracy(Node):
     Input('in_array', chainer.Variable)

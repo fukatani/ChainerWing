@@ -6,31 +6,37 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
+
 from floppy.node_lib import NodeList, NodeFilter
 from floppy.report_widget import ReportWidget
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.setStyleSheet('''MainWindow { background-color: rgb(95,95,95); border-color: black }''')
+        MainWindow.setStyleSheet(
+            '''MainWindow { background-color: rgb(95,95,95); border-color: black }''')
         MainWindow.resize(1250, 629)
         self.centralWidget = QtWidgets.QWidget(MainWindow)
         self.centralWidget.setObjectName("centralWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralWidget)
         self.gridLayout.setObjectName("gridLayout")
         self.HorizontalSplitter = QtWidgets.QSplitter(self.centralWidget)
-        self.HorizontalSplitter.setStyleSheet("QSplitter::handle{background: rgb(85,85,85);}")
+        self.HorizontalSplitter.setStyleSheet(
+            "QSplitter::handle{background: rgb(85,85,85);}")
         self.HorizontalSplitter.setOrientation(QtCore.Qt.Horizontal)
         self.HorizontalSplitter.setObjectName("HorizontalSplitter")
         self.DrawArea = QtWidgets.QWidget(self.HorizontalSplitter)
         self.DrawArea.setObjectName("DrawArea")
         self.RightContainer = QtWidgets.QWidget(self.HorizontalSplitter)
         self.RightContainer.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
+                                           QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.RightContainer.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.RightContainer.sizePolicy().hasHeightForWidth())
         self.RightContainer.setSizePolicy(sizePolicy)
         self.RightContainer.setMaximumSize(QtCore.QSize(450, 16777215))
         self.RightContainer.setBaseSize(QtCore.QSize(0, 0))
@@ -107,4 +113,3 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-

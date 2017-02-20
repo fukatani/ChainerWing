@@ -1,9 +1,10 @@
-from floppy.node import Node, Input, Output
-
-from chainer import datasets
 import chainer
+from chainer import datasets
 
-#TODO(fukatani) make abstract class
+from floppy.node import Node, Output
+
+
+# TODO(fukatani) make abstract class
 
 class GetMNIST(Node):
     Output('train_x', chainer.Variable)

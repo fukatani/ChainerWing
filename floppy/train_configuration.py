@@ -3,8 +3,8 @@ import json
 
 
 class TrainParamServer(object):
-    '''Singleton parameter server
-    '''
+    """Singleton parameter server
+    """
     __instance = None
 
     def __new__(cls, *args, **keys):
@@ -122,7 +122,7 @@ class TrainDialog(QDialog):
         self.parent().drawer.repaint()
 
     def update_optimizer(self, e):
-        #TODO(fukatani): temporal.
+        # TODO(fukatani): temporal.
         TrainParamServer()['opt_learning_rate'] = 1e-1
         TrainParamServer()['opt_vvaaabbb'] = 1e-2
         self.parent().open_train_config()
