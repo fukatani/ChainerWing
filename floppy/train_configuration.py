@@ -86,8 +86,8 @@ class TrainDialog(QDialog):
         main_layout = QVBoxLayout()
         for name, widget in self.dialogs:
             if not widget:
-                lWidget = QGroupBox(name)
-                lWidget.setStyleSheet('''
+                l_widget = QGroupBox(name)
+                l_widget.setStyleSheet('''
                 QGroupBox {
                     color: white;
                     border: 1px solid gray;
@@ -101,10 +101,10 @@ class TrainDialog(QDialog):
                     padding: 0 3px 0 3px;
                 }
                 ''')
-                lWidget.setFlat(False)
+                l_widget.setFlat(False)
                 section_layout = QFormLayout()
-                lWidget.setLayout(section_layout)
-                main_layout.addWidget(lWidget)
+                l_widget.setLayout(section_layout)
+                main_layout.addWidget(l_widget)
                 # layout.addRow(name)
             else:
                 section_layout.addRow(name, widget)

@@ -7,8 +7,8 @@ from floppy.node import ControlNode, Node, MetaNode
 from floppy.node import NODECLASSES
 
 
-def dummy(nodeClass):
-    return nodeClass
+def dummy(node_class):
+    return node_class
 
 
 class Graph(object):
