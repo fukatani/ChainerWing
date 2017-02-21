@@ -24,21 +24,21 @@ class CWProgressBar(extension.Extension, QDialog):
         super(CWProgressBar, self).__init__(*args)
         self.setWindowTitle('progress')
 
-        mainLayout = QVBoxLayout()
+        main_layout = QVBoxLayout()
         self.pbar = QProgressBar()
         self.pbar.setGeometry(25, 40, 200, 25)
-        mainLayout.addWidget(self.pbar)
+        main_layout.addWidget(self.pbar)
 
         self._stat_label = QLabel('')
-        mainLayout.addWidget(self._stat_label)
+        main_layout.addWidget(self._stat_label)
         self._est_label = QLabel('')
-        mainLayout.addWidget(self._est_label)
+        main_layout.addWidget(self._est_label)
 
-        stopButton = QPushButton('Stop')
-        stopButton.clicked.connect(self.finalize)
-        mainLayout.addWidget(stopButton)
+        stop_button = QPushButton('Stop')
+        stop_button.clicked.connect(self.finalize)
+        main_layout.addWidget(stop_button)
 
-        self.setLayout(mainLayout)
+        self.setLayout(main_layout)
 
         self.setWindowFlags(Qt.WindowStaysOnTopHint)
         self.setStyleSheet('''SettingsDialog {

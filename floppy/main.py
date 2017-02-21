@@ -17,11 +17,11 @@ logger.addHandler(fh)
 def run():
     logger.info('Starting Floppy Application with '+' '.join(sys.argv))
     app = QApplication(sys.argv)
-    painter = initializePainter()
+    painter = initialize_painter()
     startUI(app, painter)
 
 
-def initializePainter():
+def initialize_painter():
     painter = Painter2D()
     Graph(painter=painter)
     return painter
@@ -29,13 +29,13 @@ def initializePainter():
 
 def startUI(app, painter):
     win = MainWindow(painter=painter)
-    win.setArgs(parseArgv())
+    win.setArgs(parse_argv())
     win.show()
     logger.debug('Startup successful. Handing main thread control to Qt main loop.')
     sys.exit(app.exec_())
 
 
-def parseArgv():
+def parse_argv():
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', action='store_true', required=False)
     parser.add_argument('--test', nargs=1, required=False, default=False)

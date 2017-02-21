@@ -113,8 +113,8 @@ class NodeList(QListView):
         NodeList::item {color: white}
         ''')
 
-    def setup(self, nodeFilter, graph):
-        self.filter = nodeFilter
+    def setup(self, node_filter, graph):
+        self.filter = node_filter
         self.graph = graph
         self.filter.registerListView(self)
 

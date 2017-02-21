@@ -25,9 +25,9 @@ class ReportWidget(QWidget):
         size = self.size()
         painter = QPainter(self)
         point = QPoint(0, 0)
-        scaledPix = self.pixmap.scaled(size, Qt.KeepAspectRatio,
-                                       transformMode=Qt.SmoothTransformation)
+        scaled_pix = self.pixmap.scaled(size, Qt.KeepAspectRatio,
+                                        transformMode=Qt.SmoothTransformation)
         # start painting the label from left upper corner
-        point.setX((size.width() - scaledPix.width()) / 2)
-        point.setY((size.height() - scaledPix.height()) / 2)
-        painter.drawPixmap(point, scaledPix)
+        point.setX((size.width() - scaled_pix.width()) / 2)
+        point.setY((size.height() - scaled_pix.height()) / 2)
+        painter.drawPixmap(point, scaled_pix)

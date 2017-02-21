@@ -13,12 +13,12 @@ from floppy.report_widget import ReportWidget
 
 
 class Ui_MainWindow(object):
-    def setupUi(self, MainWindow):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.setStyleSheet(
+    def setupUi(self, main_window):
+        main_window.setObjectName("MainWindow")
+        main_window.setStyleSheet(
             '''MainWindow { background-color: rgb(95,95,95); border-color: black }''')
-        MainWindow.resize(1250, 629)
-        self.centralWidget = QtWidgets.QWidget(MainWindow)
+        main_window.resize(1250, 629)
+        self.centralWidget = QtWidgets.QWidget(main_window)
         self.centralWidget.setObjectName("centralWidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralWidget)
         self.gridLayout.setObjectName("gridLayout")
@@ -31,13 +31,13 @@ class Ui_MainWindow(object):
         self.DrawArea.setObjectName("DrawArea")
         self.RightContainer = QtWidgets.QWidget(self.HorizontalSplitter)
         self.RightContainer.setEnabled(True)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
-                                           QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
+        size_policy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
+                                            QtWidgets.QSizePolicy.Preferred)
+        size_policy.setHorizontalStretch(0)
+        size_policy.setVerticalStretch(0)
+        size_policy.setHeightForWidth(
             self.RightContainer.sizePolicy().hasHeightForWidth())
-        self.RightContainer.setSizePolicy(sizePolicy)
+        self.RightContainer.setSizePolicy(size_policy)
         self.RightContainer.setMaximumSize(QtCore.QSize(450, 16777215))
         self.RightContainer.setBaseSize(QtCore.QSize(0, 0))
         self.RightContainer.setObjectName("RightContainer")
@@ -69,8 +69,8 @@ class Ui_MainWindow(object):
         self.BottomWidget.setObjectName("BottomWidget")
         self.gridLayout_2.addWidget(self.VerticalSplitter, 0, 0, 1, 1)
         self.gridLayout.addWidget(self.HorizontalSplitter, 0, 0, 1, 1)
-        MainWindow.setCentralWidget(self.centralWidget)
-        self.menuBar = QtWidgets.QMenuBar(MainWindow)
+        main_window.setCentralWidget(self.centralWidget)
+        self.menuBar = QtWidgets.QMenuBar(main_window)
         self.menuBar.setStyleSheet('''QMenuBar{background: rgb(75,75,75); border-color: black}
 
         QMenuBar::item {spacing: 3px; padding: 1px 4px;background: transparent; border-radius: 4px; color: white}
@@ -95,21 +95,21 @@ class Ui_MainWindow(object):
         ''')
         self.menuBar.setGeometry(QtCore.QRect(0, 0, 1250, 21))
         self.menuBar.setObjectName("menuBar")
-        MainWindow.setMenuBar(self.menuBar)
-        self.mainToolBar = QtWidgets.QToolBar(MainWindow)
+        main_window.setMenuBar(self.menuBar)
+        self.mainToolBar = QtWidgets.QToolBar(main_window)
         self.mainToolBar.setStyleSheet('''
         QToolBar {background: rgb(75,75,75); border:1px solid rgb(55,55,55)}
         QToolButton { color: white }
         ''')
         self.mainToolBar.setObjectName("mainToolBar")
-        MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
-        self.statusBar = QtWidgets.QStatusBar(MainWindow)
+        main_window.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
+        self.statusBar = QtWidgets.QStatusBar(main_window)
         self.statusBar.setObjectName("statusBar")
-        MainWindow.setStatusBar(self.statusBar)
+        main_window.setStatusBar(self.statusBar)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        self.retranslateUi(main_window)
+        QtCore.QMetaObject.connectSlotsByName(main_window)
 
-    def retranslateUi(self, MainWindow):
+    def retranslateUi(self, main_window):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        main_window.setWindowTitle(_translate("MainWindow", "MainWindow"))

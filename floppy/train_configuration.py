@@ -82,7 +82,7 @@ class TrainDialog(QDialog):
         ''')
 
     def draw(self, *args, settings=None):
-        mainLayout = QVBoxLayout()
+        main_layout = QVBoxLayout()
         for name, widget in self.dialogs:
             if not widget:
                 lWidget = QGroupBox(name)
@@ -101,19 +101,19 @@ class TrainDialog(QDialog):
                 }
                 ''')
                 lWidget.setFlat(False)
-                sectionLayout = QFormLayout()
-                lWidget.setLayout(sectionLayout)
-                mainLayout.addWidget(lWidget)
+                section_layout = QFormLayout()
+                lWidget.setLayout(section_layout)
+                main_layout.addWidget(lWidget)
                 # layout.addRow(name)
             else:
-                sectionLayout.addRow(name, widget)
+                section_layout.addRow(name, widget)
         edit_opt_detail_btn = QPushButton("Update Optimizer")
         edit_opt_detail_btn.clicked.connect(self.update_optimizer)
-        mainLayout.addWidget(edit_opt_detail_btn)
-        closeButton = QPushButton('Apply')
-        closeButton.clicked.connect(self.close)
-        mainLayout.addWidget(closeButton)
-        self.setLayout(mainLayout)
+        main_layout.addWidget(edit_opt_detail_btn)
+        close_button = QPushButton('Apply')
+        close_button.clicked.connect(self.close)
+        main_layout.addWidget(close_button)
+        self.setLayout(main_layout)
 
     def close(self):
         for name, widget in self.dialogs:
@@ -136,12 +136,12 @@ class TrainDialog(QDialog):
 
 
 class AbstractTrainEdit(QSpinBox):
-    def __init__(self, settings, parent, default, valType=int):
+    def __init__(self, settings, parent, default, val_type=int):
         self.parent = parent
         self.settings = settings
         super(AbstractTrainEdit, self).__init__()
         self.globals_key = self.__class__.__name__[:-4]
-        v = settings.value(self.globals_key, type=valType)
+        v = settings.value(self.globals_key, type=val_type)
         v = v if v else default
         self.setValue(v)
         self.valueChanged.connect(self.redraw)
@@ -212,14 +212,13 @@ class WorkFileDirEdit(QPushButton):
         v = settings.value('WorkDir', type=str)
         v = v if v else './'
         self.value = v
-        self.clicked.connect(self.openDialog)
+        self.clicked.connect(self.open_dialog)
 
     def commit(self):
         self.settings.setValue('WorkDir', self.value)
         TrainParamServer()['WorkDir'] = self.text()
 
-    def openDialog(self):
-        dirName = QFileDialog.getExistingDirectory(self,
-                                                   'Training result file storage',
-                                                   self.value)
-        self.value = dirName
+    def open_dialog(self):
+        self.value = QFileDialog.getExistingDirectory(self,
+                                                      'Result file storage',
+                                                      self.value)
