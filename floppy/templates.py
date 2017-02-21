@@ -29,7 +29,8 @@ class Template(object, metaclass=MetaTemplate):
 
 class NetTemplate(Template):
 
-    def __call__(self, net_name, init_impl, call_impl):
+    def __call__(self, net_name, init_impl, call_impl, pred_impl,
+                 classification):
         rtn = '''import chainer
 from chainer.functions import *
 from chainer.links import *
@@ -42,17 +43,24 @@ from chainer import reporter
 from floppy.cw_progress_bar import CWProgressBar
 
 
-class {net_name}(chainer.Chain):
+class {0}(chainer.Chain):
 
     def __init__(self):
-        super({net_name}, self).__init__(
-{init_impl}
+        super({0}, self).__init__(
+{1}
         )
 
-    def __call__(self, x, y):
-        self.loss = {call_impl}
-'''.format(net_name=net_name, init_impl=init_impl, call_impl=call_impl)
+    def predict(self, x):
+        return {3}
+
+    def __call__(self, x, t):
+        self.y = self.predict(x)
+        self.loss = {2}
+'''.format(net_name, init_impl, call_impl, pred_impl)
         rtn += "        reporter.report({'loss': self.loss}, self)\n"
+        if classification:
+            rtn += "        self.accuracy = accuracy(self.y, t)\n"
+            rtn += "        reporter.report({'accuracy': self.accuracy}, self)\n"
         rtn += "        return self.loss"
         return rtn
 

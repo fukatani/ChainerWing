@@ -214,10 +214,11 @@ class WorkFileDirEdit(QPushButton):
         v = v if v else './'
         self.value = v
         self.clicked.connect(self.open_dialog)
+        TrainParamServer()['WorkDir'] = self.value
 
     def commit(self):
         self.settings.setValue('WorkDir', self.value)
-        TrainParamServer()['WorkDir'] = self.text()
+        TrainParamServer()['WorkDir'] = self.value
 
     def open_dialog(self):
         self.value = QFileDialog.getExistingDirectory(self,
@@ -235,7 +236,8 @@ class TrainModeEdit(QComboBox):
         v = settings.value('TrainMode', type=str)
         v = v if v else 'Simple Classification'
         self.value = v
+        TrainParamServer()['TrainMode'] = self.value
 
     def commit(self):
         self.settings.setValue('TrainMode', self.value)
-        TrainParamServer()['TrainMode'] = self.text()
+        TrainParamServer()['TrainMode'] = self.value

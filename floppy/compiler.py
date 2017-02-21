@@ -7,9 +7,14 @@ class Compiler(object):
     def __call__(self, nodes, **kwargs):
         net_name = TrainParamServer()['NetName']
         init_impl = self.compile_init(nodes)
-        call_impl = self.compile_call(nodes)
+        call_impl, pred_impl = self.compile_call(nodes)
+        classification = 'Class' in TrainParamServer()['TrainMode']
         net_file = open(net_name + '.py', 'w')
-        net_file.write(TEMPLATES['NetTemplate']()(net_name, init_impl, call_impl))
+        net_file.write(TEMPLATES['NetTemplate']()(net_name,
+                                                  init_impl,
+                                                  call_impl,
+                                                  pred_impl,
+                                                  classification))
         train_dict = {'BatchSize': TrainParamServer()['BatchSize'],
                       'Epoch': TrainParamServer()['Epoch'],
                       'GPU': TrainParamServer()['GPU'],
@@ -26,14 +31,21 @@ class Compiler(object):
 
     def compile_call(self, nodes):
         call_all_loss = []
+        call_all_pred = []
         for node in nodes.values():
             if issubclass(type(node), Loss):
-                compiled_loss = self.compile_node(node, nodes, [])
-                compiled_loss = "".join([func.call() for func in compiled_loss]) + "x" + ")" * (len(compiled_loss) - 1)
-                compiled_loss += node.call_end()
+                chains = self.compile_node(node, nodes, [])
+                loss = chains[0]
+                funcs = chains[1:]
+
+                compiled_pred = "".join([func.call() for func in funcs])
+                compiled_pred += 'x' + ')' * (len(funcs))
+                call_all_pred.append(compiled_pred)
+
+                compiled_loss = loss.call() + node.call_end()
                 call_all_loss.append(compiled_loss)
 
-        return ", ".join(call_all_loss)
+        return ', '.join(call_all_loss), ', '.join(call_all_pred)
 
     def compile_node(self, cursor, nodes, decode):
         decode.append(cursor)
