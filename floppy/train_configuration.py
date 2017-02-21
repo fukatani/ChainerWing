@@ -43,13 +43,14 @@ class TrainDialog(QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
         self.dialogs = [('Train Settings', None),
+                        ('TrainModeEdit', TrainModeEdit(settings, self)),
                         ('Net Name', NetNameEdit(settings, self)),
                         ('Batch Size', BatchSizeEdit(settings, self)),
                         ('Epoch', EpochEdit(settings, self)),
                         ('GPU', GPUEdit(settings, self)),
                         ('Optimizer Settings', None),
                         ('Optimizer', OptimizerEdit(settings, self)),
-                        ('Temporary File Settings', None),
+                        ('File Settings', None),
                         ('Working Directory',
                          WorkFileDirEdit(settings, self)),
                         ]
@@ -222,3 +223,19 @@ class WorkFileDirEdit(QPushButton):
         self.value = QFileDialog.getExistingDirectory(self,
                                                       'Result file storage',
                                                       self.value)
+
+
+class TrainModeEdit(QComboBox):
+    def __init__(self, settings, parent):
+        menu = ('Simple Classification', 'Simple Regression')
+        self.parent = parent
+        self.settings = settings
+        super(TrainModeEdit, self).__init__()
+        self.addItems(menu)
+        v = settings.value('TrainMode', type=str)
+        v = v if v else 'Simple Classification'
+        self.value = v
+
+    def commit(self):
+        self.settings.setValue('TrainMode', self.value)
+        TrainParamServer()['TrainMode'] = self.text()
