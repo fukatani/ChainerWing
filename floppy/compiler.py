@@ -15,12 +15,7 @@ class Compiler(object):
                                                   call_impl,
                                                   pred_impl,
                                                   classification))
-        train_dict = {'BatchSize': TrainParamServer()['BatchSize'],
-                      'Epoch': TrainParamServer()['Epoch'],
-                      'GPU': TrainParamServer()['GPU'],
-                      'Optimizer': TrainParamServer()['Optimizer'],
-                      'net_name': net_name}
-        net_file.write(TEMPLATES['TrainerTemplate']()(train_dict))
+        net_file.write(TEMPLATES['TrainerTemplate']()(TrainParamServer()))
 
     def compile_init(self, nodes):
         links = []

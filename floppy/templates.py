@@ -87,7 +87,7 @@ def main(call_by_gui=False):
     updater = training.StandardUpdater(train_iter, optimizer,
                                        device={2})
     '''.format(kwargs['Optimizer'], kwargs['BatchSize'],
-               kwargs['GPU'], kwargs['net_name']) + '''
+               kwargs['GPU'], kwargs['NetName']) + '''
     trainer = training.Trainer(updater, ({0}, 'epoch'))
     '''.format(kwargs['Epoch']) + '''
     trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
@@ -100,14 +100,11 @@ def main(call_by_gui=False):
                                'epoch',
                                file_name='loss.png'))
     '''
-        if 'disp_accuracy' in kwargs:
+        if 'Class' in kwargs['TrainMode']:
             call_train += '''
     trainer.extend(
         extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],
                                'epoch', file_name='accuracy.png'))
-    trainer.extend(extensions.PrintReport(
-        ['epoch', 'main/loss', 'validation/main/loss',
-         'main/accuracy', 'validation/main/accuracy', 'elapsed_time']))
     '''
         call_train += '''
     if call_by_gui:
