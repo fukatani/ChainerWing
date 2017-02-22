@@ -38,6 +38,12 @@ class TrainParamServer(object):
     def from_json(cls, line):
         json.loads(line)
 
+    def get_net_name(cls):
+        return cls['WorkDir'] + cls['NetName']
+
+    def get_model_name(cls):
+        return cls['WorkDir'] + cls['ModelName']
+
 
 class TrainDialog(QDialog):
     def __init__(self, *args, settings=None):

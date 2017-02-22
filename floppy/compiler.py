@@ -11,7 +11,7 @@ class Compiler(object):
             error.showMessage('Please place node and connect them before compile.')
             error.exec_()
             return
-        net_name = TrainParamServer()['NetName']
+        net_name = TrainParamServer().get_net_name()
         init_impl = self.compile_init(nodes)
         call_impl, pred_impl = self.compile_call(nodes)
         classification = 'Class' in TrainParamServer()['TrainMode']
