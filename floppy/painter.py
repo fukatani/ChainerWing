@@ -1075,12 +1075,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         try:
             self.drawer.graph.connect2RemoteRunner(ip, port)
         except ConnectionRefusedError:
-            err = QErrorMessage(self)
-            err.showMessage(
+            error = QErrorMessage(self)
+            error.showMessage(
                 'Connection to {} on port {} refused.'.format(ip, port))
         except socket.timeout:
-            err = QErrorMessage(self)
-            err.showMessage(
+            error = QErrorMessage(self)
+            error.showMessage(
                 'Connection to {} on port {} timed out.'.format(ip, port))
         else:
             self.statusBar.showMessage(
