@@ -45,6 +45,7 @@ class TrainDialog(QDialog):
         self.dialogs = [('Train Settings', None),
                         ('TrainModeEdit', TrainModeEdit(settings, self)),
                         ('Net Name', NetNameEdit(settings, self)),
+                        ('Model Name', ModelNameEdit(settings, self)),
                         ('Batch Size', BatchSizeEdit(settings, self)),
                         ('Epoch', EpochEdit(settings, self)),
                         ('GPU', GPUEdit(settings, self)),
@@ -197,6 +198,21 @@ class NetNameEdit(QLineEdit):
     def commit(self):
         self.settings.setValue('NetName', self.text())
         TrainParamServer()['NetName'] = self.text()
+
+
+class ModelNameEdit(QLineEdit):
+    def __init__(self, settings, parent):
+        self.parent = parent
+        self.settings = settings
+        super(ModelNameEdit, self).__init__()
+        v = settings.value('ModelName', type=str)
+        v = v if v else 'MyModel'
+        self.setText(v)
+        TrainParamServer()['ModelName'] = self.text()
+
+    def commit(self):
+        self.settings.setValue('ModelName', self.text())
+        TrainParamServer()['ModelName'] = self.text()
 
 
 class OptimizeParamEdit(AbstractTrainEdit):

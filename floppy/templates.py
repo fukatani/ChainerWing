@@ -39,6 +39,7 @@ from chainer.optimizers import *
 from chainer import training
 from chainer.training import extensions
 from chainer import reporter
+from chainer import serializers
 
 from floppy.cw_progress_bar import CWProgressBar
 
@@ -111,10 +112,12 @@ def main(call_by_gui=False):
         trainer.extend(CWProgressBar())
     else:
         trainer.extend(extensions.ProgressBar())
+
     trainer.run()
+    serializers.save_npz("{0}.npz", model)
 
 
 if __name__ == '__main__':
     main(False)
-    '''
+    '''.format(kwargs['ModelName'])
         return call_train
