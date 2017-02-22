@@ -1,10 +1,16 @@
 from floppy.node import Link, Loss
 from floppy.templates import TEMPLATES
 from floppy.train_configuration import TrainParamServer
+from PyQt5.QtWidgets import QErrorMessage
 
 
 class Compiler(object):
     def __call__(self, nodes, **kwargs):
+        if not nodes:
+            error = QErrorMessage()
+            error.showMessage('Please place node and connect them before compile.')
+            error.exec_()
+            return
         net_name = TrainParamServer()['NetName']
         init_impl = self.compile_init(nodes)
         call_impl, pred_impl = self.compile_call(nodes)
