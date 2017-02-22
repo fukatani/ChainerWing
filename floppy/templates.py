@@ -71,7 +71,7 @@ class TrainerTemplate(Template):
         call_train = '''
 
 
-def main(call_by_gui=False):
+def training_main(call_by_gui=False):
     model = {3}()
 
     optimizer = {0}()
@@ -115,9 +115,15 @@ def main(call_by_gui=False):
 
     trainer.run()
     serializers.save_npz("{0}.npz", model)
-
-
-if __name__ == '__main__':
-    main(False)
-    '''.format(kwargs['ModelName'])
+'''.format(kwargs['ModelName'])
         return call_train
+
+
+class PredTemplate(Template):
+    def __call__(self, *args, **kwargs):
+        return '''
+def prediction_main(x):
+    model = {0}()
+    serializers.load_npz("{0}.npz", model)
+    return model.predict(x)
+'''.format(kwargs['NetName'])

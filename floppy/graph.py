@@ -275,7 +275,7 @@ class Graph(object):
         compiler.Compiler()(self.nodes)
 
     def run(self):
-        self.runner.run()
+        self.runner.run(do_train=True)
 
     def print(self, message):
         print(message)
