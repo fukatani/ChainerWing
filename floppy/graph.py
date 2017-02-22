@@ -112,17 +112,17 @@ class Graph(object):
 
         return newNode
 
-    def createSubGraphNode(self, name, subgraphSave, inputRelays, outputRelays,
-                           spawnAt=None):
+    def createSubGraphNode(self, name, subgraph_save, input_relays,
+                           output_relays, spawnAt=None):
         inps = []
         names = set()
-        for info, x, y in inputRelays:
+        for info, x, y in input_relays:
             iName = info.name
             while iName in names:
                 iName += '_'
             names.add(iName)
             inps.append({'name': iName,
-                         'varType': info.varType,
+                         'var_type': info.var_type,
                          'hints': info.hints,
                          'default': None,
                          'select': info.select,
@@ -130,13 +130,13 @@ class Graph(object):
                          'optional': info.optional})
         outs = []
         names = set()
-        for info, x, y in outputRelays:
+        for info, x, y in output_relays:
             oName = info.name
             while oName in names:
                 oName += '_'
             names.add(oName)
             outs.append({'name': oName,
-                         'varType': info.varType,
+                         'var_type': info.var_type,
                          'hints': info.hints,
                          'default': None,
                          'select': info.select,
@@ -191,9 +191,9 @@ class Graph(object):
             inpNode = self.nodes[int(inpNode)]
         outInfo = outNode.getOutputInfo(out)
         inpInfo = inpNode.getInputInfo(inp)
-        # if not outInfo.varType == inpInfo.varType:
-        if not issubclass(outInfo.varType, inpInfo.varType) and not issubclass(
-                inpInfo.varType, outInfo.varType):
+        # if not outInfo.var_type == inpInfo.var_type:
+        if not issubclass(outInfo.var_type, inpInfo.var_type) and not issubclass(
+                inpInfo.var_type, outInfo.var_type):
             raise TypeError(
                 'Output \'{}\' of node {} and input \'{}\' of not {} don\'t match.'.format(
                     out,

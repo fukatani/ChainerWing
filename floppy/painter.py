@@ -511,9 +511,9 @@ class Painter2D(Painter):
                         drawItem.activate()
                 # pen.setColor(QColor(255, 190, 0))
                 try:
-                    pen.setColor(Painter2D.PINCOLORS[inputPin.info.varType])
+                    pen.setColor(Painter2D.PINCOLORS[inputPin.info.var_type])
                 except KeyError:
-                    pen.setColor(QColor(*inputPin.info.varType.color))
+                    pen.setColor(QColor(*inputPin.info.var_type.color))
                 pen.setWidth(2)
                 painter.setPen(pen)
                 if inputPin.ID == self.clickedPin:
@@ -554,9 +554,9 @@ class Painter2D(Painter):
                 outputPin = drawItem.data
                 # pen.setColor(QColor(0, 115, 130))
                 try:
-                    pen.setColor(Painter2D.PINCOLORS[outputPin.info.varType])
+                    pen.setColor(Painter2D.PINCOLORS[outputPin.info.var_type])
                 except KeyError:
-                    pen.setColor(QColor(*outputPin.info.varType.color))
+                    pen.setColor(QColor(*outputPin.info.var_type.color))
                 pen.setWidth(2)
                 painter.setPen(pen)
                 if outputPin.ID == self.clickedPin:
@@ -595,7 +595,7 @@ class Painter2D(Painter):
             if finalBuffer:
                 k, drawItem = finalBuffer
                 outputPin = drawItem.data
-                pen.setColor(Painter2D.PINCOLORS[outputPin.info.varType])
+                pen.setColor(Painter2D.PINCOLORS[outputPin.info.var_type])
                 pen.setWidth(2)
                 painter.setPen(pen)
                 if outputPin.ID == self.clickedPin:
@@ -650,13 +650,13 @@ class Painter2D(Painter):
                 # print(info)
                 outputID = output_node.getOutputID(info.output_name)
                 inputID = info.input_node.getInputID(info.input_name)
-                varType = output_node.getOutputInfo(info.output_name).varType
+                var_type = output_node.getOutputInfo(info.output_name).var_type
                 start = self.pinPositions[outputID]
                 end = self.pinPositions[inputID]
                 try:
-                    color = Painter2D.PINCOLORS[varType]
+                    color = Painter2D.PINCOLORS[var_type]
                 except KeyError:
-                    color = QColor(*varType.color)
+                    color = QColor(*var_type.color)
                 rotate = None
                 if issubclass(type(info.input_node),
                               ControlNode) and info.input_name == 'Control':
@@ -1527,7 +1527,7 @@ class LineEdit(DrawItem):
     def sanitizeInputString(self, string):
         string = string.strip('\r\n')
         try:
-            self.data.info.varType(string)
+            self.data.info.var_type(string)
         except ValueError:
             return ''
         return string
@@ -1598,13 +1598,13 @@ class NodeDialog(QDockWidget):
             newNode = self.graph.getNewestNode()
             pin = self.graph.getPinWithID(self.pin)
             if not self.back:
-                endPin = newNode.getInputofType(pin.info.varType)
+                endPin = newNode.getInputofType(pin.info.var_type)
                 if endPin:
                     self.graph.connect(self.graph.getNodeFromPinID(self.pin),
                                        self.pin.split(':')[1][1:], newNode,
                                        endPin.name)
             else:
-                endPin = newNode.getOutputofType(pin.info.varType)
+                endPin = newNode.getOutputofType(pin.info.var_type)
                 if endPin:
                     # self.graph.connect(self.graph.getNodeFromPinID(self.pin), self.pin.split(':')[1][1:], newNode, endPin.name)
                     self.graph.connect(newNode, endPin.name,
@@ -1625,4 +1625,4 @@ class NodeDialog(QDockWidget):
         :return: String representing a Hint. In this case a type Hint.
         """
         pin = self.graph.getPinWithID(self.pin)
-        return pin.info.varType.__name__
+        return pin.info.var_type.__name__

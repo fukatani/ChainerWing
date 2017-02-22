@@ -46,16 +46,16 @@ class Info(object):
     Class for handling all information related to both inputs and outputs.
     """
 
-    def __init__(self, name, varType, hints=None, default='', select=None,
+    def __init__(self, name, var_type, hints=None, default='', select=None,
                  owner=False, list=False, optional=False):
         self.name = name
         self.connected = False
-        self.varType = varType
+        self.var_type = var_type
         self.optional = optional
         if not hints:
-            self.hints = [varType.__name__]
+            self.hints = [var_type.__name__]
         else:
-            self.hints = [varType.__name__] + hints
+            self.hints = [var_type.__name__] + hints
         self.default = default
         self.valueSet = False
         self.value = None
@@ -70,12 +70,12 @@ class Info(object):
         self.owner = owner
 
     def setDefault(self, value):
-        if not self.varType == object:
+        if not self.var_type == object:
             try:
-                self.default = self.varType(value)
+                self.default = self.var_type(value)
             except ValueError:
                 self.default = ''
-            if self.varType == bool:
+            if self.var_type == bool:
                 try:
                     if value.upper() == 'TRUE':
                         self.default = True
@@ -102,16 +102,16 @@ class Info(object):
 class InputInfo(Info):
     def __call__(self, noException=False):
         if self.valueSet:
-            if not self.varType == object:
+            if not self.var_type == object:
                 if self.list:
-                    return [self.varType(i) for i in self.value]
-                return self.varType(self.value)
+                    return [self.var_type(i) for i in self.value]
+                return self.var_type(self.value)
             else:
                 return self.value
         elif self.default is not None and not self.connected:
             self.usedDefault = True if self.loopLevel > 0 else False
-            if not self.varType == object and self.default:
-                return self.varType(self.default)
+            if not self.var_type == object and self.default:
+                return self.var_type(self.default)
             else:
                 return self.default
         else:
@@ -161,7 +161,7 @@ class InputInfo(Info):
 class OutputInfo(Info):
     def __call__(self, value):
         try:
-            value.__FloppyType__ = self.varType
+            value.__FloppyType__ = self.var_type
         except AttributeError:
             pass
         self.value = value
@@ -193,14 +193,14 @@ class MetaNode(type):
             MetaNode.tags.append(arg)
 
     def addInput(name: str,
-                 varType: object,
+                 var_type: object,
                  hints=None,
                  default='',
                  select=None,
                  list=False,
                  optional=False):
         MetaNode.inputs.append({'name': name,
-                                'varType': varType,
+                                'var_type': var_type,
                                 'hints': hints,
                                 'default': default,
                                 'select': select,
@@ -208,13 +208,13 @@ class MetaNode(type):
                                 'optional': optional})
 
     def addOutput(name: str,
-                  varType: object,
+                  var_type: object,
                   hints=None,
                   default='',
                   select=None,
                   list=False):
         MetaNode.outputs.append({'name': name,
-                                 'varType': varType,
+                                 'var_type': var_type,
                                  'hints': hints,
                                  'default': default,
                                  'select': select,
@@ -254,7 +254,7 @@ class Node(object, metaclass=MetaNode):
     """
     Base class for Nodes.
 
-    To add Inputs to a custom Node class call 'Input(name, varType, hints, list)' in the class's
+    To add Inputs to a custom Node class call 'Input(name, var_type, hints, list)' in the class's
     body e.g.:
 
         class MyNode(Node):
@@ -413,11 +413,11 @@ class Node(object, metaclass=MetaNode):
         return {'template': 'DefaultTemplate',
                 'class': self.__class__.__name__,
                 'ID': self.ID,
-                'inputs': [(i, v.varType.__name__,
+                'inputs': [(i, v.var_type.__name__,
                             str(v.value) if len(str(v.value)) < 10 else str(
                                 v.value)[:10] + '...') for i, v in
                            self.inputs.items()],
-                'outputs': [(i, v.varType.__name__,
+                'outputs': [(i, v.var_type.__name__,
                              str(v.value) if len(str(v.value)) < 10 else str(
                                  v.value)[:10] + '...') for i, v in
                             self.outputs.items()],
@@ -510,16 +510,16 @@ class Node(object, metaclass=MetaNode):
     def getOutputID(self, output_name):
         return '{}:O{}'.format(self.ID, output_name)
 
-    def getInputofType(self, varType):
+    def getInputofType(self, var_type):
         for inp in self.inputs.values():
-            if issubclass(varType, inp.varType) or issubclass(inp.varType,
-                                                              varType):
+            if issubclass(var_type, inp.var_type) or issubclass(inp.var_type,
+                                                              var_type):
                 return inp
 
-    def getOutputofType(self, varType):
+    def getOutputofType(self, var_type):
         for out in self.outputs.values():
-            if issubclass(varType, out.varType) or issubclass(out.varType,
-                                                              varType):
+            if issubclass(var_type, out.var_type) or issubclass(out.var_type,
+                                                              var_type):
                 return out
 
     def save(self):
@@ -539,11 +539,11 @@ class Node(object, metaclass=MetaNode):
         return {'class': self.__class__.__name__,
                 'position': self.__pos__,
                 'inputs': [
-                    (input_name, inp.varType.__name__, inp(True), inp.default)
+                    (input_name, inp.var_type.__name__, inp(True), inp.default)
                     for input_name, inp in self.inputs.items()],
                 'inputConnections': inputConns,
                 'outputs': [
-                    (output_name, out.varType.__name__, out.value, out.default)
+                    (output_name, out.var_type.__name__, out.value, out.default)
                     for output_name, out in self.outputs.items()],
                 'outputConnections': outputConns,
                 'subgraph': self.subgraph}
@@ -619,10 +619,10 @@ class ProxyNode(Node):
         proxy.setInput(input_name, value, override, loopLevel)
         self.__ready__[input_name] = True
 
-    def addProxyInput(self, name, output, input, varType):
+    def addProxyInput(self, name, output, input, var_type):
         pass
 
-    def addProxyOutput(self, name, output, input, varType):
+    def addProxyOutput(self, name, output, input, var_type):
         pass
 
 
