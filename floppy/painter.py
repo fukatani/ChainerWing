@@ -421,10 +421,13 @@ class Painter2D(Painter):
         delete_action = menu.addAction('Delete node')
         action = menu.exec_(self.mapToGlobal(event.pos()))
         if action == delete_action:
-            self.graph.deleteNode(node)
-            self.unregisterNode(node)
-            self.repaint()
+            self.delete_node(node)
         return None
+
+    def delete_node(self, node):
+        self.graph.deleteNode(node)
+        self.unregisterNode(node)
+        self.repaint()
 
     def paintEvent(self, event):
         # before = time.time()
@@ -1123,16 +1126,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def deleteNode(self):
         node = self.drawer.getSelectedNode()
         if node:
-            self.drawer.graph.deleteNode(node)
-            self.drawer.unregisterNode(node)
-            self.drawer.repaint()
+            self.drawer.delete_node(node)
 
     def clearAllNodes(self):
         while self.drawer.nodes:
             node = self.drawer.nodes[0]
-            self.drawer.graph.deleteNode(node)
-            self.drawer.unregisterNode(node)
-            self.drawer.repaint()
+            self.drawer.delete_node(node)
 
     def exe_runner(self):
         self.drawer.graph.run()
