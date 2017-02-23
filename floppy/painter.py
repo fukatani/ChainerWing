@@ -542,7 +542,7 @@ class Painter2D(Painter):
                                 painter.transform())
                 if self.graph.getConnectionOfInput(inputPin):
                     text = inputPin.name
-                    drawItem.draw(painter, asLabel=text)
+                    drawItem.draw(painter, as_label=text)
                 else:
                     item = drawItem.draw(painter)
                     if item:
@@ -1466,14 +1466,13 @@ class LineEdit(DrawItem):
             self.state = 0
         return collides
 
-    def draw(self, painter, asLabel=False):
-
+    def draw(self, painter, as_label=False):
         if not self.text and not self.data.info.default:
             text = self.data.name
         else:
             text = self.data.info.default
-        if asLabel:
-            text = asLabel
+        if as_label:
+            text = as_label
             alignment = self.__class__.alignment
             pen = QPen(Qt.darkGray)
             painter.setPen(pen)
