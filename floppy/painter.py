@@ -248,6 +248,9 @@ class Painter2D(Painter):
                 if abs(event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
                             event.pos().y() - point.y()) < PINSIZE * self.scale:
                     self.clickedPin = i
+                    if i[-8:] != 'in_array':
+                        self.clickedPin = None
+                        return
                     if self.shiftDown:
                         self.graph.removeConnection(i)
                     self.update()
@@ -255,8 +258,7 @@ class Painter2D(Painter):
             for point, i in self.outputPinPositions:
                 # print(event.pos(), point, i)
                 # w = node.__size__[0]*100
-                if abs(
-                                event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
+                if abs(event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
                             event.pos().y() - point.y()) < PINSIZE * self.scale:
                     self.clickedPin = i
                     if self.shiftDown:
@@ -293,6 +295,7 @@ class Painter2D(Painter):
         for point, pin in self.inputPinPositions:
             if abs(pos.x() - point.x()) < 7 * self.scale and abs(
                             pos.y() - point.y()) < 7 * self.scale:
+                if pin[-8:] != 'in_array': return None
                 return pin
 
     def mouseReleaseEvent(self, event):
@@ -530,7 +533,7 @@ class Painter2D(Painter):
                         painter.drawRect(x - halfPinSize,
                                          y + drawOffset + PINSIZE, PINSIZE,
                                          PINSIZE)
-                    else:
+                    elif inputPin.info.var_type is chainer.Variable:
                         painter.drawEllipse(x - halfPinSize,
                                             y + drawOffset + PINSIZE, PINSIZE,
                                             PINSIZE)
