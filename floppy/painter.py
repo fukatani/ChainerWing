@@ -245,8 +245,7 @@ class Painter2D(Painter):
 
             for point, i in self.inputPinPositions:
                 # print(event.pos(), point, i)
-                if abs(
-                                event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
+                if abs(event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
                             event.pos().y() - point.y()) < PINSIZE * self.scale:
                     self.clickedPin = i
                     if self.shiftDown:
@@ -416,17 +415,15 @@ class Painter2D(Painter):
         node = self.rightClickedNode
         if not node:
             return None
+
+        # TODO(fukatani): Implement right click menu.
         menu = QMenu(self)
-        if node not in self.triggers:
-            triggerAction = menu.addAction('Add Trigger')
-            action = menu.exec_(self.mapToGlobal(event.pos()))
-            if action == triggerAction:
-                self.triggers.add(node)
-        else:
-            triggerAction = menu.addAction('Remove Trigger')
-            action = menu.exec_(self.mapToGlobal(event.pos()))
-            if action == triggerAction:
-                self.triggers.discard(node)
+        delete_action = menu.addAction('Delete node')
+        action = menu.exec_(self.mapToGlobal(event.pos()))
+        if action == delete_action:
+            self.graph.deleteNode(node)
+            self.unregisterNode(node)
+            self.repaint()
         return None
 
     def paintEvent(self, event):
@@ -1126,7 +1123,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def deleteNode(self):
         node = self.drawer.getSelectedNode()
         if node:
-            self.drawer.graph.deleteNode(self.drawer.getSelectedNode())
+            self.drawer.graph.deleteNode(node)
             self.drawer.unregisterNode(node)
             self.drawer.repaint()
 
