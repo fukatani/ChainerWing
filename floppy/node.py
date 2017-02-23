@@ -603,30 +603,6 @@ class Pin(object):
 
 
 @abstractNode
-class ProxyNode(Node):
-    """
-    A dummy node without any functionality used as a place holder for subgraphs.
-    """
-
-    def __init__(self, *args, **kwargs):
-        super(ProxyNode, self).__init__(*args, **kwargs)
-        self.__proxies__ = {}
-        self.__ready__ = {inp: False for inp in self.inputs.keys()}
-
-    def setInput(self, input_name, value, override=False, loopLevel=False):
-        self.loopLevel = max([self.loopLevel, loopLevel])
-        proxy = self.__proxies__[input_name]
-        proxy.setInput(input_name, value, override, loopLevel)
-        self.__ready__[input_name] = True
-
-    def addProxyInput(self, name, output, input, var_type):
-        pass
-
-    def addProxyOutput(self, name, output, input, var_type):
-        pass
-
-
-@abstractNode
 class ControlNode(Node):
     """
     Base class for nodes controlling the program flow e.g. If/Else constructs and loops.
@@ -672,36 +648,6 @@ class CreateInt(Node):
     def run(self):
         super(CreateInt, self).run()
         self._Integer(self._Value)
-
-
-class ReadFile(Node):
-    """
-    Node for reading a string from a file.
-    """
-    Input('Name', str)
-    Output('Content', str)
-
-    def run(self):
-        super(ReadFile, self).run()
-        fileName = self._Name
-        try:
-            with open(fileName, 'r') as fp:
-                c = fp.read()
-        except IOError:
-            self.raiseError('IOError', 'No file named {}.'.format(fileName))
-            return 1
-        self._Content(c)
-
-
-class WriteFile(Node):
-    Input('Name', str)
-    Input('Content', str)
-    Output('Trigger', object)
-
-    def run(self):
-        super(WriteFile, self).run()
-        with open(self._Name, 'w') as fp:
-            fp.write(self._Content)
 
 
 @abstractNode
@@ -790,67 +736,6 @@ class ForLoop(ControlNode):
                      self.inputs['Start'].isAvailable(info=True)))
         r['ready'] = 'Ready' if ready else 'Waiting'
         return r
-
-
-@abstractNode
-class DebugNode(Node):
-    """
-    Subclass this node for creating custom nodes related to debugging a graph.
-    """
-    Tag('Debug')
-
-    def print(self, *args):
-        string = ' '.join(args)
-        print('[DEBUG]', string)
-
-
-class DebugPrint(DebugNode):
-    """
-    Prints node instance specific debugging information to the cmd line. The input is than passed on straight to
-    the output without manipulating the object.
-    Custom debug information can be specified in an objects corresponding floppy.types.Type subclass.
-    """
-    Input('Object', object)
-    Output('Out', object)
-
-    def run(self):
-        super(DebugPrint, self).run()
-        obj = self._Object
-        try:
-            self.print(str(obj.__FloppyType__.debugInfoGetter(obj)()))
-        except AttributeError:
-            self.print(str(obj))
-        self._Out(obj)
-
-
-class MakeTable(Node):
-    Input('Keys', str, list=True)
-    # Input('Values', object, list=True)
-    Output('Table', str)
-
-    def run(self):
-        super(MakeTable, self).run()
-        for key, value in self.graph.STOREDVALUES.items():
-            print(key, value)
-        keys = self._Keys
-        data = [self.graph.STOREDVALUES[key] for key in keys]
-        # cols = len(keys)
-        table = ''
-        for key in keys:
-            table += '{} '.format(key)
-        table += '\n'
-        alive = True
-        while alive:
-            for col in data:
-                try:
-                    value = col.pop(0)
-                except IndexError:
-                    alive = False
-                    break
-                else:
-                    table += '{} '.format(value)
-        print(table)
-        self._Table(table)
 
 
 @abstractNode
