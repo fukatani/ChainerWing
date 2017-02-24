@@ -283,7 +283,7 @@ class Graph(object):
     def save(self, fp):
         """
         Saves the graph as a JSON string to the disk
-        :param file_name: string representing the file name.
+        :param fp: file pointer for writing JSON.
         :return:
         """
         net_state = self.to_json()

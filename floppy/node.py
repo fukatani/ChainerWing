@@ -626,30 +626,6 @@ class ControlNode(Node):
         self.waiting = False
 
 
-class CreateBool(Node):
-    """
-    Creates a Boolean.
-    """
-    Input('Value', bool, select=(True, False))
-    Output('Boolean', bool)
-
-    def run(self):
-        super(CreateBool, self).run()
-        self._Boolean(self._Value)
-
-
-class CreateInt(Node):
-    """
-    Creates an Integer.
-    """
-    Input('Value', int, )
-    Output('Integer', int)
-
-    def run(self):
-        super(CreateInt, self).run()
-        self._Integer(self._Value)
-
-
 @abstractNode
 class ForLoop(ControlNode):
     """
