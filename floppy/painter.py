@@ -790,7 +790,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 'floppy')
         self.iconRoot = os.path.join(iconRoot, 'resources')
         self.settings = QSettings('Floppy', 'Floppy')
+
         self.select_data_button = QPushButton('Please Select Data File')
+        self.select_data_button.clicked.connect(self.data_manage)
 
         self.setupUi(self)
 
@@ -1039,7 +1041,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def data_manage(self):
         # TODO(fukatani): open data dialog.
-        print('aaa')
+        init_path = os.path.abspath(__file__) + '/../../examples/'
+        data_file = QFileDialog.getOpenFileName(self, 'Select data File', init_path,
+                                            filter='(*.csv, *.npz, *.py);; Any (*.*)')[0]
+        if data_file:
+            self.select_data_button.setText(data_file)
 
     def openMacroDialog(self):
         if not self.drawer.groupSelected():
@@ -1185,7 +1191,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             init_path = os.path.abspath(__file__) + '/../../examples/'
             file_name = \
                 QFileDialog.getOpenFileName(self, 'Open File', init_path,
-                                            filter='Floppy Files (*.json);; Any (*.*)')[
+                                            filter='Chainer Wing Files (*.json);; Any (*.*)')[
                     0]
         else:
             file_name = override
