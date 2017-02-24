@@ -48,7 +48,10 @@ class TrainParamServer(object):
 class TrainDialog(QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
-        self.dialogs = [('Train Settings', None),
+        self.dialogs = [('File Settings', None),
+                        ('Working Directory',
+                         WorkFileDirEdit(settings, self)),
+                        ('Train Settings', None),
                         ('TrainModeEdit', TrainModeEdit(settings, self)),
                         ('Net Name', NetNameEdit(settings, self)),
                         ('Model Name', ModelNameEdit(settings, self)),
@@ -57,9 +60,6 @@ class TrainDialog(QDialog):
                         ('GPU', GPUEdit(settings, self)),
                         ('Optimizer Settings', None),
                         ('Optimizer', OptimizerEdit(settings, self)),
-                        ('File Settings', None),
-                        ('Working Directory',
-                         WorkFileDirEdit(settings, self)),
                         ]
         for param in TrainParamServer().iter_for_opt_params():
             dialog = (param, OptimizeParamEdit(settings, self, param))
