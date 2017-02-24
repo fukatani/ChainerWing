@@ -790,6 +790,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                 'floppy')
         self.iconRoot = os.path.join(iconRoot, 'resources')
         self.settings = QSettings('Floppy', 'Floppy')
+        self.select_data_button = QPushButton('Please Select Data File')
 
         self.setupUi(self)
 
@@ -831,17 +832,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.compile_and_exe()
 
     def initActions(self):
-        self.exitAction = QAction(
+        self.exit_action = QAction(
             QIcon(os.path.join(self.iconRoot, 'quit.png')), 'Quit', self)
-        self.exitAction.setShortcut('Ctrl+Q')
-        self.exitAction.setStatusTip('Exit application')
-        self.exitAction.triggered.connect(self.close)
+        self.exit_action.setShortcut('Ctrl+Q')
+        self.exit_action.setStatusTip('Exit application')
+        self.exit_action.triggered.connect(self.close)
 
-        self.newAction = QAction(QIcon(os.path.join(self.iconRoot, 'new.png')),
-                                 'New', self)
-        self.newAction.setShortcut('Ctrl+N')
-        self.newAction.setStatusTip('New Graph')
-        self.newAction.triggered.connect(self.new)
+        self.data_action = QAction(QIcon(os.path.join(self.iconRoot, 'new.png')),
+                                   'Data', self)
+        self.data_action.setShortcut('Ctrl+D')
+        self.data_action.setStatusTip('Manageing Data')
+        self.data_action.triggered.connect(self.data_manage)
 
         self.compile_and_exe_action = QAction(
             QIcon(os.path.join(self.iconRoot, 'run.png')), 'Compile and Run',
@@ -851,19 +852,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.compile_and_exe_action.setIconVisibleInMenu(True)
         self.addAction(self.compile_and_exe_action)
 
-        self.loadAction = QAction(
+        self.load_action = QAction(
             QIcon(os.path.join(self.iconRoot, 'load.png')), 'load', self)
-        self.loadAction.setShortcut('Ctrl+O')
-        self.loadAction.triggered.connect(self.loadGraph)
-        self.loadAction.setIconVisibleInMenu(True)
-        self.addAction(self.loadAction)
+        self.load_action.setShortcut('Ctrl+O')
+        self.load_action.triggered.connect(self.loadGraph)
+        self.load_action.setIconVisibleInMenu(True)
+        self.addAction(self.load_action)
 
-        self.saveAction = QAction(
+        self.save_action = QAction(
             QIcon(os.path.join(self.iconRoot, 'save.png')), 'save', self)
-        self.saveAction.setShortcut('Ctrl+S')
-        self.saveAction.triggered.connect(self.save_graph_and_train)
-        self.saveAction.setIconVisibleInMenu(True)
-        self.addAction(self.saveAction)
+        self.save_action.setShortcut('Ctrl+S')
+        self.save_action.triggered.connect(self.save_graph_and_train)
+        self.save_action.setIconVisibleInMenu(True)
+        self.addAction(self.save_action)
 
         self.clear_all_action = QAction(
             QIcon(os.path.join(self.iconRoot, 'kill.png')), 'Clear All', self)
@@ -931,7 +932,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.addAction(self.statusAction)
 
         self.train_configure_action = QAction(
-            QIcon(os.path.join(self.iconRoot, 'drop.png')), 'Drop', self)
+            QIcon(os.path.join(self.iconRoot, 'drop.png')), 'Train configure', self)
         self.train_configure_action.setShortcut('Ctrl+I')
         self.train_configure_action.triggered.connect(self.open_train_config)
         self.train_configure_action.setIconVisibleInMenu(True)
@@ -944,13 +945,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushAction.setIconVisibleInMenu(True)
         self.addAction(self.pushAction)
 
-        self.settingsAction = QAction(
+        self.settings_action = QAction(
             QIcon(os.path.join(self.iconRoot, 'settings.png')), 'Settings',
             self)
-        self.settingsAction.setShortcut('Ctrl+T')
-        self.settingsAction.triggered.connect(self.openSettingsDialog)
-        self.settingsAction.setIconVisibleInMenu(False)
-        self.addAction(self.settingsAction)
+        self.settings_action.setShortcut('Ctrl+T')
+        self.settings_action.triggered.connect(self.openSettingsDialog)
+        self.settings_action.setIconVisibleInMenu(False)
+        self.addAction(self.settings_action)
 
         self.createSubgraphAction = QAction(
             QIcon(os.path.join(self.iconRoot, 'macro.png')), 'Create Macro',
@@ -970,22 +971,28 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def initMenus(self):
         fileMenu = self.menuBar.addMenu('&File')
-        fileMenu.addAction(self.exitAction)
-        fileMenu.addAction(self.newAction)
-        fileMenu.addAction(self.compile_and_exe_action)
+        fileMenu.addAction(self.data_action)
+        fileMenu.addAction(self.save_action)
+        fileMenu.addAction(self.load_action)
+        fileMenu.addAction(self.exit_action)
 
-        advancedMenu = self.menuBar.addMenu('&Advanced')
-        advancedMenu.addAction(self.connectAction)
-        advancedMenu.addAction(self.createSubgraphAction)
+        run_menu = self.menuBar.addMenu('&Run')
+        run_menu.addAction(self.compile_and_exe_action)
+        run_menu.addAction(self.compile_action)
+        run_menu.addAction(self.exe_action)
+        # run_menu.addAction(self.connectAction)
+        # run_menu.addAction(self.createSubgraphAction)
 
         settingsMenu = self.menuBar.addMenu('&Settings')
-        settingsMenu.addAction(self.settingsAction)
+        settingsMenu.addAction(self.train_configure_action)
+        settingsMenu.addAction(self.settings_action)
 
-        self.mainToolBar.addAction(self.exitAction)
+        # self.mainToolBar.addAction(self.exitAction)
+        self.mainToolBar.addWidget(self.select_data_button)
+        # self.mainToolBar.addAction(self.data_action)
         self.mainToolBar.addSeparator()
-        self.mainToolBar.addAction(self.newAction)
-        self.mainToolBar.addAction(self.saveAction)
-        self.mainToolBar.addAction(self.loadAction)
+        self.mainToolBar.addAction(self.save_action)
+        self.mainToolBar.addAction(self.load_action)
         self.mainToolBar.addSeparator()
         self.mainToolBar.addAction(self.compile_and_exe_action)
         self.mainToolBar.addSeparator()
@@ -1005,7 +1012,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.mainToolBar.addAction(self.statusAction)
         self.mainToolBar.addAction(self.train_configure_action)
         self.mainToolBar.addSeparator()
-        self.mainToolBar.addAction(self.settingsAction)
+        self.mainToolBar.addAction(self.settings_action)
 
         # self.mainToolBar.addSeparator()
         # self.mainToolBar.addWidget(QLabel('Display Macro:'))
@@ -1030,11 +1037,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.macroSelector.addItems(new.difference(self.knownSubgraphs))
         self.knownSubgraphs = self.knownSubgraphs.union(new)
 
-    def new(self):
-        self.drawer.reset()
-        self.drawer.registerGraph(Graph(self.drawer))
-        self.drawer.reportWidget = self.BottomWidget
-        self.drawer.repaint()
+    def data_manage(self):
+        # TODO(fukatani): open data dialog.
+        print('aaa')
 
     def openMacroDialog(self):
         if not self.drawer.groupSelected():
