@@ -1041,7 +1041,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def data_manage(self):
         # TODO(fukatani): open data dialog.
-        init_path = os.path.abspath(__file__) + '/../../examples/'
+        init_path = TrainParamServer().get_data_dir()
         data_file = QFileDialog.getOpenFileName(self, 'Select data File', init_path,
                                             filter='(*.csv, *.npz, *.py);; Any (*.*)')[0]
         if data_file:
@@ -1188,7 +1188,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def loadGraph(self, *args, override=False):
         if not override:
             # TODO(fukatani): serialize directory.
-            init_path = os.path.abspath(__file__) + '/../../examples/'
+            init_path = TrainParamServer().get_data_dir()
             file_name = \
                 QFileDialog.getOpenFileName(self, 'Open File', init_path,
                                             filter='Chainer Wing Files (*.json);; Any (*.*)')[

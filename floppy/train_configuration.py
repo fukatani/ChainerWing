@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 import json
+import os
 
 
 class TrainParamServer(object):
@@ -43,6 +44,11 @@ class TrainParamServer(object):
 
     def get_model_name(cls):
         return cls['WorkDir'] + cls['ModelName']
+
+    def get_data_dir(cls):
+        if 'DataDir' not in cls.__dict__:
+            cls.__dict__['DataDir'] = os.path.abspath(__file__) + '/../../examples/'
+        return cls.__dict__['DataDir']
 
 
 class TrainDialog(QDialog):
