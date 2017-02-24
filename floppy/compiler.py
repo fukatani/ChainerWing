@@ -16,7 +16,7 @@ class Compiler(object):
         call_impl, pred_impl = self.compile_call(nodes)
         classification = 'Class' in TrainParamServer()['TrainMode']
         net_file = open(net_name + '.py', 'w')
-        net_file.write(TEMPLATES['NetTemplate']()(net_name,
+        net_file.write(TEMPLATES['NetTemplate']()(TrainParamServer()['NetName'],
                                                   init_impl,
                                                   call_impl,
                                                   pred_impl,
