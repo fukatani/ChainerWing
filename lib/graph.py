@@ -1,10 +1,10 @@
 import json
 from collections import OrderedDict
 
-from floppy import compiler
-from floppy import runner
-from floppy.node import ControlNode, Node, MetaNode
-from floppy.node import NODECLASSES
+from lib import compiler
+from lib import runner
+from lib.node import ControlNode, Node, MetaNode
+from lib.node import NODECLASSES
 
 
 def dummy(node_class):

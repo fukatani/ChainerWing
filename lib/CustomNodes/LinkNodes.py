@@ -1,6 +1,6 @@
 import chainer
 
-from floppy.node import Input, Output, Link
+from lib.node import Input, Output, Link
 
 
 class Linear(Link):

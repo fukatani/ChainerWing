@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'floppy/resources/mainwindow.ui'
+# Form implementation generated from reading ui file 'lib/resources/mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.4
 #
@@ -8,8 +8,8 @@
 
 from PyQt5 import QtCore, QtWidgets
 
-from floppy.node_lib import NodeList, NodeFilter
-from floppy.report_widget import ReportWidget
+from lib.node_lib import NodeList, NodeFilter
+from lib.report_widget import ReportWidget
 
 
 class Ui_MainWindow(object):

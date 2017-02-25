@@ -1,13 +1,13 @@
 import os
 
-from floppy.mainwindow import Ui_MainWindow
-from floppy.node import ControlNode
-from floppy.node_lib import ContextNodeFilter
-from floppy.node_lib import ContextNodeList
-from floppy.data_config import DataDialog
-from floppy.settings import SettingsDialog
-from floppy.train_config import TrainDialog
-from floppy.train_config import TrainParamServer
+from lib.mainwindow import Ui_MainWindow
+from lib.node import ControlNode
+from lib.node_lib import ContextNodeFilter
+from lib.node_lib import ContextNodeList
+from lib.data_config import DataDialog
+from lib.settings import SettingsDialog
+from lib.train_config import TrainDialog
+from lib.train_config import TrainParamServer
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
@@ -774,7 +774,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         iconRoot = os.path.realpath(__file__)
         iconRoot = os.path.join(os.path.dirname(os.path.dirname(iconRoot)),
-                                'floppy')
+                                'lib')
         self.iconRoot = os.path.join(iconRoot, 'resources')
         self.settings = QtCore.QSettings('Floppy', 'Floppy')
 

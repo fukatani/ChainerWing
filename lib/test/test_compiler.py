@@ -4,11 +4,11 @@ import sys
 from PyQt5.QtCore import QSettings
 from PyQt5.QtWidgets import QApplication
 
-from floppy import node_lib
-from floppy import train_config
-from floppy.graph import Graph
-from floppy.painter import MainWindow, Painter2D
-from floppy.train_config import TrainParamServer
+from lib import node_lib
+from lib import train_config
+from lib.graph import Graph
+from lib.painter import MainWindow, Painter2D
+from lib.train_config import TrainParamServer
 
 if __name__ == '__main__':
     # To initialize train_parameter.

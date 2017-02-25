@@ -1,5 +1,5 @@
-from floppy.graph import Graph
-from floppy.painter import Painter2D, MainWindow
+from lib.graph import Graph
+from lib.painter import Painter2D, MainWindow
 import sys
 from PyQt5 import QtWidgets
 import argparse
@@ -7,7 +7,7 @@ import logging
 
 logger = logging.getLogger('Floppy')
 logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler('floppy.log')
+fh = logging.FileHandler('lib.log')
 fh.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)

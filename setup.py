@@ -13,6 +13,6 @@ setup(name='chainer_wind',
       author='fukatani',
       license="BSD 3-Clause",
       packages=find_packages(),
-      package_data={'floppy': ['resources/*', ], },
+      package_data={'lib': ['resources/*', ], },
       install_requires=install_requires,
       )

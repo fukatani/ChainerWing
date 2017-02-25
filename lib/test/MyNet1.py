@@ -7,7 +7,7 @@ from chainer import training
 from chainer.training import extensions
 from chainer import reporter
 
-from floppy.cw_progress_bar import CWProgressBar
+from lib.cw_progress_bar import CWProgressBar
 
 
 class MyNet1(chainer.Chain):

@@ -1,6 +1,6 @@
-from floppy.node import Link, Loss
-from floppy.templates import TEMPLATES
-from floppy.train_config import TrainParamServer
+from lib.node import Link, Loss
+from lib.templates import TEMPLATES
+from lib.train_config import TrainParamServer
 from PyQt5.QtWidgets import QErrorMessage
 
 

@@ -1,4 +1,4 @@
-from floppy.data_fetch import DataManeger
+from lib.data_fetch import DataManeger
 import numpy as np
 
 if __name__ == '__main__':

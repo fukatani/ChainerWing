@@ -41,7 +41,7 @@ from chainer.training import extensions
 from chainer import reporter
 from chainer import serializers
 
-from floppy.cw_progress_bar import CWProgressBar
+from lib.cw_progress_bar import CWProgressBar
 
 
 class {0}(chainer.Chain):

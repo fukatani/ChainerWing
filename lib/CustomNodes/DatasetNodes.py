@@ -1,7 +1,7 @@
 import chainer
 from chainer import datasets
 
-from floppy.node import Node, Output
+from lib.node import Node, Output
 
 
 # TODO(fukatani) make abstract class

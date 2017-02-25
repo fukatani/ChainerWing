@@ -1,6 +1,6 @@
 import chainer
 
-from floppy.node import Input, Loss
+from lib.node import Input, Loss
 
 
 class SoftmaxCrossEntropy(Loss):
