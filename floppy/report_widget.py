@@ -9,7 +9,7 @@ from PyQt5 import QtCore
 class ReportWidget(QtWidgets.QTabWidget):
 
     def __init__(self, *args, **kwargs):
-        super(ReportWidget, self).__init__(height=210, *args, **kwargs)
+        super(ReportWidget, self).__init__(*args, **kwargs)
         self.setStyleSheet('''ReportWidget{background: rgb(55,55,55)}
         ''')
         try:
@@ -28,7 +28,7 @@ class ReportWidget(QtWidgets.QTabWidget):
 class GraphWidget(QtWidgets.QWidget):
 
     def __init__(self, image_file, *args, **kwargs):
-        super(GraphWidget, self).__init__(height=200)
+        super(GraphWidget, self).__init__()
         self.setStyleSheet('''ReportWidget{background: rgb(55,55,55)}
         ''')
         self.pixmap = None

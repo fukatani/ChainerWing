@@ -58,7 +58,6 @@ class SettingsDialog(QtWidgets.QDialog):
                 section_layout = QtWidgets.QFormLayout()
                 l_widget.setLayout(section_layout)
                 main_layout.addWidget(l_widget)
-                # layout.addRow(name)
             else:
                 section_layout.addRow(name, widget)
         close_button = QtWidgets.QPushButton('Apply')

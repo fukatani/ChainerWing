@@ -57,10 +57,8 @@ class TrainDialog(QtWidgets.QDialog):
         self.settings = settings
         work_edit = WorkDirEdit(settings, self)
         self.dialogs = [('File Settings', None),
-                        ('Working Directory',
-                         work_edit),
-                        ('',
-                         work_edit.label),
+                        ('Working Directory', work_edit),
+                        ('', work_edit.label),
                         ('Train Settings', None),
                         ('TrainModeEdit', TrainModeEdit(settings, self)),
                         ('Net Name', NetNameEdit(settings, self)),
