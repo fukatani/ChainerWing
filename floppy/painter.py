@@ -206,7 +206,10 @@ class Painter2D(Painter):
         else:
             x = .9
         self.scale *= x
-        self.repaint()  # Dirty trick to make sure the connection beziers are drawn at the same zoom level as the nodes.
+
+        # Dirty trick to make sure the connection beziers are drawn
+        # at the same zoom level as the nodes.
+        self.repaint()
         self.update()
 
     def mousePressEvent(self, event):
@@ -325,13 +328,10 @@ class Painter2D(Painter):
                     error.exec_()
 
             else:
-                if not self.shiftDown and (
-                                abs((
-                                                event.pos() - self.mouseDownPos).x()) > 10 or
-                                abs((
-                                                event.pos() - self.mouseDownPos).y()) > 10):
-                    # print('Do something. NOW!!!')
-                    self.openDialog(event)
+                if not self.shiftDown:
+                    if (abs((event.pos() - self.mouseDownPos).x()) > 10 or
+                        abs((event.pos() - self.mouseDownPos).y()) > 10):
+                        self.openDialog(event)
             self.looseConnection = False
             self.clickedPin = None
         self.drag = False
@@ -386,8 +386,7 @@ class Painter2D(Painter):
         if self.downOverNode:
             if self.groupSelection:
                 for node in self.groupSelection:
-                    newPos = (
-                                 event.pos() - self.downOverNode) * self.scale ** -1
+                    newPos = (event.pos() - self.downOverNode) / self.scale
                     oldPos = QPoint(node.__pos__[0], node.__pos__[1])
                     newPos = oldPos + newPos
                     node.__pos__ = (newPos.x(), newPos.y())
@@ -395,7 +394,7 @@ class Painter2D(Painter):
                 self.update()
             else:
                 node = self.clickedNode
-                newPos = (event.pos() - self.downOverNode) * self.scale ** -1
+                newPos = (event.pos() - self.downOverNode) / self.scale
                 oldPos = QPoint(node.__pos__[0], node.__pos__[1])
                 newPos = oldPos + newPos
                 node.__pos__ = (newPos.x(), newPos.y())
@@ -488,7 +487,6 @@ class Painter2D(Painter):
             painter.setPen(pen)
 
             painter.fillPath(path, QtGui.QColor(55, 55, 55))
-            # painter.drawRoundedRect(node.pos[0], node.pos[1], node.size[0], node.size[1], 50, 5)
             painter.drawPath(path)
             pen.setColor(QtGui.QColor(150, 150, 150))
             painter.setFont(
@@ -760,19 +758,15 @@ class Painter2D(Painter):
         verticalN = int(self.width() / spacing / 2) + 1
         horizontalN = int(self.height() / spacing / 2) + 1
         for i in range(verticalN):
-            # painter.drawLine(self.width()/2 + self.globalOffset.x()+i*spacing, 0, self.width()/2+ self.globalOffset.x() + i*spacing, self.height())
             painter.drawLine(self.width() / 2 + i * spacing, 0,
                              self.width() / 2 + i * spacing, self.height())
-            # painter.drawLine(QPoint(self.width()/2 + self.globalOffset.x()-i*spacing, 0), QPoint(self.width()/2+ self.globalOffset.x() - i*spacing, self.height()))
             painter.drawLine(QPoint(self.width() / 2 - i * spacing, 0),
                              QPoint(self.width() / 2 - i * spacing,
                                     self.height()))
 
         for i in range(horizontalN):
-            # painter.drawLine(0, self.height()/2+self.globalOffset.y()+i*spacing, self.width(), self.height()/2+self.globalOffset.y()+i*spacing)
             painter.drawLine(0, self.height() / 2 + i * spacing, self.width(),
                              self.height() / 2 + i * spacing)
-            # painter.drawLine(0, self.height()/2+self.globalOffset.y()-i*spacing, self.width(), self.height()/2+self.globalOffset.y()-i*spacing)
             painter.drawLine(0, self.height() / 2 - i * spacing, self.width(),
                              self.height() / 2 - i * spacing)
 
@@ -1286,7 +1280,8 @@ class DrawItem(object):
                          alignment, text)
 
     def set_font(self, painter):
-        painter.setFont(QFont('Helvetica', self.settings.value('FontSize')))
+        painter.setFont(
+            QtGui.QFont('Helvetica', self.settings.value('FontSize')))
 
     def run(self):
         pass
