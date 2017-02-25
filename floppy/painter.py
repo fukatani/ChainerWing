@@ -5,8 +5,8 @@ from floppy.node import ControlNode
 from floppy.node_lib import ContextNodeFilter
 from floppy.node_lib import ContextNodeList
 from floppy.settings import SettingsDialog
-from floppy.train_configuration import TrainDialog
-from floppy.train_configuration import TrainParamServer
+from floppy.train_config import TrainDialog
+from floppy.train_config import TrainParamServer
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QPoint, QSettings

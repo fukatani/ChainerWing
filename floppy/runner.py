@@ -1,6 +1,6 @@
 import importlib
 
-from floppy.train_configuration import TrainParamServer
+from floppy.train_config import TrainParamServer
 from PyQt5.QtWidgets import QErrorMessage
 
 

@@ -1,4 +1,4 @@
-from floppy.train_configuration import TrainParamServer
+from floppy.train_config import TrainParamServer
 
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui

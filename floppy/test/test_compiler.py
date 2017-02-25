@@ -5,10 +5,10 @@ from PyQt5.QtCore import QSettings
 from PyQt5.QtWidgets import QApplication
 
 from floppy import node_lib
-from floppy import train_configuration
+from floppy import train_config
 from floppy.graph import Graph
 from floppy.painter import MainWindow, Painter2D
-from floppy.train_configuration import TrainParamServer
+from floppy.train_config import TrainParamServer
 
 if __name__ == '__main__':
     # To initialize train_parameter.
@@ -17,7 +17,7 @@ if __name__ == '__main__':
 
     painter = Painter2D()
     test_window = MainWindow(painter=painter)
-    train_configuration.TrainDialog(test_window, settings=settings)
+    train_config.TrainDialog(test_window, settings=settings)
 
     graph = Graph(painter=painter)
     with open('../../examples/mnist.json', 'r') as fp:
