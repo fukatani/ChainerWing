@@ -55,9 +55,12 @@ class TrainParamServer(object):
 class TrainDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
+        work_edit = WorkDirEdit(settings, self)
         self.dialogs = [('File Settings', None),
                         ('Working Directory',
-                         WorkFileDirEdit(settings, self)),
+                         work_edit),
+                        ('',
+                         work_edit.label),
                         ('Train Settings', None),
                         ('TrainModeEdit', TrainModeEdit(settings, self)),
                         ('Net Name', NetNameEdit(settings, self)),
@@ -234,16 +237,17 @@ class OptimizeParamEdit(AbstractTrainEdit):
         TrainParamServer()[key] = self.value()
 
 
-class WorkFileDirEdit(QtWidgets.QPushButton):
+class WorkDirEdit(QtWidgets.QPushButton):
     def __init__(self, settings, parent):
         self.parent = parent
         self.settings = settings
-        super(WorkFileDirEdit, self).__init__('Browse')
+        super(WorkDirEdit, self).__init__('Browse')
         v = settings.value('WorkDir', type=str)
         v = v if v else './'
         self.value = v
         self.clicked.connect(self.open_dialog)
         TrainParamServer()['WorkDir'] = self.value
+        self.label = WorkDirLabel(settings, parent)
 
     def commit(self):
         self.settings.setValue('WorkDir', self.value)
@@ -254,6 +258,14 @@ class WorkFileDirEdit(QtWidgets.QPushButton):
             getExistingDirectory(self,
                                  'Result file storage',
                                  self.value)
+        self.label.setText(self.value)
+
+
+class WorkDirLabel(QtWidgets.QLabel):
+    def __init__(self, settings, parent):
+        self.parent = parent
+        self.settings = settings
+        super(WorkDirLabel, self).__init__(TrainParamServer()['WorkDir'])
 
 
 class TrainModeEdit(QtWidgets.QComboBox):
