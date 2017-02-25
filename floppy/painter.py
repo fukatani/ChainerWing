@@ -4,6 +4,7 @@ from floppy.mainwindow import Ui_MainWindow
 from floppy.node import ControlNode
 from floppy.node_lib import ContextNodeFilter
 from floppy.node_lib import ContextNodeList
+from floppy.data_config import DataDialog
 from floppy.settings import SettingsDialog
 from floppy.train_config import TrainDialog
 from floppy.train_config import TrainParamServer
@@ -779,7 +780,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.select_data_button = QtWidgets.QPushButton('Please Select '
                                                         'Data File')
-        self.select_data_button.clicked.connect(self.data_manage)
+        self.select_data_button.clicked.connect(self.open_data_config)
 
         self.setupUi(self)
 
@@ -832,7 +833,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             QtGui.QIcon(os.path.join(self.iconRoot, 'new.png')), 'Data', self)
         self.data_action.setShortcut('Ctrl+D')
         self.data_action.setStatusTip('Manageing Data')
-        self.data_action.triggered.connect(self.data_manage)
+        self.data_action.triggered.connect(self.open_data_config)
 
         self.compile_and_exe_action = QtWidgets.QAction(
             QtGui.QIcon(os.path.join(self.iconRoot, 'run.png')),
@@ -1032,14 +1033,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.macroSelector.addItems(new.difference(self.knownSubgraphs))
         self.knownSubgraphs = self.knownSubgraphs.union(new)
 
-    def data_manage(self):
-        # TODO(fukatani): open data dialog.
-        init_path = TrainParamServer().get_data_dir()
-        data_file = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select data File', init_path,
-            filter='(*.csv, *.npz, *.py);; Any (*.*)')[0]
-        if data_file:
-            self.select_data_button.setText(data_file)
+    def open_data_config(self):
+        DataDialog(self, settings=self.settings).show()
 
     def openMacroDialog(self):
         if not self.drawer.groupSelected():
