@@ -1,4 +1,5 @@
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
+
 import json
 import os
 
@@ -51,7 +52,7 @@ class TrainParamServer(object):
         return cls.__dict__['DataDir']
 
 
-class TrainDialog(QDialog):
+class TrainDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
         self.dialogs = [('File Settings', None),
@@ -96,10 +97,10 @@ class TrainDialog(QDialog):
         ''')
 
     def draw(self, *args, settings=None):
-        main_layout = QVBoxLayout()
+        main_layout = QtWidgets.QVBoxLayout()
         for name, widget in self.dialogs:
             if not widget:
-                l_widget = QGroupBox(name)
+                l_widget = QtWidgets.QGroupBox(name)
                 l_widget.setStyleSheet('''
                 QGroupBox {
                     color: white;
@@ -115,16 +116,16 @@ class TrainDialog(QDialog):
                 }
                 ''')
                 l_widget.setFlat(False)
-                section_layout = QFormLayout()
+                section_layout = QtWidgets.QFormLayout()
                 l_widget.setLayout(section_layout)
                 main_layout.addWidget(l_widget)
                 # layout.addRow(name)
             else:
                 section_layout.addRow(name, widget)
-        edit_opt_detail_btn = QPushButton("Update Optimizer")
+        edit_opt_detail_btn = QtWidgets.QPushButton("Update Optimizer")
         edit_opt_detail_btn.clicked.connect(self.update_optimizer)
         main_layout.addWidget(edit_opt_detail_btn)
-        close_button = QPushButton('Apply')
+        close_button = QtWidgets.QPushButton('Apply')
         close_button.clicked.connect(self.close)
         main_layout.addWidget(close_button)
         self.setLayout(main_layout)
@@ -149,7 +150,7 @@ class TrainDialog(QDialog):
         self.close()
 
 
-class AbstractTrainEdit(QSpinBox):
+class AbstractTrainEdit(QtWidgets.QSpinBox):
     def __init__(self, settings, parent, default, val_type=int):
         self.parent = parent
         self.settings = settings
@@ -184,7 +185,7 @@ class GPUEdit(AbstractTrainEdit):
         super(GPUEdit, self).__init__(settings, parent, -1)
 
 
-class OptimizerEdit(QLineEdit):
+class OptimizerEdit(QtWidgets.QLineEdit):
     def __init__(self, settings, parent):
         self.parent = parent
         self.settings = settings
@@ -198,7 +199,7 @@ class OptimizerEdit(QLineEdit):
         TrainParamServer()['Optimizer'] = self.text()
 
 
-class NetNameEdit(QLineEdit):
+class NetNameEdit(QtWidgets.QLineEdit):
     def __init__(self, settings, parent):
         self.parent = parent
         self.settings = settings
@@ -212,7 +213,7 @@ class NetNameEdit(QLineEdit):
         TrainParamServer()['NetName'] = self.text()
 
 
-class ModelNameEdit(QLineEdit):
+class ModelNameEdit(QtWidgets.QLineEdit):
     def __init__(self, settings, parent):
         self.parent = parent
         self.settings = settings
@@ -233,7 +234,7 @@ class OptimizeParamEdit(AbstractTrainEdit):
         TrainParamServer()[key] = self.value()
 
 
-class WorkFileDirEdit(QPushButton):
+class WorkFileDirEdit(QtWidgets.QPushButton):
     def __init__(self, settings, parent):
         self.parent = parent
         self.settings = settings
@@ -249,12 +250,13 @@ class WorkFileDirEdit(QPushButton):
         TrainParamServer()['WorkDir'] = self.value
 
     def open_dialog(self):
-        self.value = QFileDialog.getExistingDirectory(self,
-                                                      'Result file storage',
-                                                      self.value)
+        self.value = QtWidgets.QFileDialog.\
+            getExistingDirectory(self,
+                                 'Result file storage',
+                                 self.value)
 
 
-class TrainModeEdit(QComboBox):
+class TrainModeEdit(QtWidgets.QComboBox):
     def __init__(self, settings, parent):
         menu = ('Simple Classification', 'Simple Regression')
         self.parent = parent

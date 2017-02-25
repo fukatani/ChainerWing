@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
 
 
-class SettingsDialog(QDialog):
+class SettingsDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
         self.dialogs = [('Node Graph Render Settings', None),
@@ -36,10 +36,10 @@ class SettingsDialog(QDialog):
                                 color: white;
                             }
         ''')
-        main_layout = QVBoxLayout()
+        main_layout = QtWidgets.QVBoxLayout()
         for name, widget in self.dialogs:
             if not widget:
-                l_widget = QGroupBox(name)
+                l_widget = QtWidgets.QGroupBox(name)
                 l_widget.setStyleSheet('''
                 QGroupBox {
                     color: white;
@@ -55,13 +55,13 @@ class SettingsDialog(QDialog):
                 }
                 ''')
                 l_widget.setFlat(False)
-                section_layout = QFormLayout()
+                section_layout = QtWidgets.QFormLayout()
                 l_widget.setLayout(section_layout)
                 main_layout.addWidget(l_widget)
                 # layout.addRow(name)
             else:
                 section_layout.addRow(name, widget)
-        close_button = QPushButton('Apply')
+        close_button = QtWidgets.QPushButton('Apply')
         close_button.clicked.connect(self.close)
         main_layout.addWidget(close_button)
         self.setLayout(main_layout)
@@ -79,7 +79,7 @@ class SettingsDialog(QDialog):
         self.parent().drawer.repaint()
 
 
-class AbstractEdit(QSpinBox):
+class AbstractEdit(QtWidgets.QSpinBox):
     def __init__(self, settings, parent, default, val_type=int):
         self.parent = parent
         self.settings = settings

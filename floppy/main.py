@@ -1,7 +1,7 @@
 from floppy.graph import Graph
 from floppy.painter import Painter2D, MainWindow
 import sys
-from PyQt5.QtWidgets import QApplication
+from PyQt5 import QtWidgets
 import argparse
 import logging
 
@@ -16,7 +16,7 @@ logger.addHandler(fh)
 
 def run():
     logger.info('Starting Floppy Application with '+' '.join(sys.argv))
-    app = QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     painter = initialize_painter()
     startUI(app, painter)
 

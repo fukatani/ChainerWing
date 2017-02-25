@@ -1,6 +1,5 @@
 import os
 
-from floppy.graph import Graph
 from floppy.mainwindow import Ui_MainWindow
 from floppy.node import ControlNode
 from floppy.node_lib import ContextNodeFilter
@@ -9,7 +8,7 @@ from floppy.settings import SettingsDialog
 from floppy.train_configuration import TrainDialog
 from floppy.train_configuration import TrainParamServer
 
-from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QPoint, QSettings
 from PyQt5.QtGui import *
 from PyQt5.Qt import QTimer
@@ -24,7 +23,7 @@ PINSIZE = 8
 TEXTYOFFSET = 0
 
 
-class Painter(QWidget):
+class Painter(QtWidgets.QWidget):
     def decorateNode(self, node, position):
         return node
 
@@ -321,7 +320,7 @@ class Painter2D(Painter):
                     self.graph.connect(output_nodeID, output_name, input_nodeID,
                                        input_name)
                 except TypeError:
-                    error = QErrorMessage()
+                    error = QtWidgets.QErrorMessage()
                     error.showMessage('Cannot connect pins of different type')
                     error.exec_()
 
@@ -420,7 +419,7 @@ class Painter2D(Painter):
             return None
 
         # TODO(fukatani): Implement right click menu.
-        menu = QMenu(self)
+        menu = QtWidgets.QMenu(self)
         delete_action = menu.addAction('Delete node')
         action = menu.exec_(self.mapToGlobal(event.pos()))
         if action == delete_action:
@@ -781,7 +780,7 @@ class Painter2D(Painter):
         self.settings = settings
 
 
-class MainWindow(QMainWindow, Ui_MainWindow):
+class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None, painter=None):
         super(MainWindow, self).__init__(parent)
 
@@ -791,7 +790,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.iconRoot = os.path.join(iconRoot, 'resources')
         self.settings = QSettings('Floppy', 'Floppy')
 
-        self.select_data_button = QPushButton('Please Select Data File')
+        self.select_data_button = QtWidgets.QPushButton('Please Select '
+                                                        'Data File')
         self.select_data_button.clicked.connect(self.data_manage)
 
         self.setupUi(self)
@@ -813,7 +813,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         p = self.palette()
         p.setColor(drawWidget.backgroundRole(), QColor(70, 70, 70))
         drawWidget.setPalette(p)
-        l = QGridLayout()
+        l = QtWidgets.QGridLayout()
         l.addWidget(drawWidget)
         self.DrawArea.setLayout(l)
         self.drawer = drawWidget
@@ -834,19 +834,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.compile_and_exe()
 
     def initActions(self):
-        self.exit_action = QAction(
+        self.exit_action = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'quit.png')), 'Quit', self)
         self.exit_action.setShortcut('Ctrl+Q')
         self.exit_action.setStatusTip('Exit application')
         self.exit_action.triggered.connect(self.close)
 
-        self.data_action = QAction(QIcon(os.path.join(self.iconRoot, 'new.png')),
-                                   'Data', self)
+        self.data_action = QtWidgets.QAction(
+            QIcon(os.path.join(self.iconRoot, 'new.png')), 'Data', self)
         self.data_action.setShortcut('Ctrl+D')
         self.data_action.setStatusTip('Manageing Data')
         self.data_action.triggered.connect(self.data_manage)
 
-        self.compile_and_exe_action = QAction(
+        self.compile_and_exe_action = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'run.png')), 'Compile and Run',
             self)
         self.compile_and_exe_action.setShortcut('Ctrl+R')
@@ -854,42 +854,42 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.compile_and_exe_action.setIconVisibleInMenu(True)
         self.addAction(self.compile_and_exe_action)
 
-        self.load_action = QAction(
+        self.load_action = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'load.png')), 'load', self)
         self.load_action.setShortcut('Ctrl+O')
         self.load_action.triggered.connect(self.loadGraph)
         self.load_action.setIconVisibleInMenu(True)
         self.addAction(self.load_action)
 
-        self.save_action = QAction(
+        self.save_action = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'save.png')), 'save', self)
         self.save_action.setShortcut('Ctrl+S')
         self.save_action.triggered.connect(self.save_graph_and_train)
         self.save_action.setIconVisibleInMenu(True)
         self.addAction(self.save_action)
 
-        self.clear_all_action = QAction(
+        self.clear_all_action = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'kill.png')), 'Clear All', self)
         # self.killRunnerAction.setShortcut('Ctrl+K')
         self.clear_all_action.triggered.connect(self.clearAllNodes)
         self.clear_all_action.setIconVisibleInMenu(True)
         self.addAction(self.clear_all_action)
 
-        self.pauseRunnerAction = QAction(
+        self.pauseRunnerAction = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'pause.png')), 'Pause', self)
         self.pauseRunnerAction.setShortcut('Ctrl+P')
         self.pauseRunnerAction.triggered.connect(self.pauseRunner)
         self.pauseRunnerAction.setIconVisibleInMenu(True)
         self.addAction(self.pauseRunnerAction)
 
-        self.compile_action = QAction(
+        self.compile_action = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'unpause.png')), 'Compile', self)
         self.compile_action.setShortcut('Ctrl+L')
         self.compile_action.triggered.connect(self.compile_runner)
         self.compile_action.setIconVisibleInMenu(True)
         self.addAction(self.compile_action)
 
-        self.exe_action = QAction(
+        self.exe_action = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'step.png')), 'Run', self)
         self.exe_action.setShortcut('Ctrl+K')
         self.exe_action.triggered.connect(self.exe_runner)
@@ -914,40 +914,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # self.spawnRunnerAction.setIconVisibleInMenu(True)
         # self.addAction(self.spawnRunnerAction)
 
-        self.deleteNodeAction = QAction('Delete', self)
+        self.deleteNodeAction = QtWidgets.QAction('Delete', self)
         self.deleteNodeAction.setShortcut('Delete')
         self.deleteNodeAction.triggered.connect(self.deleteNode)
         self.deleteNodeAction.setIconVisibleInMenu(True)
         self.addAction(self.deleteNodeAction)
 
-        self.connectAction = QAction(
+        self.connectAction = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'connect.png')), 'Connect', self)
         self.connectAction.setShortcut('Ctrl+C')
         self.connectAction.triggered.connect(self.connect)
         self.connectAction.setIconVisibleInMenu(True)
         self.addAction(self.connectAction)
 
-        self.statusAction = QAction('Status', self)
+        self.statusAction = QtWidgets.QAction('Status', self)
         # self.statusAction.setShortcut('Ctrl+R')
         self.statusAction.triggered.connect(self.updateStatus)
         self.statusAction.setIconVisibleInMenu(True)
         self.addAction(self.statusAction)
 
-        self.train_configure_action = QAction(
-            QIcon(os.path.join(self.iconRoot, 'drop.png')), 'Train configure', self)
+        self.train_configure_action = QtWidgets.QAction(
+            QIcon(os.path.join(self.iconRoot, 'drop.png')),
+            'Train configure', self)
         self.train_configure_action.setShortcut('Ctrl+I')
         self.train_configure_action.triggered.connect(self.open_train_config)
         self.train_configure_action.setIconVisibleInMenu(True)
         self.addAction(self.train_configure_action)
 
-        self.pushAction = QAction(
+        self.pushAction = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'push.png')), 'Push', self)
         self.pushAction.setShortcut('Ctrl+X')
         self.pushAction.triggered.connect(self.pushGraph)
         self.pushAction.setIconVisibleInMenu(True)
         self.addAction(self.pushAction)
 
-        self.settings_action = QAction(
+        self.settings_action = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'settings.png')), 'Settings',
             self)
         self.settings_action.setShortcut('Ctrl+T')
@@ -955,7 +956,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.settings_action.setIconVisibleInMenu(False)
         self.addAction(self.settings_action)
 
-        self.createSubgraphAction = QAction(
+        self.createSubgraphAction = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'macro.png')), 'Create Macro',
             self)
         self.createSubgraphAction.setShortcut('Ctrl+G')
@@ -963,7 +964,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.createSubgraphAction.setIconVisibleInMenu(False)
         self.addAction(self.createSubgraphAction)
 
-        self.configureAction = QAction(
+        self.configureAction = QtWidgets.QAction(
             QIcon(os.path.join(self.iconRoot, 'configure.png')), 'configure',
             self)
         self.configureAction.setShortcut('Ctrl+Y')
@@ -1042,8 +1043,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def data_manage(self):
         # TODO(fukatani): open data dialog.
         init_path = TrainParamServer().get_data_dir()
-        data_file = QFileDialog.getOpenFileName(self, 'Select data File', init_path,
-                                            filter='(*.csv, *.npz, *.py);; Any (*.*)')[0]
+        data_file = QtWidgets.QFileDialog.getOpenFileName(
+            self, 'Select data File', init_path,
+            filter='(*.csv, *.npz, *.py);; Any (*.*)')[0]
         if data_file:
             self.select_data_button.setText(data_file)
 
@@ -1052,7 +1054,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.statusBar.showMessage(
                 'You Must Select a Group to Create a Macro.', 2000)
             return
-        name, state = QInputDialog.getText(self, 'Create Macro', 'Macro Name:')
+        name, state = QtWidgets.QInputDialog.getText(
+            self, 'Create Macro', 'Macro Name:')
         if not state:
             return
         self.drawer.createSubgraph(name)
@@ -1065,50 +1068,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         TrainDialog(self, settings=self.settings).show()
 
     def connect(self):
-        self.connectHint = self.settings.value('DefaultConnection', type=str)
-        text = ''
-        while not text:
-            text, ok = QInputDialog.getItem(self,
-                                            'Connect to remote Interpreter',
-                                            'IP Address/Port: (xxx.xxx.xxx:Port)',
-                                            [self.connectHint])
-            if not ok:
-                return
-        if ':' not in text:
-            ip = text
-            port = ''
-            while not port:
-                port, ok = QInputDialog.getText(self, 'Port number is missing',
-                                                'Port:')
-                if not ok:
-                    return
-        else:
-            ip, port = text.split(':')
-        self.connectHint = text
-        import socket
-        try:
-            self.drawer.graph.connect2RemoteRunner(ip, port)
-        except ConnectionRefusedError:
-            error = QErrorMessage(self)
-            error.showMessage(
-                'Connection to {} on port {} refused.'.format(ip, port))
-        except socket.timeout:
-            error = QErrorMessage(self)
-            error.showMessage(
-                'Connection to {} on port {} timed out.'.format(ip, port))
-        else:
-            self.statusBar.showMessage(
-                'Connection to {} on port {} established.'.format(ip, port),
-                2000)
+        # TODO(fukatani): Implement.
+        pass
 
     def close(self):
         try:
             self.drawer.graph.killRunner()
         except:
-            error = QErrorMessage()
+            error = QtWidgets.QErrorMessage()
             error.showMessage('No runner to kill.')
             error.exec_()
-        qApp.quit()
+        QtWidgets.qApp.quit()
 
     def updateStatus(self):
         try:
@@ -1189,10 +1159,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if not override:
             # TODO(fukatani): serialize directory.
             init_path = TrainParamServer().get_data_dir()
-            file_name = \
-                QFileDialog.getOpenFileName(self, 'Open File', init_path,
-                                            filter='Chainer Wing Files (*.json);; Any (*.*)')[
-                    0]
+            file_name = QtWidgets.QFileDialog.getOpenFileName(
+                self, 'Open File', init_path,
+                filter='Chainer Wing Files (*.json);; Any (*.*)')[0]
         else:
             file_name = override
         if not file_name: return
@@ -1211,8 +1180,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             TrainParamServer().from_json(line)
 
     def raiseErrorMessage(self, message):
-        err = QErrorMessage(self)
-        err.showMessage(message)
+        error = QtWidgets.QErrorMessage(self)
+        error.showMessage(message)
         logger.error(message)
 
     def save_graph_and_train(self, *args):
@@ -1221,7 +1190,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         :param args: throwaway arguments.
         :return: None
         """
-        file_name = QFileDialog.getSaveFileName(self, 'Save File', '~/')[0]
+        file_name = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save File', '~/')[0]
         if not file_name:
             return
         if not file_name.endswith('.json'):
@@ -1550,10 +1520,10 @@ class OutputLabel(DrawItem):
     pass
 
 
-class NodeDialog(QDockWidget):
+class NodeDialog(QtWidgets.QDockWidget):
     """
-    Container Widget handling the set up of a ContextNodeFilter widget and a ContextNodeList when connections are
-    dragged into open space.
+    Container Widget handling the set up of a ContextNodeFilter widget and
+    a ContextNodeList when connections are dragged into open space.
     """
 
     def __init__(self, painter, event, pin, graph, parent=None):
@@ -1561,18 +1531,18 @@ class NodeDialog(QDockWidget):
         self.painter = painter
         self.pin = pin
         super(NodeDialog, self).__init__(parent)
-        self.setTitleBarWidget(QWidget(self))
+        self.setTitleBarWidget(QtWidgets.QWidget(self))
         self.setStyleSheet(
             "NodeDialog {background-color:rgb(45,45,45) ;border:1px solid rgb(0, 0, 0); "
             "border-color:black}")
         self.setWindowFlags(
             Qt.Window | Qt.WindowStaysOnTopHint | Qt.X11BypassWindowManagerHint | Qt.FramelessWindowHint)
-        self.setFeatures(QDockWidget.DockWidgetMovable)
+        self.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
         self.setFloating(True)
         pos = event.globalPos()
         self.setGeometry(pos.x(), pos.y(), 150, 250)
-        dL = QVBoxLayout()
-        cB = QCheckBox('Context sensitive')
+        dL = QtWidgets.QVBoxLayout()
+        cB = QtWidgets.QCheckBox('Context sensitive')
         cB.setChecked(painter.contextSensitive)
         self.cB = cB
 
@@ -1592,7 +1562,7 @@ class NodeDialog(QDockWidget):
         dL.addWidget(cB)
         dL.addWidget(nodeList)
         # self.cl
-        self.dialogWidget = QWidget()
+        self.dialogWidget = QtWidgets.QWidget()
         self.dialogWidget.setLayout(dL)
         self.setWidget(self.dialogWidget)
 
@@ -1615,13 +1585,9 @@ class NodeDialog(QDockWidget):
             else:
                 endPin = newNode.getOutputofType(pin.info.var_type)
                 if endPin:
-                    # self.graph.connect(self.graph.getNodeFromPinID(self.pin), self.pin.split(':')[1][1:], newNode, endPin.name)
                     self.graph.connect(newNode, endPin.name,
                                        self.graph.getNodeFromPinID(self.pin),
                                        self.pin.split(':')[1][1:])
-
-                    # self.painter.app.connectionManager.registerStart(pin, pin.node)
-                    # self.painter.app.connectionManager.registerEnd(endPin, newNode)
 
         # painter.contextSensitive = self.cB.checkState()
         self.painter.update()

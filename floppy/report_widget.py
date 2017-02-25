@@ -1,14 +1,12 @@
 from floppy.train_configuration import TrainParamServer
 
-from PyQt5.QtWidgets import QWidget
-from PyQt5.QtWidgets import QTabWidget
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtGui import QPainter
+from PyQt5 import QtWidgets
+from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
-from PyQt5.QtCore import QPoint
+from PyQt5 import QtCore
 
 
-class ReportWidget(QTabWidget):
+class ReportWidget(QtWidgets.QTabWidget):
 
     def __init__(self, *args, **kwargs):
         super(ReportWidget, self).__init__(height=210, *args, **kwargs)
@@ -27,7 +25,7 @@ class ReportWidget(QTabWidget):
         self.resize(200, 200)
 
 
-class GraphWidget(QWidget):
+class GraphWidget(QtWidgets.QWidget):
 
     def __init__(self, image_file, *args, **kwargs):
         super(GraphWidget, self).__init__(height=200)
@@ -40,11 +38,11 @@ class GraphWidget(QWidget):
         if 'Class' not in TrainParamServer()['TrainMode']:
             if 'accuracy' in self.image_file:
                 return
-        self.pixmap = QPixmap(self.image_file)
+        self.pixmap = QtGui.QPixmap(self.image_file)
         #self.adjustSize()
         size = self.size()
-        painter = QPainter(self)
-        point = QPoint(0, 0)
+        painter = QtGui.QPainter(self)
+        point = QtCore.QPoint(0, 0)
         scaled_pix = self.pixmap.scaled(size, Qt.KeepAspectRatio,
                                         transformMode=Qt.SmoothTransformation)
         # start painting the label from left upper corner

@@ -4,17 +4,13 @@ import datetime
 import time
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication
-from PyQt5.QtWidgets import QDialog
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QProgressBar
-from PyQt5.QtWidgets import QPushButton
-from PyQt5.QtWidgets import QVBoxLayout
+from PyQt5 import QtWidgets
+
 from chainer.training import extension
 from chainer.training import trigger
 
 
-class CWProgressBar(extension.Extension, QDialog):
+class CWProgressBar(extension.Extension, QtWidgets.QDialog):
 
     def __init__(self, *args, update_interval=100):
         self._update_interval = update_interval
@@ -24,17 +20,17 @@ class CWProgressBar(extension.Extension, QDialog):
         super(CWProgressBar, self).__init__(*args)
         self.setWindowTitle('progress')
 
-        main_layout = QVBoxLayout()
-        self.pbar = QProgressBar()
+        main_layout = QtWidgets.QVBoxLayout()
+        self.pbar = QtWidgets.QProgressBar()
         self.pbar.setGeometry(25, 40, 200, 25)
         main_layout.addWidget(self.pbar)
 
-        self._stat_label = QLabel('')
+        self._stat_label = QtWidgets.QLabel('')
         main_layout.addWidget(self._stat_label)
-        self._est_label = QLabel('')
+        self._est_label = QtWidgets.QLabel('')
         main_layout.addWidget(self._est_label)
 
-        stop_button = QPushButton('Stop')
+        stop_button = QtWidgets.QPushButton('Stop')
         stop_button.clicked.connect(self.finalize)
         main_layout.addWidget(stop_button)
 
@@ -106,7 +102,7 @@ class CWProgressBar(extension.Extension, QDialog):
 
             if len(recent_timing) > 100:
                 del recent_timing[0]
-        QApplication.instance().processEvents()
+        QtWidgets.QApplication.instance().processEvents()
 
     def finalize(self):
         # delete the progress bar and exit training
