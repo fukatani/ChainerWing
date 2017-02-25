@@ -100,6 +100,10 @@ class Ui_MainWindow(object):
         self.mainToolBar.setStyleSheet('''
         QToolBar {background: rgb(75,75,75); border:1px solid rgb(55,55,55)}
         QToolButton { color: white }
+        QPushButton {
+            background-color: rgb(155,95,95);
+            color: white;
+        }
         ''')
         self.mainToolBar.setObjectName("mainToolBar")
         main_window.addToolBar(QtCore.Qt.TopToolBarArea, self.mainToolBar)
