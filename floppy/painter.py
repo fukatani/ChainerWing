@@ -9,9 +9,9 @@ from floppy.train_config import TrainDialog
 from floppy.train_config import TrainParamServer
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt, QPoint, QSettings
+from PyQt5.QtCore import Qt
+from PyQt5 import QtCore
 from PyQt5 import QtGui
-from PyQt5.Qt import QTimer
 
 import chainer
 import logging
@@ -38,7 +38,7 @@ class Painter2D(Painter):
                  numpy.ndarray: QtGui.QColor(100, 0, 200), }
     nodes = []
     scale = 1.
-    globalOffset = QPoint(0, 0)
+    globalOffset = QtCore.QPoint(0, 0)
     drag = False
     inputPinPositions = []
     clickedPin = None
@@ -49,7 +49,7 @@ class Painter2D(Painter):
     def __init__(self, parent=None):
         super(Painter2D, self).__init__(parent)
         self.setMouseTracking(True)
-        self.timer = QTimer()
+        self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.checkGraph)
         self.timer.start(500)
         self.setFocusPolicy(Qt.ClickFocus)
@@ -387,7 +387,7 @@ class Painter2D(Painter):
             if self.groupSelection:
                 for node in self.groupSelection:
                     newPos = (event.pos() - self.downOverNode) / self.scale
-                    oldPos = QPoint(node.__pos__[0], node.__pos__[1])
+                    oldPos = QtCore.QPoint(node.__pos__[0], node.__pos__[1])
                     newPos = oldPos + newPos
                     node.__pos__ = (newPos.x(), newPos.y())
                 self.downOverNode = event.pos()
@@ -395,7 +395,7 @@ class Painter2D(Painter):
             else:
                 node = self.clickedNode
                 newPos = (event.pos() - self.downOverNode) / self.scale
-                oldPos = QPoint(node.__pos__[0], node.__pos__[1])
+                oldPos = QtCore.QPoint(node.__pos__[0], node.__pos__[1])
                 newPos = oldPos + newPos
                 node.__pos__ = (newPos.x(), newPos.y())
                 self.downOverNode = event.pos()
@@ -446,12 +446,12 @@ class Painter2D(Painter):
 
         painter.translate(self.width() / 2. + self.globalOffset.x(),
                           self.height() / 2. + self.globalOffset.y())
-        self.center = QPoint(self.width() / 2. + self.globalOffset.x(),
+        self.center = QtCore.QPoint(self.width() / 2. + self.globalOffset.x(),
                              self.height() / 2. + self.globalOffset.y())
         painter.scale(self.scale, self.scale)
         # painter.translate(self.width()/2., self.height()/2.)
         painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing)
-        # painter.drawEllipse(QPoint(0,0),5,5)
+        # painter.drawEllipse(QtCore.QPoint(0,0),5,5)
         report = self.graph.getReport()
         if report and not report == self.lastReport:
             self.reportWidget.updateReport(report)
@@ -481,8 +481,8 @@ class Painter2D(Painter):
             h = node.__size__[1] * (8 + PINSIZE) + 40
 
             path.addRoundedRect(x, y, w, h, 50, 5)
-            self.nodePoints.append((QPoint(x, y) * painter.transform(),
-                                    QPoint(x + w, y + h) * painter.transform(),
+            self.nodePoints.append((QtCore.QPoint(x, y) * painter.transform(),
+                                    QtCore.QPoint(x + w, y + h) * painter.transform(),
                                     node))
             painter.setPen(pen)
 
@@ -522,7 +522,7 @@ class Painter2D(Painter):
                 if inputPin.name == 'Control':
                     painter.drawEllipse(x - halfPinSize + w / 2.,
                                         y - halfPinSize, PINSIZE, PINSIZE)
-                    point = QPoint(x + w / 2., y) * painter.transform()
+                    point = QtCore.QPoint(x + w / 2., y) * painter.transform()
                     self.inputPinPositions.append((point, inputPin.ID))
                     continue
                 else:
@@ -534,8 +534,8 @@ class Painter2D(Painter):
                         painter.drawEllipse(x - halfPinSize,
                                             y + drawOffset + PINSIZE, PINSIZE,
                                             PINSIZE)
-                    point = QPoint(x,
-                                   y + drawOffset + 4 + PINSIZE) * painter.transform()
+                    point = QtCore.QPoint(x, y + drawOffset + 4 + PINSIZE)
+                    point *= painter.transform()
                 self.inputPinPositions.append((point, inputPin.ID))
                 drawOffset += (8 + PINSIZE)
                 drawItem.update(x, y + drawOffset + 8, w, h,
@@ -565,10 +565,6 @@ class Painter2D(Painter):
                 if outputPin.name == 'Final':
                     finalBuffer = (k, drawItem)
                     continue
-                    # painter.drawEllipse(x-4+w/2., y+10+drawOffset, 8, 8)
-                    # point = QPoint(x+w/2., y+drawOffset+14) * painter.transform()
-                    # self.outputPinPositions.append((point, outputPin.ID))
-                    # continue
                 else:
                     if outputPin.info.list:
                         painter.drawRect(x + w - halfPinSize,
@@ -578,7 +574,7 @@ class Painter2D(Painter):
                         painter.drawEllipse(x + w - halfPinSize,
                                             y + drawOffset + PINSIZE, PINSIZE,
                                             PINSIZE)
-                    point = QPoint(x + w - 4,
+                    point = QtCore.QPoint(x + w - 4,
                                    y + drawOffset + 4 + PINSIZE) * painter.transform()
                 # drawOffset += 16
                 drawOffset += (8 + PINSIZE)
@@ -604,7 +600,7 @@ class Painter2D(Painter):
                 painter.drawEllipse(x - halfPinSize + w / 2.,
                                     y + 10 - int(PINSIZE / 10) + drawOffset,
                                     PINSIZE, PINSIZE)
-                point = QPoint(x + w / 2.,
+                point = QtCore.QPoint(x + w / 2.,
                                y + drawOffset + 14) * painter.transform()
                 self.outputPinPositions.append((point, outputPin.ID))
 
@@ -612,13 +608,12 @@ class Painter2D(Painter):
         self.pinPositions = {value[1]: value[0] for value in
                              self.inputPinPositions + self.outputPinPositions}
         # self.drawConnections(painter)
-        self.transform = painter.transform()
-        self.transform = painter.transform()
+        # self.transform = painter.transform()
         for item in lastDraws:
             item.draw(painter, last=True)
 
         if self.selectFrame and self.selectFrame_End:
-            painter.setBrush(QColor(255, 255, 255, 25))
+            painter.setBrush(QtGui.QColor(255, 255, 255, 25))
             painter.setPen(Qt.white)
             x = self.selectFrame.x()
             y = self.selectFrame.y()
@@ -760,8 +755,8 @@ class Painter2D(Painter):
         for i in range(verticalN):
             painter.drawLine(self.width() / 2 + i * spacing, 0,
                              self.width() / 2 + i * spacing, self.height())
-            painter.drawLine(QPoint(self.width() / 2 - i * spacing, 0),
-                             QPoint(self.width() / 2 - i * spacing,
+            painter.drawLine(QtCore.QPoint(self.width() / 2 - i * spacing, 0),
+                             QtCore.QPoint(self.width() / 2 - i * spacing,
                                     self.height()))
 
         for i in range(horizontalN):
@@ -782,7 +777,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         iconRoot = os.path.join(os.path.dirname(os.path.dirname(iconRoot)),
                                 'floppy')
         self.iconRoot = os.path.join(iconRoot, 'resources')
-        self.settings = QSettings('Floppy', 'Floppy')
+        self.settings = QtCore.QSettings('Floppy', 'Floppy')
 
         self.select_data_button = QtWidgets.QPushButton('Please Select '
                                                         'Data File')
@@ -794,7 +789,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             QtGui.QIcon(os.path.join(self.iconRoot, 'appIcon.png')))
 
         self.resize(self.settings.value("size", (900, 700)))
-        self.move(self.settings.value("pos", QPoint(50, 50)))
+        self.move(self.settings.value("pos", QtCore.QPoint(50, 50)))
         self.setWindowTitle('ChainerWind')
 
         self.initActions()
@@ -1257,10 +1252,10 @@ class DrawItem(object):
         self.y = y
         self.w = w - 10
         self.h = h
-        point = QPoint(x + 12, y - 16) * transform
+        point = QtCore.QPoint(x + 12, y - 16) * transform
         self._x = point.x()
         self._y = point.y()
-        point = QPoint(x + w - 24, y + h - 60) * transform
+        point = QtCore.QPoint(x + w - 24, y + h - 60) * transform
         self._xx = point.x()
         self._yy = point.y()
 
@@ -1386,8 +1381,8 @@ class Selector(DrawItem):
             # pen.setWidth(3)
             painter.setPen(pen)
             painter.setBrush(QtGui.QBrush(Qt.gray))
-            points = QPoint(xx + self.w - 40, yy - 2 + PINSIZE / 2), QPoint(
-                xx + 10 - 40 + self.w, yy - 2 + PINSIZE / 2), QPoint(
+            points = QtCore.QPoint(xx + self.w - 40, yy - 2 + PINSIZE / 2), QtCore.QPoint(
+                xx + 10 - 40 + self.w, yy - 2 + PINSIZE / 2), QtCore.QPoint(
                 xx + 5 + self.w - 40, yy + 4 + PINSIZE / 2)
             painter.drawPolygon(*points)
             painter.setBrush(QtGui.QColor(40, 40, 40))
