@@ -10,7 +10,7 @@ from floppy.train_configuration import TrainParamServer
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt, QPoint, QSettings
-from PyQt5.QtGui import *
+from PyQt5 import QtGui
 from PyQt5.Qt import QTimer
 
 import chainer
@@ -29,13 +29,13 @@ class Painter(QtWidgets.QWidget):
 
 
 class Painter2D(Painter):
-    PINCOLORS = {str: QColor(255, 190, 0),
-                 int: QColor(0, 115, 130),
-                 float: QColor(0, 200, 0),
-                 object: QColor(190, 190, 190),
-                 bool: QColor(190, 0, 0),
-                 chainer.Variable: QColor(100, 0, 100),
-                 numpy.ndarray: QColor(100, 0, 200), }
+    PINCOLORS = {str: QtGui.QColor(255, 190, 0),
+                 int: QtGui.QColor(0, 115, 130),
+                 float: QtGui.QColor(0, 200, 0),
+                 object: QtGui.QColor(190, 190, 190),
+                 bool: QtGui.QColor(190, 0, 0),
+                 chainer.Variable: QtGui.QColor(100, 0, 100),
+                 numpy.ndarray: QtGui.QColor(100, 0, 200), }
     nodes = []
     scale = 1.
     globalOffset = QPoint(0, 0)
@@ -437,8 +437,8 @@ class Painter2D(Painter):
         self.outputPinPositions = []
         self.nodePoints = []
         super(Painter2D, self).paintEvent(event)
-        painter = QPainter(self)
-        painter.setRenderHint(QPainter.HighQualityAntialiasing)
+        painter = QtGui.QPainter(self)
+        painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing)
         self.drawGrid(painter)
         try:
             self.drawConnections(painter)
@@ -451,7 +451,7 @@ class Painter2D(Painter):
                              self.height() / 2. + self.globalOffset.y())
         painter.scale(self.scale, self.scale)
         # painter.translate(self.width()/2., self.height()/2.)
-        painter.setRenderHint(QPainter.HighQualityAntialiasing)
+        painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing)
         # painter.drawEllipse(QPoint(0,0),5,5)
         report = self.graph.getReport()
         if report and not report == self.lastReport:
@@ -464,18 +464,18 @@ class Painter2D(Painter):
         for j, node in enumerate(self.nodes):
             if not self.selectedSubgraph[0] == node.subgraph:
                 continue
-            pen = QPen()
+            pen = QtGui.QPen()
             pen.setWidth(2)
             if hasattr(node, 'color'):
                 painter.setBrush(node.color())
             else:
-                painter.setBrush(QColor(55, 55, 55))
+                painter.setBrush(QtGui.QColor(55, 55, 55))
             if self.clickedNode == node or node in self.groupSelection:
-                painter.setBrush(QColor(75, 75, 75))
+                painter.setBrush(QtGui.QColor(75, 75, 75))
 
-            font = QFont('Helvetica', 12)
+            font = QtGui.QFont('Helvetica', 12)
             painter.setFont(font)
-            path = QPainterPath()
+            path = QtGui.QPainterPath()
             x = node.__pos__[0]  # + self.globalOffset.x()
             y = node.__pos__[1]  # + self.globalOffset.y()
             w = node.__size__[0] * self.settings.value('NodeWidth')
@@ -487,16 +487,16 @@ class Painter2D(Painter):
                                     node))
             painter.setPen(pen)
 
-            painter.fillPath(path, QColor(55, 55, 55))
+            painter.fillPath(path, QtGui.QColor(55, 55, 55))
             # painter.drawRoundedRect(node.pos[0], node.pos[1], node.size[0], node.size[1], 50, 5)
             painter.drawPath(path)
-            pen.setColor(QColor(150, 150, 150))
+            pen.setColor(QtGui.QColor(150, 150, 150))
             painter.setFont(
-                QFont('Helvetica', self.settings.value('NodeTitleFontSize')))
+                QtGui.QFont('Helvetica', self.settings.value('NodeTitleFontSize')))
             painter.setPen(pen)
             painter.drawText(x, y + 3, w, h, Qt.AlignHCenter,
                              node.__class__.__name__)
-            painter.setBrush(QColor(40, 40, 40))
+            painter.setBrush(QtGui.QColor(40, 40, 40))
             drawOffset = 25
             # for i, inputPin in enumerate(node.inputPins.values()):
             for i, drawItem in enumerate(self.drawItemsOfNode[node]['inp']):
@@ -515,7 +515,7 @@ class Painter2D(Painter):
                 try:
                     pen.setColor(Painter2D.PINCOLORS[inputPin.info.var_type])
                 except KeyError:
-                    pen.setColor(QColor(*inputPin.info.var_type.color))
+                    pen.setColor(QtGui.QColor(*inputPin.info.var_type.color))
                 pen.setWidth(2)
                 painter.setPen(pen)
                 if inputPin.ID == self.clickedPin:
@@ -558,7 +558,7 @@ class Painter2D(Painter):
                 try:
                     pen.setColor(Painter2D.PINCOLORS[outputPin.info.var_type])
                 except KeyError:
-                    pen.setColor(QColor(*outputPin.info.var_type.color))
+                    pen.setColor(QtGui.QColor(*outputPin.info.var_type.color))
                 pen.setWidth(2)
                 painter.setPen(pen)
                 if outputPin.ID == self.clickedPin:
@@ -658,7 +658,7 @@ class Painter2D(Painter):
                 try:
                     color = Painter2D.PINCOLORS[var_type]
                 except KeyError:
-                    color = QColor(*var_type.color)
+                    color = QtGui.QColor(*var_type.color)
                 rotate = None
                 if issubclass(type(info.input_node),
                               ControlNode) and info.input_name == 'Control':
@@ -675,11 +675,11 @@ class Painter2D(Painter):
         self.looseConnection = position
 
     def drawBezier(self, start, end, color, painter, rotate=None):
-        pen = QPen()
+        pen = QtGui.QPen()
         pen.setColor(color)
         pen.setWidth(self.settings.value('ConnectionLineWidth') * self.scale)
         painter.setPen(pen)
-        path = QPainterPath()
+        path = QtGui.QPainterPath()
         path.moveTo(start)
         diffx = abs((start.x() - end.x()) / 2.)
         if diffx < 100 * self.scale:
@@ -753,8 +753,8 @@ class Painter2D(Painter):
         if color < 0:
             return
 
-        pen = QPen()
-        pen.setColor(QColor(color, color, color))
+        pen = QtGui.QPen()
+        pen.setColor(QtGui.QColor(color, color, color))
         pen.setStyle(Qt.DashLine)
         painter.setPen(pen)
         verticalN = int(self.width() / spacing / 2) + 1
@@ -796,7 +796,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.setupUi(self)
 
-        self.setWindowIcon(QIcon(os.path.join(self.iconRoot, 'appIcon.png')))
+        self.setWindowIcon(
+            QtGui.QIcon(os.path.join(self.iconRoot, 'appIcon.png')))
 
         self.resize(self.settings.value("size", (900, 700)))
         self.move(self.settings.value("pos", QPoint(50, 50)))
@@ -811,7 +812,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         drawWidget.setAutoFillBackground(True)
         p = self.palette()
-        p.setColor(drawWidget.backgroundRole(), QColor(70, 70, 70))
+        p.setColor(drawWidget.backgroundRole(), QtGui.QColor(70, 70, 70))
         drawWidget.setPalette(p)
         l = QtWidgets.QGridLayout()
         l.addWidget(drawWidget)
@@ -835,62 +836,65 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def initActions(self):
         self.exit_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'quit.png')), 'Quit', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'quit.png')), 'Quit', self)
         self.exit_action.setShortcut('Ctrl+Q')
         self.exit_action.setStatusTip('Exit application')
         self.exit_action.triggered.connect(self.close)
 
         self.data_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'new.png')), 'Data', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'new.png')), 'Data', self)
         self.data_action.setShortcut('Ctrl+D')
         self.data_action.setStatusTip('Manageing Data')
         self.data_action.triggered.connect(self.data_manage)
 
         self.compile_and_exe_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'run.png')), 'Compile and Run',
-            self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'run.png')),
+            'Compile and Run', self)
         self.compile_and_exe_action.setShortcut('Ctrl+R')
         self.compile_and_exe_action.triggered.connect(self.compile_and_exe)
         self.compile_and_exe_action.setIconVisibleInMenu(True)
         self.addAction(self.compile_and_exe_action)
 
         self.load_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'load.png')), 'load', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'load.png')), 'load', self)
         self.load_action.setShortcut('Ctrl+O')
         self.load_action.triggered.connect(self.loadGraph)
         self.load_action.setIconVisibleInMenu(True)
         self.addAction(self.load_action)
 
         self.save_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'save.png')), 'save', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'save.png')), 'save', self)
         self.save_action.setShortcut('Ctrl+S')
         self.save_action.triggered.connect(self.save_graph_and_train)
         self.save_action.setIconVisibleInMenu(True)
         self.addAction(self.save_action)
 
         self.clear_all_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'kill.png')), 'Clear All', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'kill.png')),
+            'Clear All', self)
         # self.killRunnerAction.setShortcut('Ctrl+K')
         self.clear_all_action.triggered.connect(self.clearAllNodes)
         self.clear_all_action.setIconVisibleInMenu(True)
         self.addAction(self.clear_all_action)
 
         self.pauseRunnerAction = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'pause.png')), 'Pause', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'pause.png')),
+            'Pause', self)
         self.pauseRunnerAction.setShortcut('Ctrl+P')
         self.pauseRunnerAction.triggered.connect(self.pauseRunner)
         self.pauseRunnerAction.setIconVisibleInMenu(True)
         self.addAction(self.pauseRunnerAction)
 
         self.compile_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'unpause.png')), 'Compile', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'unpause.png')),
+            'Compile', self)
         self.compile_action.setShortcut('Ctrl+L')
         self.compile_action.triggered.connect(self.compile_runner)
         self.compile_action.setIconVisibleInMenu(True)
         self.addAction(self.compile_action)
 
         self.exe_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'step.png')), 'Run', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'step.png')), 'Run', self)
         self.exe_action.setShortcut('Ctrl+K')
         self.exe_action.triggered.connect(self.exe_runner)
         self.exe_action.setIconVisibleInMenu(True)
@@ -921,7 +925,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.addAction(self.deleteNodeAction)
 
         self.connectAction = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'connect.png')), 'Connect', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'connect.png')),
+            'Connect', self)
         self.connectAction.setShortcut('Ctrl+C')
         self.connectAction.triggered.connect(self.connect)
         self.connectAction.setIconVisibleInMenu(True)
@@ -934,7 +939,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.addAction(self.statusAction)
 
         self.train_configure_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'drop.png')),
+            QtGui.QIcon(os.path.join(self.iconRoot, 'drop.png')),
             'Train configure', self)
         self.train_configure_action.setShortcut('Ctrl+I')
         self.train_configure_action.triggered.connect(self.open_train_config)
@@ -942,31 +947,31 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.addAction(self.train_configure_action)
 
         self.pushAction = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'push.png')), 'Push', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'push.png')), 'Push', self)
         self.pushAction.setShortcut('Ctrl+X')
         self.pushAction.triggered.connect(self.pushGraph)
         self.pushAction.setIconVisibleInMenu(True)
         self.addAction(self.pushAction)
 
         self.settings_action = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'settings.png')), 'Settings',
-            self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'settings.png')),
+            'Settings', self)
         self.settings_action.setShortcut('Ctrl+T')
         self.settings_action.triggered.connect(self.openSettingsDialog)
         self.settings_action.setIconVisibleInMenu(False)
         self.addAction(self.settings_action)
 
         self.createSubgraphAction = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'macro.png')), 'Create Macro',
-            self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'macro.png')),
+            'Create Macro', self)
         self.createSubgraphAction.setShortcut('Ctrl+G')
         self.createSubgraphAction.triggered.connect(self.openMacroDialog)
         self.createSubgraphAction.setIconVisibleInMenu(False)
         self.addAction(self.createSubgraphAction)
 
         self.configureAction = QtWidgets.QAction(
-            QIcon(os.path.join(self.iconRoot, 'configure.png')), 'configure',
-            self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'configure.png')),
+            'configure', self)
         self.configureAction.setShortcut('Ctrl+Y')
         self.configureAction.triggered.connect(self.configureInterpreter)
         self.configureAction.setIconVisibleInMenu(False)
@@ -1270,9 +1275,9 @@ class DrawItem(object):
     def draw(self, painter, asLabel=False):
         alignment = self.__class__.alignment
         text = self.data.name
-        pen = QPen(Qt.darkGray)
+        pen = QtGui.QPen(Qt.darkGray)
         painter.setPen(pen)
-        painter.setBrush(QColor(40, 40, 40))
+        painter.setBrush(QtGui.QColor(40, 40, 40))
         xx, yy, ww, hh = self.x + self.w / 2. - (
             self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
         self.set_font(painter)
@@ -1357,9 +1362,9 @@ class Selector(DrawItem):
         if asLabel:
             text = asLabel
             alignment = self.__class__.alignment
-            pen = QPen(Qt.darkGray)
+            pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)
-            painter.setBrush(QColor(40, 40, 40))
+            painter.setBrush(QtGui.QColor(40, 40, 40))
             xx, yy, ww, hh = self.x + self.w / 2. - (
                 self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
             self.set_font(painter)
@@ -1372,9 +1377,9 @@ class Selector(DrawItem):
             text = self.data.name
             if self.select:
                 text = str(self.select)
-            pen = QPen(Qt.darkGray)
+            pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)
-            painter.setBrush(QColor(40, 40, 40))
+            painter.setBrush(QtGui.QColor(40, 40, 40))
             xx, yy, ww, hh = self.x + self.w / 2. - (
                 self.w - 25) / 2., self.y - 18, self.w - 25, 4 + PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
@@ -1385,20 +1390,20 @@ class Selector(DrawItem):
             pen.setColor(Qt.gray)
             # pen.setWidth(3)
             painter.setPen(pen)
-            painter.setBrush(QBrush(Qt.gray))
+            painter.setBrush(QtGui.QBrush(Qt.gray))
             points = QPoint(xx + self.w - 40, yy - 2 + PINSIZE / 2), QPoint(
                 xx + 10 - 40 + self.w, yy - 2 + PINSIZE / 2), QPoint(
                 xx + 5 + self.w - 40, yy + 4 + PINSIZE / 2)
             painter.drawPolygon(*points)
-            painter.setBrush(QColor(40, 40, 40))
+            painter.setBrush(QtGui.QColor(40, 40, 40))
         else:
             if not last:
                 return self
             alignment = self.alignment
             text = self.data.name
-            pen = QPen(Qt.darkGray)
+            pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)
-            painter.setBrush(QColor(40, 40, 40))
+            painter.setBrush(QtGui.QColor(40, 40, 40))
             xx, yy, ww, hh = self.x + self.w / 2. - (
                 self.w - 25) / 2., self.y - 26 + 12, self.w - 25, (
                                  4 + PINSIZE) * len(self.items)
@@ -1412,7 +1417,7 @@ class Selector(DrawItem):
                     pen.setColor(Qt.white)
                     painter.setPen(pen)
                 else:
-                    pen = QPen(Qt.darkGray)
+                    pen = QtGui.QPen(Qt.darkGray)
                     painter.setPen(pen)
                 painter.drawText(xx + 5, yy + PINSIZE - 3 + i * (
                     4 + PINSIZE) + TEXTYOFFSET, ww - 20, hh + 5 + PINSIZE,
@@ -1420,9 +1425,9 @@ class Selector(DrawItem):
             # painter.drawText(xx-5, yy-3+0, ww-20, hh+5, alignment, 'True')
             # painter.drawText(xx-5, yy-3+12, ww-20, hh+5, alignment, 'False')
 
-            pen = QPen(Qt.darkGray)
+            pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)
-            painter.setBrush(QColor(60, 60, 60))
+            painter.setBrush(QtGui.QColor(60, 60, 60))
             xx, yy, ww, hh = self.x + self.w / 2. - (
                 self.w - 25) / 2., self.y - 18, self.w - 25, 4 + PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
@@ -1458,9 +1463,9 @@ class LineEdit(DrawItem):
         if as_label:
             text = as_label
             alignment = self.__class__.alignment
-            pen = QPen(Qt.darkGray)
+            pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)
-            painter.setBrush(QColor(40, 40, 40))
+            painter.setBrush(QtGui.QColor(40, 40, 40))
             xx, yy, ww, hh = self.x + self.w / 2. - (
                 self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
             self.set_font(painter)
@@ -1471,9 +1476,9 @@ class LineEdit(DrawItem):
         text = str(text)
         if not self.state:
             alignment = self.__class__.alignment
-            pen = QPen(Qt.darkGray)
+            pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)
-            painter.setBrush(QColor(40, 40, 40))
+            painter.setBrush(QtGui.QColor(40, 40, 40))
             xx, yy, ww, hh = self.x + self.w / 2. - (
                 self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
@@ -1483,9 +1488,9 @@ class LineEdit(DrawItem):
                              alignment, text)
         else:
             alignment = self.__class__.alignment
-            pen = QPen(Qt.darkGray)
+            pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)
-            painter.setBrush(QColor(10, 10, 10))
+            painter.setBrush(QtGui.QColor(10, 10, 10))
             xx, yy, ww, hh = self.x + self.w / 2. - (
                 self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
