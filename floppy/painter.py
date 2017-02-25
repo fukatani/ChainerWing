@@ -604,11 +604,9 @@ class Painter2D(Painter):
                                y + drawOffset + 14) * painter.transform()
                 self.outputPinPositions.append((point, outputPin.ID))
 
-                # trans = painter.transform()
         self.pinPositions = {value[1]: value[0] for value in
                              self.inputPinPositions + self.outputPinPositions}
         # self.drawConnections(painter)
-        # self.transform = painter.transform()
         for item in lastDraws:
             item.draw(painter, last=True)
 
@@ -707,10 +705,10 @@ class Painter2D(Painter):
                     .format(type(node).__name__), 2000)
         node.__painter__ = {'position': position}
         node.__pos__ = position
-        node.__size__ = (1, len(node.inputs) + len(node.outputs))
-        node.__size__ = (1, node.__size__[1] if not issubclass(type(node),
-                                                               ControlNode) else
-        node.__size__[1] - 2)
+        if issubclass(type(node), ControlNode):
+            node.__size__ = (1, len(node.inputs) + len(node.outputs))
+        else:
+            node.__size__ = (1, len(node.inputs) + len(node.outputs) - 2)
         self.nodes.append(node)
         self.drawItemsOfNode[node] = {'inp': [], 'out': []}
         for out in node.outputPins.values():
@@ -1381,9 +1379,9 @@ class Selector(DrawItem):
             # pen.setWidth(3)
             painter.setPen(pen)
             painter.setBrush(QtGui.QBrush(Qt.gray))
-            points = QtCore.QPoint(xx + self.w - 40, yy - 2 + PINSIZE / 2), QtCore.QPoint(
-                xx + 10 - 40 + self.w, yy - 2 + PINSIZE / 2), QtCore.QPoint(
-                xx + 5 + self.w - 40, yy + 4 + PINSIZE / 2)
+            points = QtCore.QPoint(xx + self.w - 40, yy - 2 + PINSIZE / 2), \
+                     QtCore.QPoint(xx + 10 - 40 + self.w, yy - 2 + PINSIZE / 2), \
+                     QtCore.QPoint(xx + 5 + self.w - 40, yy + 4 + PINSIZE / 2)
             painter.drawPolygon(*points)
             painter.setBrush(QtGui.QColor(40, 40, 40))
         else:
