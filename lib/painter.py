@@ -707,9 +707,9 @@ class Painter2D(Painter):
         node.__painter__ = {'position': position}
         node.__pos__ = position
         if issubclass(type(node), ControlNode):
-            node.__size__ = (1, len(node.inputs) + len(node.outputs))
-        else:
             node.__size__ = (1, len(node.inputs) + len(node.outputs) - 2)
+        else:
+            node.__size__ = (1, len(node.inputs) + len(node.outputs))
         self.nodes.append(node)
         self.drawItemsOfNode[node] = {'inp': [], 'out': []}
         for out in node.outputPins.values():
