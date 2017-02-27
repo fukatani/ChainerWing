@@ -580,12 +580,6 @@ class Painter2D(Painter):
                 # drawOffset += 16
                 drawOffset += (8 + PINSIZE)
                 self.outputPinPositions.append((point, outputPin.ID))
-                if not outputPin.info.select:
-                    text = outputPin.name
-                    # self.drawLabel(x, y+drawOffset+8, w, h, text, painter, Qt.AlignRight)
-                else:
-                    text = outputPin.name
-                    # self.drawSelector(x, y+drawOffset+8, w, h, text, painter, Qt.AlignRight)
                 drawItem.update(x, y + drawOffset + 8, w, h,
                                 painter.transform())
                 drawItem.draw(painter)

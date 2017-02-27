@@ -125,9 +125,8 @@ class InputInfo(Info):
     def set(self, value, override=False, loopLevel=0):
         if self.valueSet and not override:
             raise InputAlreadySet(
-                'Input \'{}\' of node \'{}\' is already set.'.format(self.name,
-                                                                     str(
-                                                                         self.owner)))
+                'Input "{}" of node "{}" is already set.'.format(self.name,
+                                                                 self.owner))
         self.value = value
         self.valueSet = True
         if not self.name == 'Control':
