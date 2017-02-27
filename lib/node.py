@@ -357,14 +357,13 @@ class Node(object, metaclass=MetaNode):
                 self.outputBuffer[out.name] = out.value
         [Info.reset(inp, self.loopLevel) for inp in self.inputs.values()]
 
-    def setInput(self, input_name, value, override=False, loopLevel=False):
+    def setInput(self, input_name, value, override=False, loopLevel=0):
         """
         Sets the value of an input.
         :param input_name: str representing the name of the input.
         :param value: object of the appropriate type for that input.
         :param override: boolean specifying whether the input should be overridden if it was set already.
-        :param looped: boolean. Set to True if the input is set by a looped node. If True, the node becomes a looped
-        node itself. Defaults to False.
+        :param loopLebel: int. Nested number of loop.
         :return: None
         """
         self.loopLevel = max([self.loopLevel, loopLevel])

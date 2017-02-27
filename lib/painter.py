@@ -418,7 +418,6 @@ class Painter2D(Painter):
         if not node:
             return None
 
-        # TODO(fukatani): Implement right click menu.
         menu = QtWidgets.QMenu(self)
         delete_action = menu.addAction('Delete node')
         action = menu.exec_(self.mapToGlobal(event.pos()))
@@ -1138,7 +1137,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def loadGraph(self, *args, override=False):
         if not override:
-            # TODO(fukatani): serialize directory.
             init_path = TrainParamServer().get_data_dir()
             file_name = QtWidgets.QFileDialog.getOpenFileName(
                 self, 'Open File', init_path,
