@@ -512,13 +512,13 @@ class Node(object, metaclass=MetaNode):
     def getInputofType(self, var_type):
         for inp in self.inputs.values():
             if issubclass(var_type, inp.var_type) or issubclass(inp.var_type,
-                                                              var_type):
+                                                                var_type):
                 return inp
 
     def getOutputofType(self, var_type):
         for out in self.outputs.values():
             if issubclass(var_type, out.var_type) or issubclass(out.var_type,
-                                                              var_type):
+                                                                var_type):
                 return out
 
     def save(self):
