@@ -633,7 +633,6 @@ class Painter2D(Painter):
 
         for output_node, connList in self.graph.connections.items():
             for info in connList:
-                # print(info)
                 outputID = output_node.getOutputID(info.output_name)
                 inputID = info.input_node.getInputID(info.input_name)
                 var_type = output_node.getOutputInfo(info.output_name).var_type
@@ -850,7 +849,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             QtGui.QIcon(os.path.join(self.iconRoot, 'kill.png')),
             'Clear All', self)
         # self.killRunnerAction.setShortcut('Ctrl+K')
-        self.clear_all_action.triggered.connect(self.clearAllNodes)
+        self.clear_all_action.triggered.connect(self.clear_all_nodes)
         self.clear_all_action.setIconVisibleInMenu(True)
         self.addAction(self.clear_all_action)
 
@@ -1088,7 +1087,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if node:
             self.drawer.delete_node(node)
 
-    def clearAllNodes(self):
+    def clear_all_nodes(self):
         while self.drawer.nodes:
             node = self.drawer.nodes[0]
             self.drawer.delete_node(node)
@@ -1141,7 +1140,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             file_name = override
         if not file_name: return
         logger.debug('Attempting to load graph: {}'.format(file_name))
-        self.clearAllNodes()
+        self.clear_all_nodes()
         with open(file_name, 'r') as fp:
             line = fp.readline()
             if not line: return
@@ -1242,7 +1241,7 @@ class DrawItem(object):
 
         self._yy = self._y + PINSIZE
 
-    def draw(self, painter, asLabel=False):
+    def draw(self, painter, as_label=''):
         alignment = self.__class__.alignment
         text = self.data.name
         pen = QtGui.QPen(Qt.darkGray)
@@ -1329,9 +1328,9 @@ class Selector(DrawItem):
             self.state = 0
         return super(Selector, self).collide(pos)
 
-    def draw(self, painter, last=False, asLabel=False):
-        if asLabel:
-            text = asLabel
+    def draw(self, painter, last=False, as_label=''):
+        if as_label:
+            text = as_label
             alignment = self.__class__.alignment
             pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)
