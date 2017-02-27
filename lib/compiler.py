@@ -27,7 +27,8 @@ class Compiler(object):
         links = []
         for node in nodes.values():
             if issubclass(type(node), Link):
-                links.append('            l{0}={1}'.format(node.link_id, node.call_init()))
+                links.append('            l{0}={1}'.
+                             format(node.link_id, node.call_init()))
         return '\n'.join(links)
 
     def compile_call(self, nodes):

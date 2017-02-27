@@ -39,7 +39,6 @@ class GraphWidget(QtWidgets.QWidget):
             if 'accuracy' in self.image_file:
                 return
         self.pixmap = QtGui.QPixmap(self.image_file)
-        #self.adjustSize()
         size = self.size()
         painter = QtGui.QPainter(self)
         point = QtCore.QPoint(0, 0)

@@ -1521,10 +1521,12 @@ class NodeDialog(QtWidgets.QDockWidget):
         super(NodeDialog, self).__init__(parent)
         self.setTitleBarWidget(QtWidgets.QWidget(self))
         self.setStyleSheet(
-            "NodeDialog {background-color:rgb(45,45,45) ;border:1px solid rgb(0, 0, 0); "
+            "NodeDialog {background-color:rgb(45,45,45) ;"
+            "border:1px solid rgb(0, 0, 0); "
             "border-color:black}")
         self.setWindowFlags(
-            Qt.Window | Qt.WindowStaysOnTopHint | Qt.X11BypassWindowManagerHint | Qt.FramelessWindowHint)
+            Qt.Window | Qt.WindowStaysOnTopHint |
+            Qt.X11BypassWindowManagerHint | Qt.FramelessWindowHint)
         self.setFeatures(QtWidgets.QDockWidget.DockWidgetMovable)
         self.setFloating(True)
         pos = event.globalPos()
@@ -1583,7 +1585,7 @@ class NodeDialog(QtWidgets.QDockWidget):
 
     def getTypeHint(self):
         """
-        Returns the name of the type of the pin the new node will be connected to.
+        Returns the name of the type of the pin new node will be connected to.
         This is used to filter the node list for appropriate nodes.
         :return: String representing a Hint. In this case a type Hint.
         """

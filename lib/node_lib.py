@@ -12,14 +12,15 @@ customNodesPath = os.path.join(os.path.dirname(__file__), 'CustomNodes')
 for i, path in enumerate(os.listdir(customNodesPath)):
     if path.endswith('py'):
         try:
-            SourceFileLoader(str(i), os.path.join(customNodesPath, path)).load_module()
+            full_path = os.path.join(customNodesPath, path)
+            SourceFileLoader(str(i), full_path).load_module()
         except Exception as e:
             print('Warning: error in custom node:\n{}'.format(str(e)))
 
 
 class NodeFilter(QLineEdit):
     """
-    Widget for filtering a list of available nodes by user specified characteristics.
+    Widget for filtering a list of available nodes by user specified strings.
     """
     def __init__(self, parent=None):
         super(NodeFilter, self).__init__(parent)
@@ -49,7 +50,6 @@ class NodeFilter(QLineEdit):
         if not text.startswith('$'):
             nodes = [node for node in NODECLASSES.keys() if text in node.lower()]
         else:
-            # nodes = set(self.nodeScanner.getHints(text[1:]) + self.nodeScanner.getHints(text[1:], False))
             text = text[1:]
             nodes = set([nodeName for nodeName, node in NODECLASSES.items() if node.matchHint(text)])
         model = QStandardItemModel()
@@ -172,8 +172,8 @@ class NodeList(QListView):
 
 class ContextNodeList(NodeList):
     """
-    A NodeList widget adapted to work in the context menu created when dragging a connection into open space in the
-    diagram.
+    NodeList widget adapted to work in the context menu created when dragging
+    a connection into open space in the diagram.
     """
     def registerDialog(self, dialog):
         """
