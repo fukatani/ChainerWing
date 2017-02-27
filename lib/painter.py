@@ -576,7 +576,6 @@ class Painter2D(Painter):
                                             PINSIZE)
                     point = QtCore.QPoint(x + w - 4,
                                    y + drawOffset + 4 + PINSIZE) * painter.transform()
-                # drawOffset += 16
                 drawOffset += (8 + PINSIZE)
                 self.outputPinPositions.append((point, outputPin.ID))
                 drawItem.update(x, y + drawOffset + 8, w, h,
@@ -765,10 +764,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None, painter=None):
         super(MainWindow, self).__init__(parent)
 
-        iconRoot = os.path.realpath(__file__)
-        iconRoot = os.path.join(os.path.dirname(os.path.dirname(iconRoot)),
-                                'lib')
-        self.iconRoot = os.path.join(iconRoot, 'resources')
+        self.iconRoot = os.path.join(os.path.dirname(__file__), 'resources')
         self.settings = QtCore.QSettings('Floppy', 'Floppy')
 
         self.select_data_button = QtWidgets.QPushButton('Please Select '

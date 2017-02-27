@@ -359,7 +359,7 @@ class Node(object, metaclass=MetaNode):
 
     def setInput(self, input_name, value, override=False, loopLevel=0):
         """
-        Sets the value of an input.
+        Set the value of an input.
         :param input_name: str representing the name of the input.
         :param value: object of the appropriate type for that input.
         :param override: boolean specifying whether the input should be overridden if it was set already.
@@ -381,9 +381,8 @@ class Node(object, metaclass=MetaNode):
         if self.locked:
             return False
         if self.buffered and self.outputs.keys():
-            print(
-                'Node {} has buffered output. Trying to notify outgoing connections.'.format(
-                    self))
+            print('Node {} has buffered output. '
+                  'Trying to notify outgoing connections.'.format(self))
             return self.notify()
         for inp in self.inputs.values():
             if not inp.isAvailable():
@@ -394,7 +393,7 @@ class Node(object, metaclass=MetaNode):
 
     def report(self):
         """
-        Creates and returns a dictionary encoding the current state of the Node instance.
+        Create and returns a dictionary encoding the current state of the Node instance.
         Override this method to implement custom reporting behavior. Check the ReportWidget documentation for details
         on how to implement custom templates.
 
@@ -422,17 +421,6 @@ class Node(object, metaclass=MetaNode):
                 'keep': None,
                 'ready': 'Ready' if ready else 'Waiting'}
 
-    # def prepare(self):
-    #     """
-    #     Method for preparing a node for execution.
-    #     This method is called on each node before the main execution loop of the owning graph instance is started.
-    #     The methods makes sure that artifacts from previous execution are reset to their original states and default
-    #     values of inputs that are connected to other nodes' outputs are removed.
-    #     :return:
-    #     """
-    #     return
-    #     [InputInfo.reset(inp) for inp in self.inputs.values()]
-
     def _addInput(*args, data='', cls=None):
         """
         This should be a classmethod.
@@ -458,7 +446,7 @@ class Node(object, metaclass=MetaNode):
     @classmethod
     def _addTag(cls, tag='Node'):
         """
-        Adds a Tag to a Node class object.
+        Add a Tag to a Node class object.
         :param tag:
         :return:
         """
@@ -466,7 +454,7 @@ class Node(object, metaclass=MetaNode):
 
     def __getattr__(self, item):
         """
-        Catches self._<Input/Ouptput> accesses and calls the appropriate methods.
+        Catch self._<Input/Ouptput> accesses and calls the appropriate methods.
         :param item: str; Attribute name.
         :return: object; Attribute
         :rtype: object
@@ -480,13 +468,12 @@ class Node(object, metaclass=MetaNode):
                 except KeyError:
                     raise AttributeError(
                         'No I/O with name {} defined.'.format(item.lstrip('_')))
-                    # raise AttributeError('No Input with name {} defined.'.format(item.lstrip('_')))
         else:
             return super(Node, self).__getattr__(item)
 
     def getInputPin(self, input_name):
         """
-        Returns a reference to the Pin instance associated with the input with the given name.
+        Get a reference to the Pin associated with the given input name.
         :param input_name: str; Name of the input.
         :return: Pin instance
         :rtype: Pin
