@@ -363,7 +363,7 @@ class Node(object, metaclass=MetaNode):
         :param input_name: str representing the name of the input.
         :param value: object of the appropriate type for that input.
         :param override: boolean specifying whether the input should be overridden if it was set already.
-        :param loopLebel: int. Nested number of loop.
+        :param loopLevel: int. Nested number of loop.
         :return: None
         """
         self.loopLevel = max([self.loopLevel, loopLevel])

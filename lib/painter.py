@@ -747,7 +747,7 @@ class Painter2D(Painter):
                              self.width() / 2 + i * spacing, self.height())
             painter.drawLine(QtCore.QPoint(self.width() / 2 - i * spacing, 0),
                              QtCore.QPoint(self.width() / 2 - i * spacing,
-                                    self.height()))
+                                           self.height()))
 
         for i in range(horizontalN):
             painter.drawLine(0, self.height() / 2 + i * spacing, self.width(),

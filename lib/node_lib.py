@@ -236,8 +236,8 @@ class ContextNodeList(NodeList):
 
 class ContextNodeFilter(NodeFilter):
     """
-    A NodeFilter widget adapted to work in the context menu created when dragging a connection into open space in the
-    diagram.
+    NodeFilter widget adapted to work in the context menu created
+    when dragging a connection into open space in the diagram.
     """
     def registerDialog(self, dialog, back=False):
         """
