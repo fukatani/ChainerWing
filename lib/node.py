@@ -57,7 +57,6 @@ class Info(object):
         else:
             self.hints = [var_type.__name__] + hints
         self.default = default
-        self.valueSet = False
         self.value = None
         self.select = select
         self.owner = owner
@@ -95,13 +94,15 @@ class Info(object):
             #       'level than the node setting the Input: {}vs.{}'.format(self.name, nodeLoopLevel, self.loopLevel))
             return
         self.default = None
-        self.valueSet = False
         self.value = None
+
+    def has_value_set(self):
+        return self.value is not None
 
 
 class InputInfo(Info):
     def __call__(self, noException=False):
-        if self.valueSet:
+        if self.has_value_set():
             if not self.var_type == object:
                 if self.list:
                     return [self.var_type(i) for i in self.value]
@@ -123,12 +124,11 @@ class InputInfo(Info):
                 raise InputNotAvailable('Input not set for node.')
 
     def set(self, value, override=False, loopLevel=0):
-        if self.valueSet and not override:
+        if self.has_value_set() and not override:
             raise InputAlreadySet(
                 'Input "{}" of node "{}" is already set.'.format(self.name,
                                                                  self.owner))
         self.value = value
-        self.valueSet = True
         if not self.name == 'Control':
             self.loopLevel = loopLevel
 
@@ -140,19 +140,16 @@ class InputInfo(Info):
 
     def isAvailable(self, info=False):
         if info:
-            if self.valueSet:
+            if self.has_value_set():
                 return True
             elif self.default is not None and not self.connected and not self.usedDefault and self.pure < 2:
                 return True
             return False
-        if self.valueSet:
-            # print('^^^^^^^^^^^^^^^^^^', self.name, self.value, self.valueSet)
+        if self.has_value_set():
             return True
         elif self.default is not None and not self.connected and not self.usedDefault and self.pure < 2:
             if self.pure == 1:
                 self.pure = 2
-            # self.usedDefault = True
-            # print('+++++++++++++++++', self.name, self.value, self.valueSet, self.owner, self.usedDefault, self.pure)
             return True
         return False
 
@@ -164,7 +161,6 @@ class OutputInfo(Info):
         except AttributeError:
             pass
         self.value = value
-        self.valueSet = True
 
 
 class MetaNode(type):
