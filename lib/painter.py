@@ -782,25 +782,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.initActions()
         self.initMenus()
 
-        drawWidget = painter
         painter.reportWidget = self.BottomWidget
         painter.set_settings(self.settings)
 
-        drawWidget.setAutoFillBackground(True)
+        painter.setAutoFillBackground(True)
         p = self.palette()
-        p.setColor(drawWidget.backgroundRole(), QtGui.QColor(70, 70, 70))
-        drawWidget.setPalette(p)
+        p.setColor(painter.backgroundRole(), QtGui.QColor(70, 70, 70))
+        painter.setPalette(p)
         l = QtWidgets.QGridLayout()
-        l.addWidget(drawWidget)
+        l.addWidget(painter)
         self.DrawArea.setLayout(l)
-        self.drawer = drawWidget
-        self.painter = drawWidget
+        self.drawer = painter
 
         self.setupNodeLib()
         # self.drawer.graph.spawnAndConnect()
         self.connectHint = self.settings.value('DefaultConnection', type=str)
 
-        # to reflect initial configration
+        # to reflect initial configuration
         SettingsDialog(self, settings=self.settings).close()
         TrainDialog(self, settings=self.settings).close()
 
