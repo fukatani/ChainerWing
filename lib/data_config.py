@@ -6,29 +6,28 @@ from PyQt5 import QtWidgets
 class DataDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
+
         train_edit = DataFileEdit(settings, self, 'TrainData')
-        test_edit = DataFileEdit(settings, self, 'TrainData')
+        self.test_edit = DataFileEdit(settings, self, 'TestData')
+        self.same_data_check = DataCheckBox(settings, self, 'UseSameData')
+        self.same_data_check.stateChanged.connect(self.state_changed)
+        self.shuffle_check = DataCheckBox(settings, self, 'Shuffle')
+        self.ratio_edit = DataLineEdit(settings, self, 'TestDataRatio')
+        self.test_data_label = self.test_edit.label
+
         self.dialogs = [('Train data Settings', None),
                         ('Set Train Data', train_edit),
                         ('', train_edit.label),
                         ('Test data Settings', None),
-                        ('Same data with training',
-                         DataCheckBox(settings, self, 'UseSameData')),
-                        ('Shuffle',
-                         DataCheckBox(settings, self, 'Shuffle')),
-                        ('Test data ratio',
-                         DataLineEdit(settings, self, 'TestDataRatio')),
-                        ('Set Test Data', test_edit),
-                        ('', test_edit.label),
+                        ('Same data with training', self.same_data_check),
+                        ('Shuffle', self.shuffle_check),
+                        ('Test data ratio', self.ratio_edit),
+                        ('Set Test Data', self.test_edit),
+                        ('', self.test_data_label),
                         ]
         super(DataDialog, self).__init__(*args)
         self.setStyleSheet('''DataDialog {
                                 background: rgb(75,75,75);
-                            }
-                            QLineEdit {
-                                background-color: rgb(95,95,95);
-                                border: 1px solid gray;
-                                color: white;
                             }
                             QSpinBox {
                                 background-color: rgb(95,95,95);
@@ -37,7 +36,6 @@ class DataDialog(QtWidgets.QDialog):
                             }
                             QPushButton {
                                 background-color: rgb(155,95,95);
-                                color: white;
                             }
                             QLabel {
                                 color: white;
@@ -72,6 +70,7 @@ class DataDialog(QtWidgets.QDialog):
         main_layout.addWidget(close_button)
         self.setLayout(main_layout)
         self.resize(300, 300)
+        self.state_changed(0)
 
     def close(self):
         for name, widget in self.dialogs:
@@ -84,6 +83,16 @@ class DataDialog(QtWidgets.QDialog):
 
     def redraw(self):
         self.parent().drawer.repaint()
+
+    def state_changed(self, _):
+        if self.same_data_check.isChecked():
+            self.ratio_edit.setDisabled(False)
+            self.test_edit.setDisabled(True)
+            self.shuffle_check.setDisabled(False)
+        else:
+            self.ratio_edit.setDisabled(True)
+            self.test_edit.setDisabled(False)
+            self.shuffle_check.setDisabled(True)
 
 
 class DataFileEdit(QtWidgets.QPushButton):
