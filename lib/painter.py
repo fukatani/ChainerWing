@@ -8,6 +8,7 @@ from lib.data_config import DataDialog
 from lib.settings import SettingsDialog
 from lib.train_config import TrainDialog
 from lib.train_config import TrainParamServer
+from lib import util
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
@@ -324,10 +325,7 @@ class Painter2D(Painter):
                     self.graph.connect(output_nodeID, output_name, input_nodeID,
                                        input_name)
                 except TypeError:
-                    error = QtWidgets.QErrorMessage()
-                    error.showMessage('Cannot connect pins of different type')
-                    error.exec_()
-
+                    util.disp_error('Cannot connect pins of different type')
             else:
                 if not self.shiftDown:
                     if (abs((event.pos() - self.mouseDownPos).x()) > 10 or
@@ -1048,9 +1046,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             self.drawer.graph.killRunner()
         except:
-            error = QtWidgets.QErrorMessage()
-            error.showMessage('No runner to kill.')
-            error.exec_()
+            util.disp_error('No runner to kill.')
         QtWidgets.qApp.quit()
 
     def updateStatus(self):
@@ -1142,19 +1138,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         with open(file_name, 'r') as fp:
             line = fp.readline()
             if not line: return
-            self.drawer.graph.load_from_json(line,
-                                             callback=self.raiseErrorMessage)
+            self.drawer.graph.load_from_json(line)
             self.statusBar.showMessage(
                 'Graph loaded from {}.'.format(file_name), 2000)
             logger.info('Successfully loaded graph: {}'.format(file_name))
             line = fp.readline()
             if not line: return
             TrainParamServer().from_json(line)
-
-    def raiseErrorMessage(self, message):
-        error = QtWidgets.QErrorMessage(self)
-        error.showMessage(message)
-        logger.error(message)
 
     def save_graph_and_train(self, *args):
         """

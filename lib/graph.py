@@ -5,6 +5,7 @@ from lib import compiler
 from lib import runner
 from lib.node import ControlNode, Node, MetaNode
 from lib.node import NODECLASSES
+from lib import util
 
 
 def dummy(node_class):
@@ -310,16 +311,16 @@ class Graph(object):
         """
         self.runner.kill()
 
-    def load_from_json(self, line, callback=None):
+    def load_from_json(self, line):
         """
         :param line: string
         :param callback:
         :return:
         """
         graph_state = json.loads(line)
-        self.loadState(graph_state, callback)
+        self.loadState(graph_state)
 
-    def loadState(self, graph_state, callback=None, reuseIDs=False):
+    def loadState(self, graph_state, reuseIDs=False):
         """
         Reconstruct a Graph instance from a JSON string representation
         created by the Graph.to_json() method.
@@ -340,12 +341,8 @@ class Graph(object):
                 except KeyError:
                     dynamic = False
                 if not dynamic:
-                    if callback:
-                        callback('Unknown Node class **{}**'.format(
-                            nodeData['class']))
-                    else:
-                        raise Exception('Unknown Node class <{}>.'.format(
-                            nodeData['class']))
+                    util.disp_error('Unknown Node class **{}**'
+                                    .format(nodeData['class']))
                     continue
                 else:
                     print('I need to create a custom class now.')

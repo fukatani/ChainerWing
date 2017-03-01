@@ -1,15 +1,13 @@
 from lib.node import Link, Loss
 from lib.templates import TEMPLATES
 from lib.train_config import TrainParamServer
-from PyQt5.QtWidgets import QErrorMessage
+from lib import util
 
 
 class Compiler(object):
     def __call__(self, nodes, **kwargs):
         if not nodes:
-            error = QErrorMessage()
-            error.showMessage('Please place node and connect them before compile.')
-            error.exec_()
+            util.disp_error('Please place node and connect them before compile.')
             return
         net_name = TrainParamServer().get_net_name()
         init_impl = self.compile_init(nodes)

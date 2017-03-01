@@ -1,6 +1,7 @@
 import importlib
 
 from lib.train_config import TrainParamServer
+from lib import util
 from PyQt5.QtWidgets import QErrorMessage
 
 
@@ -11,10 +12,8 @@ class Runner(object):
         try:
             module = importlib.import_module(module_file)
         except SyntaxError:
-            error = QErrorMessage()
-            error.showMessage('Generated chainer script ({}.py) is not valid.'
-                              .format(TrainParamServer().get_net_name()))
-            error.exec_()
+            util.disp_error('Generated chainer script ({}.py) is not valid.'
+                            .format(TrainParamServer().get_net_name()))
             return
         if do_train:
             module.training_main(True)
