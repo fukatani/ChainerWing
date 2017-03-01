@@ -1,4 +1,4 @@
-from lib.data_fetch import DataManeger
+from lib.data_fetch import DataManager
 import numpy as np
 
 if __name__ == '__main__':
@@ -10,11 +10,11 @@ if __name__ == '__main__':
                          [1., 9.]])
     expect_y = np.array([0., 0., 0., 0., 1., 1.])
 
-    train_x, train_y = DataManeger().get_data_from_file('sample_data.csv', True)
+    train_x, train_y = DataManager().get_data_from_file('sample_data.csv', True)
     assert (train_x == expect_x).all()
     assert (train_y == expect_y).all()
 
     np.savez('sample_data.npz', x=train_x, y=train_y)
-    train_x, train_y = DataManeger().get_data_from_file('sample_data.npz', True)
+    train_x, train_y = DataManager().get_data_from_file('sample_data.npz', True)
     assert (train_x == expect_x).all()
     assert (train_y == expect_y).all()

@@ -2,7 +2,7 @@ import numpy as np
 import csv
 
 
-class DataManeger(object):
+class DataManager(object):
     def __init__(self):
         self.train_columns = 0
 
@@ -24,9 +24,9 @@ class DataManeger(object):
                 if isinstance(line[0], str):
                     exists_header = 1
         data = np.loadtxt(csv_file, delimiter=',', skiprows=exists_header)
-        return self.separate_superviser(data, is_supervised)
+        return self.separate_supervisor(data, is_supervised)
 
-    def separate_superviser(self, data, is_supervised):
+    def separate_supervisor(self, data, is_supervised):
         if is_supervised:
             self.train_columns = data.shape[1]
             superviser = data[:, -1]
@@ -41,5 +41,5 @@ class DataManeger(object):
 
 
 if __name__ == '__main__':
-    train_x, train_y = DataManeger().get_data_from_file('sample_data.csv', True)
-    train_x, train_y = DataManeger().get_data_from_file('sample_data.npz', True)
+    train_x, train_y = DataManager().get_data_from_file('sample_data.csv', True)
+    train_x, train_y = DataManager().get_data_from_file('sample_data.npz', True)
