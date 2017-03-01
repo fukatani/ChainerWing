@@ -110,7 +110,7 @@ class InputInfo(Info):
             else:
                 return self.value
         elif self.default is not None and not self.connected:
-            self.usedDefault = True if self.loopLevel > 0 else False
+            self.usedDefault = self.loopLevel > 0
             if not self.var_type == object and self.default:
                 return self.var_type(self.default)
             else:
