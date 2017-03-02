@@ -88,11 +88,11 @@ def training_main(call_by_gui=False):
     updater = training.StandardUpdater(train_iter, optimizer,
                                        device={2})
     '''.format(kwargs['Optimizer'], kwargs['BatchSize'],
-               kwargs['GPU'], kwargs['NetName']) + '''
+               kwargs['GPU']-1, kwargs['NetName']) + '''
     trainer = training.Trainer(updater, ({0}, 'epoch'))
     '''.format(kwargs['Epoch']) + '''
     trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
-    '''.format(kwargs['GPU']) + '''
+    '''.format(kwargs['GPU']-1) + '''
     trainer.extend(extensions.snapshot(), trigger=({0}, 'epoch'))
     '''.format(kwargs['Epoch']) + '''
     trainer.extend(extensions.LogReport())
