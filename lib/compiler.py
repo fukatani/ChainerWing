@@ -9,7 +9,7 @@ class Compiler(object):
         if not nodes:
             util.disp_error('Please place node and connect them before compile.')
             return
-        net_name = TrainParamServer().get_net_name()
+        net_name = TrainParamServer()['NetName']
         init_impl = self.compile_init(nodes)
         call_impl, pred_impl = self.compile_call(nodes)
         classification = 'Class' in TrainParamServer()['TrainMode']
