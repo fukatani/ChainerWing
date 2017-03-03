@@ -46,7 +46,7 @@ class Info(object):
     Class for handling all information related to both inputs and outputs.
     """
 
-    def __init__(self, name, var_type, hints=None, default='', select=None,
+    def __init__(self, name, var_type, hints=None, default=None, select=None,
                  owner=False, list=False, optional=False):
         self.name = name
         self.connected = False
@@ -73,7 +73,7 @@ class Info(object):
             try:
                 self.default = self.var_type(value)
             except ValueError:
-                self.default = ''
+                self.default = None
             if self.var_type == bool:
                 try:
                     if value.upper() == 'TRUE':
@@ -101,7 +101,7 @@ class Info(object):
 
 
 class InputInfo(Info):
-    def __call__(self, noException=False):
+    def __call__(self, no_exception=False):
         if self.has_value_set():
             if not self.var_type == object:
                 if self.list:
@@ -116,7 +116,7 @@ class InputInfo(Info):
             else:
                 return self.default
         else:
-            if noException:
+            if no_exception:
                 return None
             elif self.name == 'in_array':  # treat as start node.
                 return ""
@@ -190,7 +190,7 @@ class MetaNode(type):
     def addInput(name: str,
                  var_type: object,
                  hints=None,
-                 default='',
+                 default=None,
                  select=None,
                  list=False,
                  optional=False):

@@ -1,4 +1,6 @@
-from lib.node import Link, Loss
+from lib.node import Link
+from lib.node import Loss
+from lib.node import InputNotAvailable
 from lib.templates import TEMPLATES
 from lib.train_config import TrainParamServer
 from lib import util
@@ -11,7 +13,11 @@ class Compiler(object):
             return
         net_name = TrainParamServer()['NetName']
         init_impl = self.compile_init(nodes)
+        if not init_impl:
+            return False
         call_impl, pred_impl = self.compile_call(nodes)
+        if not call_impl:
+            return False
         classification = 'Class' in TrainParamServer()['TrainMode']
         net_file = open(net_name + '.py', 'w')
         net_file.write(TEMPLATES['NetTemplate']()(TrainParamServer()['NetName'],
@@ -20,13 +26,19 @@ class Compiler(object):
                                                   pred_impl,
                                                   classification))
         net_file.write(TEMPLATES['TrainerTemplate']()(TrainParamServer()))
+        return True
 
     def compile_init(self, nodes):
         links = []
         for node in nodes.values():
             if issubclass(type(node), Link):
-                links.append('            l{0}={1}'.
-                             format(node.link_id, node.call_init()))
+                try:
+                    links.append('            l{0}={1}'.
+                                format(node.link_id, node.call_init()))
+                except:
+                    util.disp_error(
+                        "Unset parameter was found in {0}".format(node))
+                    return ''
         return '\n'.join(links)
 
     def compile_call(self, nodes):
@@ -38,7 +50,11 @@ class Compiler(object):
                 loss = chains[0]
                 funcs = chains[1:]
 
-                compiled_pred = "".join([func.call() for func in funcs])
+                try:
+                    compiled_pred = "".join([func.call() for func in funcs])
+                except InputNotAvailable:
+                    util.disp_error("Unset parameter was found in {0}".format(node))
+                    return ''
                 compiled_pred += 'x' + ')' * (len(funcs))
                 call_all_pred.append(compiled_pred)
 

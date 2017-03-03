@@ -1121,8 +1121,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         logger.debug('Connected to Runner.')
 
     def compile_and_exe(self, *args):
-        self.compile_runner()
-        self.exe_runner()
+        if self.compile_runner():
+            self.exe_runner()
+        else:
+            util.disp_error('Compile is failured')
 
     def loadGraph(self, *args, override=False):
         if not override:
