@@ -117,7 +117,7 @@ def training_main(call_by_gui=False):
     serializers.save_npz("{0}.npz", model)
 
 if __name__ == '__main__':
-    main(False)
+    training_main(False)
 '''.format(kwargs.get_model_name())
         return call_train
 
