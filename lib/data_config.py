@@ -7,7 +7,7 @@ class DataDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
 
-        train_edit = DataFileEdit(settings, self, 'TrainData')
+        self.train_edit = DataFileEdit(settings, self, 'TrainData')
         self.test_edit = DataFileEdit(settings, self, 'TestData')
         self.same_data_check = DataCheckBox(settings, self, 'UseSameData')
         self.same_data_check.stateChanged.connect(self.state_changed)
@@ -16,8 +16,8 @@ class DataDialog(QtWidgets.QDialog):
         self.test_data_label = self.test_edit.label
 
         self.dialogs = [('Train data Settings', None),
-                        ('Set Train Data', train_edit),
-                        ('', train_edit.label),
+                        ('Set Train Data', self.train_edit),
+                        ('', self.train_edit.label),
                         ('Test data Settings', None),
                         ('Same data with training', self.same_data_check),
                         ('Shuffle', self.shuffle_check),
@@ -85,6 +85,13 @@ class DataDialog(QtWidgets.QDialog):
         self.parent().drawer.repaint()
 
     def state_changed(self, _):
+        if self.train_edit.python_selected():
+            self.same_data_check.setDisabled(True)
+            self.ratio_edit.setDisabled(True)
+            self.test_edit.setDisabled(True)
+            self.shuffle_check.setDisabled(True)
+        else:
+            self.same_data_check.setDisabled(False)
         if self.same_data_check.isChecked():
             self.ratio_edit.setDisabled(False)
             self.test_edit.setDisabled(True)
@@ -120,6 +127,10 @@ class DataFileEdit(QtWidgets.QPushButton):
         if data_file:
             self.value = data_file
             self.label.setText(self.value)
+            self.parent.state_changed(0)
+
+    def python_selected(self):
+        return self.value[-3:] == '.py'
 
 
 class DataFileLabel(QtWidgets.QLabel):
