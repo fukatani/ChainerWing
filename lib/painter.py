@@ -803,7 +803,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def setArgs(self, args):
         if args.test:
             logger.info('Performing test.')
-            self.loadGraph(override=args.test[0])
+            self.load_graph(override=args.test[0])
             self.compile_and_exe()
 
     def initActions(self):
@@ -830,7 +830,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.load_action = QtWidgets.QAction(
             QtGui.QIcon(os.path.join(self.iconRoot, 'load.png')), 'load', self)
         self.load_action.setShortcut('Ctrl+O')
-        self.load_action.triggered.connect(self.loadGraph)
+        self.load_action.triggered.connect(self.load_graph)
         self.load_action.setIconVisibleInMenu(True)
         self.addAction(self.load_action)
 
@@ -1126,7 +1126,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             util.disp_error('Compile is failured')
 
-    def loadGraph(self, *args, override=False):
+    def load_graph(self, *args, override=False):
         if not override:
             init_path = TrainParamServer().get_data_dir()
             file_name = QtWidgets.QFileDialog.getOpenFileName(
