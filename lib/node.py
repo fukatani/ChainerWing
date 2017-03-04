@@ -6,9 +6,6 @@ from PyQt5.QtGui import QColor
 NODECLASSES = {}
 
 
-# STOREDVALUES = {}
-
-
 class InputNotAvailable(Exception):
     pass
 
@@ -286,8 +283,7 @@ class Node(object, metaclass=MetaNode):
             out = copy(out)
             out.setOwner(self)
             outID = '{}:O{}'.format(self.ID, out.name)
-            newPin = Pin(outID, out, self)
-            self.outputPins[out.name] = newPin
+            self.outputPins[out.name] = Pin(outID, out, self)
             self.outputs[out.name] = out
             self.outputBuffer[out.name] = None
         if not self.inputs.keys():

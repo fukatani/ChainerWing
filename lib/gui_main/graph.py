@@ -32,7 +32,6 @@ class Graph(object):
         self.connected = False
         self.nextFreeNodeID = 0
         self.nodes = {}
-        self.STOREDVALUES = {}
         self.connections = {}
         self.runner = runner.Runner()
         self.status = None
