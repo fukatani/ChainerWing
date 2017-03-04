@@ -9,7 +9,8 @@ from lib.templates import TEMPLATES
 class Compiler(object):
     def __call__(self, nodes, **kwargs):
         if not nodes:
-            util.disp_error('Please place node and connect them before compile.')
+            util.disp_error('Please place nodes and connect them'
+                            ' before compilation.')
             return
         net_name = TrainParamServer()['NetName']
         init_impl = self.compile_init(nodes)
@@ -34,10 +35,10 @@ class Compiler(object):
             if issubclass(type(node), Link):
                 try:
                     links.append('            l{0}={1}'.
-                                format(node.link_id, node.call_init()))
+                                 format(node.link_id, node.call_init()))
                 except:
                     util.disp_error(
-                        "Unset parameter was found in {0}".format(node))
+                        'Unset parameter was found in {0}'.format(node))
                     return ''
         return '\n'.join(links)
 
@@ -53,7 +54,7 @@ class Compiler(object):
                 try:
                     compiled_pred = "".join([func.call() for func in funcs])
                 except InputNotAvailable:
-                    util.disp_error("Unset parameter was found in {0}".format(node))
+                    util.disp_error('Unset parameter was found in {0}'.format(node))
                     return ''
                 compiled_pred += 'x' + ')' * (len(funcs))
                 call_all_pred.append(compiled_pred)
