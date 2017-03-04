@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets
 from lib.subwindows.prediction import Ui_PredictionWindow
 from lib.subwindows.train_config import TrainParamServer
+from lib.runner import PredictionRunner
 
 
 class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
@@ -36,4 +37,5 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
             self.output_name.setText(self.value)
 
     def exe_prediction(self):
-        pass
+        runner = PredictionRunner()
+        runner.run()

@@ -6,6 +6,7 @@ from lib import runner
 from lib.node import ControlNode, Node, MetaNode
 from lib.node import NODECLASSES
 from lib import util
+from lib.subwindows.train_config import TrainParamServer
 
 
 def dummy(node_class):
@@ -275,8 +276,12 @@ class Graph(object):
         return compiler.Compiler()(self.nodes)
 
     def run(self):
-        self.runner = runner.Runner()
-        self.runner.run(do_train=True)
+        try:
+            self.runner = runner.TrainRunner()
+        except SyntaxError:
+            util.disp_error('Generated chainer script ({}.py) is not valid.'
+                            .format(TrainParamServer().get_net_name()))
+        self.runner.run()
 
     def print(self, message):
         print(message)

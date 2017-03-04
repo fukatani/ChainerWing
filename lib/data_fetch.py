@@ -61,6 +61,7 @@ class DataManager(object):
         return train_data, test_data
 
     def get_data_pred(self):
+        # TODO(fukatani): Implement
         pass
 
 
