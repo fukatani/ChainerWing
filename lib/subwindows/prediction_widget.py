@@ -1,3 +1,5 @@
+import os
+
 from PyQt5 import QtWidgets
 from lib.subwindows.prediction import Ui_PredictionWindow
 from lib.subwindows.train_config import TrainParamServer
@@ -9,33 +11,69 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         self.settings = settings
         super(PredictionWindow, self).__init__(*args)
         self.setupUi(self)
+
         self.input_sel_button.clicked.connect(self.set_input)
+        self.input_config = PredInputDataConfig(self.input_data_name, self)
+
+        self.output_sel_button.clicked.connect(self.set_output)
+        self.output_config = PredOutputDataConfig(self.output_name, self)
+
         self.model_sel_button.clicked.connect(self.set_model)
+        self.model_config = PredModelConfig(self.model_name, self)
 
     def set_input(self):
-        init_path = TrainParamServer().get_data_dir()
-        data_file = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select Input Data File', init_path,
-            filter='(*.csv, *.npz, *.py);; Any (*.*)')[0]
-        if data_file:
-            self.input_data_name.setText(self.value)
+        self.input_config.set_data()
 
     def set_model(self):
-        init_path = TrainParamServer().get_data_dir()
-        data_file = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select Model Data File', init_path,
-            filter='(*.npz);; Any (*.*)')[0]
-        if data_file:
-            self.model_name.setText(self.value)
+        self.model_config.set_data()
 
     def set_output(self):
-        init_path = TrainParamServer().get_data_dir()
-        data_file = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select Input Data File', init_path,
-            filter='(*.csv, *.npz);; Any (*.*)')[0]
-        if data_file:
-            self.output_name.setText(self.value)
+        self.output_config.set_data()
 
     def exe_prediction(self):
         runner = PredictionRunner()
         runner.run()
+
+
+class DataConfig(object):
+    def __init__(self, label, window):
+        self.param_name = self.__class__.__name__[:-6]  # remove 'Config'
+        self.label = label
+        self.window = window
+        self.direction = ''
+        self.filter = ''
+
+    def set_data(self):
+        train_server = TrainParamServer()
+        if self.param_name in train_server.__dict__:
+            init_path = train_server[self.param_name]
+            init_path = os.path.abspath(init_path)
+        else:
+            init_path = train_server.get_data_dir()
+        data_file = QtWidgets.QFileDialog.getOpenFileName(
+            self.window, self.direction, init_path,
+            filter=self.filter)[0]
+        if data_file:
+            self.label.setText(data_file)
+            train_server[self.param_name] = data_file
+
+
+class PredInputDataConfig(DataConfig):
+    def __init__(self, label, window):
+        super(PredInputDataConfig, self).__init__(label, window)
+        self.direction = 'Select Input Data File'
+        self.filter = '(*.csv, *.npz, *.py);; Any (*.*)'
+
+
+class PredOutputDataConfig(DataConfig):
+    def __init__(self, label, window):
+        super(PredOutputDataConfig, self).__init__(label, window)
+        self.direction = 'Select Output Data File'
+        self.filter = '(*.csv, *.npz);; Any (*.*)'
+
+
+class PredModelConfig(DataConfig):
+    def __init__(self, label, window):
+        super(PredModelConfig, self).__init__(label, window)
+        self.direction = 'Select Model File'
+        self.filter = '(*.npz);; Any (*.*)'

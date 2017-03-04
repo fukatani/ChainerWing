@@ -19,6 +19,9 @@ class DataManager(object):
                 return data['x'], data['y']
             else:
                 return data['x'], None
+        else:
+            raise Exception('Unexpected data format.'
+                            'Input shold be *.csv or *.npz')
 
     def csv_to_ndarray(self, csv_file, is_supervised):
         exists_header = 0
@@ -62,8 +65,16 @@ class DataManager(object):
         return train_data, test_data
 
     def get_data_pred(self):
-        # TODO(fukatani): Implement
-        pass
+        train_server = TrainParamServer()
+        if train_server['TrainData'][-3:] == '.py':
+            module = machinery.SourceFileLoader("data_getter",
+                                                train_server['TrainData'])
+            module = module.load_module()
+            return module.main()
+        else:
+            data_file = train_server['TrainData']
+            data, _ = self.get_data_from_file(data_file)
+            return data
 
 
 if __name__ == '__main__':

@@ -115,6 +115,13 @@ def training_main(train, test, pbar=None):
     trainer.run()
     serializers.save_npz("{0}.npz", model)
 
+
+def prediction_main(train, test, pbar=None):
+    model = {3}()
+    serializers.load_npz("{0}.npz", model)
+    return model(prediction)
+
+
 if __name__ == '__main__':
     training_main(False)
 '''.format(kwargs.get_model_name())
