@@ -15,7 +15,7 @@ def dummy(node_class):
 
 class Graph(object):
     """
-    Class for managing all nodes. The class provides interfaces for spawning/removing nodes and connections.
+    Managing all nodes. This class provides interfaces for spawning/removing nodes and connections.
     It also provides interfaces for spawning and connecting to graph interpreters and for communicating with them.
     Since a Graph interpreter is nothing but a small program able to load a Graph instance and listening to commands,
     the Graph class also provides methods for executing the implemented logic.
@@ -28,7 +28,6 @@ class Graph(object):
         self._requestUpdate = False
         self._requestReport = ''
         self.currentReport = ''
-        self.runningNodes = []
         self.statusLock = None
         self.connected = False
         self.nextFreeNodeID = 0
@@ -177,8 +176,8 @@ class Graph(object):
     def connect(self, outNode, out, inpNode, inp):
         """
         Creates a logical connection between two nodes.
-        Before the actual connection is established checks will be performed to make sure that the input is actually
-        legal.
+        Before the actual connection is established checks will be performed
+         to make sure that the input is actually legal.
         If necessary, previously created connections that are in conflict with the new one will be deleted.
         :param outNode: Node instance that has the output involved in the connection.
         :param out: string representing the Output's name.
@@ -201,10 +200,6 @@ class Graph(object):
                     str(outNode),
                     inp,
                     str(inpNode)))
-        # print('Connect output \'{1}\' of node {0} to input \'{3}\' of node {2}'.format(str(outNode),
-        #                                                                                out,
-        #                                                                                str(inpNode),
-        #                                                                                inp))
         conn = Connection(outNode, out, inpNode, inp)
         if not issubclass(type(inpNode), ControlNode) or not inp == 'Control':
             for oldCon in self.reverseConnections[inpNode]:
@@ -271,11 +266,15 @@ class Graph(object):
     def compile(self):
         """
         Compile the Graph as chainer code.
-        :return:
+        :return: If compilation was succeeded, return True.
         """
         return compiler.Compiler()(self.nodes)
 
     def run(self):
+        """
+        Run compiled chainer code.
+        :return:
+        """
         try:
             self.runner = runner.TrainRunner()
         except SyntaxError:
@@ -296,7 +295,7 @@ class Graph(object):
 
     def killRunner(self):
         """
-        Send KILL command to the graph interpreter telling it to terminate itself.
+        Kill chainer execution thread.
         :return:
         """
         if self.runner is not None:
@@ -349,8 +348,6 @@ class Graph(object):
                 output_node, output_name = outputID.split(':O')
                 try:
                     output_node = idMap[int(output_node)]
-                    # print(id, nodeData['inputConnections'], output_node, output_name)
-
                     self.connect(str(output_node), output_name, str(idMap[id]),
                                  input_name)
                 except KeyError:
@@ -371,61 +368,6 @@ class Graph(object):
                         print(
                             'Warning: Could not create connection due to missing node.')
 
-        self.update()
-        return idMap
-
-    def updateState(self, data, reuseIDs=False):
-        """
-        Updates the current the Graph instance with the json representation of another, similar Graph instance.
-        New Node instances are created for Nodes in the json data that are not already present.
-        Also, all connections are removed and re-instanciated based on the provided json data.
-        :param data:
-        :return:
-        """
-        self.connections = {key: set() for key in self.connections.keys()}
-        self.reverseConnections = {key: set() for key in
-                                   self.reverseConnections.keys()}
-        idMap = {}
-        removeNodes = set(self.nodes.keys())
-        for id, nodeData in data:
-            useID = id if reuseIDs else False
-            idMap[int(id)] = int(id)
-            if not int(id) in self.nodes.keys():
-                restoredNode = self.spawnNode(NODECLASSES[nodeData['class']],
-                                              position=nodeData['position'],
-                                              silent=True, useID=useID)
-                thisNode = restoredNode
-            else:
-                thisNode = self.nodes[int(id)]
-            removeNodes.discard(thisNode.ID)
-            inputs = nodeData['inputs']
-            outputs = nodeData['outputs']
-            for input in inputs:
-                thisNode.inputs[input[0]].setDefault(input[-1])
-            for output in outputs:
-                thisNode.outputs[output[0]].setDefault(output[-1])
-        for id, nodeData in data:
-            id = int(id)
-            for input_name, outputID in nodeData['inputConnections'].items():
-                if input_name == 'Control':
-                    continue
-                output_node, output_name = outputID.split(':O')
-                output_node = idMap[int(output_node)]
-                # print(id, nodeData['inputConnections'], output_node, output_name)
-                self.connect(str(output_node), output_name, str(idMap[id]),
-                             input_name)
-
-            for output_name, inputIDs in nodeData['outputConnections'].items():
-                for inputID in inputIDs:
-                    if 'Control' not in inputID:
-                        continue
-                    input_node, input_name = inputID.split(':I')
-                    input_node = idMap[int(input_node)]
-                    # print(id, nodeData['inputConnections'], output_node, output_name)
-                    self.connect(str(idMap[id]), output_name, str(input_node),
-                                 input_name)
-        for nodeID in removeNodes:
-            self.deleteNode(self.nodes[nodeID])
         self.update()
         return idMap
 
@@ -455,7 +397,6 @@ class Graph(object):
                     continue
                 output_node, output_name = outputID.split(':O')
                 output_node = idMap[int(output_node)]
-                # print(id, nodeData['inputConnections'], output_node, output_name)
                 self.connect(str(output_node), output_name, str(idMap[id]),
                              input_name)
 
@@ -465,7 +406,6 @@ class Graph(object):
                         continue
                     input_node, input_name = inputID.split(':I')
                     input_node = idMap[int(input_node)]
-                    # print(id, nodeData['inputConnections'], output_node, output_name)
                     self.connect(str(idMap[id]), output_name, str(input_node),
                                  input_name)
 
