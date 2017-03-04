@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 
@@ -1114,9 +1115,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             file_name += '.json'
         logger.debug('Attempting to save graph as {}'.format(file_name))
         with open(file_name, 'w') as fp:
-            self.drawer.graph.save(fp)
+            graph_dump = json.dumps(self.drawer.graph.to_dict(), sort_keys=True)
+            fp.write(graph_dump)
             fp.write('\n')
-            TrainParamServer().save(fp)
+            train_dump = json.dumps(TrainParamServer().to_dict(), sort_keys=True)
+            fp.write(train_dump)
         self.statusBar.showMessage('Graph saved as {}.'.format(file_name), 2000)
         logger.info('Save graph as {}'.format(file_name))
 

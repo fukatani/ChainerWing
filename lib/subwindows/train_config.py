@@ -33,9 +33,8 @@ class TrainParamServer(object):
         for key in opt_keys:
             del cls.__dict__[key]
 
-    def save(cls, fp):
-        train_state = json.dumps(cls.__dict__, sort_keys=True)
-        fp.write(train_state)
+    def to_dict(cls):
+        return cls.__dict__
 
     def from_json(cls, line):
         json.loads(line)

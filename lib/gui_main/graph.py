@@ -283,31 +283,16 @@ class Graph(object):
                             .format(TrainParamServer().get_net_name()))
         self.runner.run()
 
-    def print(self, message):
-        print(message)
-
-    def save(self, fp):
-        """
-        Saves the graph as a JSON string to the disk
-        :param fp: file pointer for writing JSON.
-        :return:
-        """
-        net_state = self.to_json()
-        fp.write(net_state)
-
-    def to_json(self, subgraph=None):
+    def to_dict(self, subgraph=None):
         """
         Encodes the graph as a JSON string and returns the string.
         :param subgraph: Returns whole graph is 'subgraph=None' else only the nodes corresponding to the subgraph.
         :return:
         """
         if subgraph:
-            return json.dumps(
-                [(node.ID, node.save()) for node in self.nodes.values() if
-                 node.subgraph == subgraph], sort_keys=True)
-        return json.dumps(
-            [(node.ID, node.save()) for node in self.nodes.values()],
-            sort_keys=True)
+            return [(node.ID, node.to_dict()) for node in self.nodes.values() if
+                 node.subgraph == subgraph]
+        return [(node.ID, node.to_dict()) for node in self.nodes.values()]
 
     def killRunner(self):
         """

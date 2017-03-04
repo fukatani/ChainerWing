@@ -499,7 +499,7 @@ class Node(object, metaclass=MetaNode):
                                                                 var_type):
                 return out
 
-    def save(self):
+    def to_dict(self):
         """
         Returns a dictionary containing all data necessary to reinstanciate the Node instance with the same properties
         it currently has. A list of the dictionaries of each node instance in a graph is all the data necessary to
