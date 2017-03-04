@@ -41,8 +41,6 @@ from chainer.training import extensions
 from chainer import reporter
 from chainer import serializers
 
-from lib.cw_progress_bar import CWProgressBar
-
 
 class {0}(chainer.Chain):
 
@@ -71,7 +69,7 @@ class TrainerTemplate(Template):
         call_train = '''
 
 
-def training_main(train, test, call_by_gui=False):
+def training_main(train, test, pbar=None):
     model = {3}()
 
     optimizer = {0}()
@@ -87,7 +85,10 @@ def training_main(train, test, call_by_gui=False):
                                        device={2})
     '''.format(kwargs['Optimizer'], kwargs['BatchSize'],
                kwargs['GPU']-1, kwargs['NetName']) + '''
-    trainer = training.Trainer(updater, ({0}, 'epoch'))
+    if pbar is None:
+        trainer = training.Trainer(updater, ({0}, 'epoch'))
+    else:
+        trainer = training.Trainer(updater, pbar.get_stop_trigger)
     '''.format(kwargs['Epoch']) + '''
     trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
     '''.format(kwargs['GPU']-1) + '''
@@ -106,8 +107,8 @@ def training_main(train, test, call_by_gui=False):
                                'epoch', file_name='accuracy.png'))
     '''
         call_train += '''
-    if call_by_gui:
-        trainer.extend(CWProgressBar())
+    if pbar is not None:
+        trainer.extend(pbar)
     else:
         trainer.extend(extensions.ProgressBar())
 

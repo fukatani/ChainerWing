@@ -8,14 +8,17 @@ from PyQt5 import QtWidgets
 
 from chainer.training import extension
 from chainer.training import trigger
+from chainer.training.triggers import interval
 
 
 class CWProgressBar(extension.Extension, QtWidgets.QDialog):
 
-    def __init__(self, *args, update_interval=100):
+    def __init__(self, epoch, update_interval=100, *args):
         self._update_interval = update_interval
         self._recent_timing = []
-        self._training_length = None
+        self.stop_trigger = None
+        self.interval_trigger = interval.IntervalTrigger(epoch, 'epoch')
+        self.epoch = epoch
 
         super(CWProgressBar, self).__init__(*args)
         self.setWindowTitle('progress')
@@ -52,14 +55,9 @@ class CWProgressBar(extension.Extension, QtWidgets.QDialog):
         self.raise_()
 
     def __call__(self, trainer):
-        training_length = self._training_length
 
         # initialize some attributes at the first call
-        t = trainer.stop_trigger
-        if not isinstance(t, trigger.IntervalTrigger):
-            raise TypeError(
-                'cannot retrieve the training length from %s' % type(t))
-        training_length = self._training_length = t.period, t.unit
+        training_length = self.epoch, 'epoch'
 
         stat_template = (
                 '{0.iteration:10} iter, {0.epoch} epoch / %s %ss\n' %
@@ -106,5 +104,8 @@ class CWProgressBar(extension.Extension, QtWidgets.QDialog):
 
     def finalize(self):
         # delete the progress bar and exit training
+        self.stop_trigger = True
         super(CWProgressBar, self).close()
-        return
+
+    def get_stop_trigger(self, trainer):
+        return self.stop_trigger or self.interval_trigger(trainer)

@@ -33,7 +33,7 @@ class Graph(object):
         self.nextFreeNodeID = 0
         self.nodes = {}
         self.connections = {}
-        self.runner = runner.Runner()
+        self.runner = None
         self.status = None
         self.reverseConnections = {}
         # self.statusLock = Lock()
@@ -275,6 +275,7 @@ class Graph(object):
         return compiler.Compiler()(self.nodes)
 
     def run(self):
+        self.runner = runner.Runner()
         self.runner.run(do_train=True)
 
     def print(self, message):
@@ -308,7 +309,8 @@ class Graph(object):
         Send KILL command to the graph interpreter telling it to terminate itself.
         :return:
         """
-        self.runner.kill()
+        if self.runner is not None:
+            self.runner.kill()
 
     def load_from_json(self, line):
         """
