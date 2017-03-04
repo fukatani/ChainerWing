@@ -52,7 +52,7 @@ class DataConfig(object):
             init_path = train_server[self.param_name]
             init_path = os.path.abspath(init_path)
         else:
-            init_path = train_server.get_data_dir()
+            init_path = train_server.get_work_dir()
         data_file = QtWidgets.QFileDialog.getOpenFileName(
             self.window, self.direction, init_path,
             filter=self.filter)[0]
