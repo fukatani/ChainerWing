@@ -46,6 +46,15 @@ class TrainParamServer(object):
     def get_model_name(cls):
         return cls['WorkDir'] + '/' + cls['ModelName']
 
+    def get_train_data_name(cls):
+        final_slash_pos = cls['TrainData'].rfind('/')
+        final_dot_pos = cls['TrainData'].rfind('.')
+        if final_slash_pos > 0 and final_dot_pos > 0:
+            assert final_slash_pos < final_dot_pos
+            return cls['TrainData'][final_slash_pos+1: final_dot_pos]
+        else:
+            return ''
+
     def get_data_dir(cls):
         if 'DataDir' not in cls.__dict__:
             cls.__dict__['DataDir'] = os.path.abspath(__file__) + '/../../examples/'

@@ -763,8 +763,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.iconRoot = os.path.join(os.path.dirname(__file__), 'resources')
         self.settings = QtCore.QSettings('Floppy', 'Floppy')
 
-        self.select_data_button = QtWidgets.QPushButton('Please Select '
-                                                        'Data File')
+        self.select_data_button = QtWidgets.QPushButton('')
         self.select_data_button.clicked.connect(self.open_data_config)
 
         self.setupUi(self)
@@ -799,6 +798,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         SettingsDialog(self, settings=self.settings).close()
         TrainDialog(self, settings=self.settings).close()
         DataDialog(self, settings=self.settings).close()
+        self.update_data_label()
 
     def setArgs(self, args):
         if args.test:
@@ -1018,7 +1018,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.knownSubgraphs = self.knownSubgraphs.union(new)
 
     def open_data_config(self):
-        DataDialog(self, settings=self.settings).show()
+        data_dialog = DataDialog(self, settings=self.settings)
+        data_dialog.show()
+        self.update_data_label()
+
+    def update_data_label(self):
+        text = TrainParamServer().get_train_data_name()
+        if text:
+            self.select_data_button.setText('Selecting Data: ' + text)
+        else:
+            self.select_data_button.setText('Please Select Data File')
 
     def openMacroDialog(self):
         if not self.drawer.groupSelected():
