@@ -39,6 +39,9 @@ class DataConfig(object):
     def __init__(self, label, window):
         self.param_name = self.__class__.__name__[:-6]  # remove 'Config'
         self.label = label
+        train_server = TrainParamServer()
+        if self.param_name in train_server.__dict__:
+            self.label = label.setText(train_server[self.param_name])
         self.window = window
         self.direction = ''
         self.filter = ''
@@ -56,6 +59,9 @@ class DataConfig(object):
         if data_file:
             self.label.setText(data_file)
             train_server[self.param_name] = data_file
+        else:
+            self.label.setText(self.direction)
+            del train_server[self.param_name]
 
 
 class PredInputDataConfig(DataConfig):
