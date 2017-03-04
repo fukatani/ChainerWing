@@ -11,8 +11,6 @@ from PyQt5.QtCore import Qt
 from lib import util
 from lib.gui_main.mainwindow import Ui_MainWindow
 from lib.node import ControlNode
-from lib.node_lib import ContextNodeFilter
-from lib.node_lib import ContextNodeList
 from lib.subwindows.data_config import DataDialog
 from lib.subwindows.settings import SettingsDialog
 from lib.subwindows.train_config import TrainDialog
