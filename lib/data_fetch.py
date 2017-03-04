@@ -51,6 +51,7 @@ class DataManager(object):
             module = module.load_module()
             return module.main()
         if train_server['UseSameData']:
+            # TODO(fukatani): Implement
             data_file = train_server['TrainData']
             data = self.get_data_from_file()
         else:

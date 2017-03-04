@@ -788,7 +788,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.setupNodeLib()
         # self.drawer.graph.spawnAndConnect()
-        self.connectHint = self.settings.value('DefaultConnection', type=str)
 
         # to reflect initial configuration
         SettingsDialog(self, settings=self.settings).close()
@@ -1095,19 +1094,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage('Compile started.', 2000)
         return self.drawer.graph.compile()
 
-    def spawnRunner(self):
-        logger.debug('Spawning new Runner.')
-        self.statusBar.showMessage('New Remote Interpreter spawned.', 2000)
-        self.drawer.graph.spawnAndConnect(self.settings.value('LOCALPORT'))
-        logger.debug('Connected to Runner.')
-
-    def compile_and_exe(self, *args):
+    def compile_and_exe(self):
         if self.compile_runner():
             self.exe_runner()
         else:
             util.disp_error('Compile is failured')
 
-    def load_graph(self, *args, override=False):
+    def load_graph(self, override=False):
         if not override:
             init_path = TrainParamServer().get_data_dir()
             file_name = QtWidgets.QFileDialog.getOpenFileName(
@@ -1504,7 +1497,7 @@ class NodeDialog(QtWidgets.QDockWidget):
         nodeList.registerGraph(graph)
         nodeList.registerPainter(painter)
         nodeList.setup(nFilter, graph)
-        cB.stateChanged.connect(nFilter.check)
+        cB.stateChanged.connect(nFilter.update_node_list)
         nFilter.registerListView(nodeList)
         dL.addWidget(nFilter)
         dL.addWidget(cB)

@@ -24,7 +24,7 @@ class NodeFilter(QLineEdit):
     """
     def __init__(self, parent=None):
         super(NodeFilter, self).__init__(parent)
-        self.textEdited.connect(self.check)
+        self.textEdited.connect(self.update_node_list)
         self.setStyleSheet("NodeFilter {background-color:rgb(75,75,75) ;"
                            "border:1px solid rgb(0, 0, 0); "
                            "border-color:black; color: white }")
@@ -39,10 +39,11 @@ class NodeFilter(QLineEdit):
         super(NodeFilter, self).focusInEvent(event)
         self.selectAll()
 
-    def check(self, text):
+    def update_node_list(self, text=''):
         """
         Interpret the text in the LineEdit and send the filtered node list to the registered NodeList widget.
         :param text: string that is used for filtering the node list.
+                     If '', display all Nodes.
         :return: None
         """
         text = text.lower()
@@ -59,16 +60,6 @@ class NodeFilter(QLineEdit):
             model.appendRow(item)
         self.listView.setModel(model)
 
-    def registerNodeListLayout(self, layout, widget):
-        """
-        Do I still need this? It doesn't look like it.
-        :param layout:
-        :param widget:
-        :return:
-        """
-        self.check('')
-        # print layout.children()
-
     def registerListView(self, view):
         """
         Establishes a reference to the NodeList instance used for displaying the filtering results.
@@ -76,13 +67,7 @@ class NodeFilter(QLineEdit):
         :return: None
         """
         self.listView = view
-        self.check('')
-
-    def getSelectedNode(self):
-        """
-        Do I still need this? It doesn't look like it.
-        """
-        pass
+        self.update_node_list()
 
     def keyPressEvent(self, event):
         """
@@ -250,7 +235,7 @@ class ContextNodeFilter(NodeFilter):
         self.dialog = dialog
         self.back = back
 
-    def check(self, text):
+    def update_node_list(self, text):
         """
         Adapted method from base class to do hinting by default.
         :param text: string interpreted for filtering the node list.
