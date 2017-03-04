@@ -273,7 +273,7 @@ class Graph(object):
         Compile the Graph as chainer code.
         :return:
         """
-        compiler.Compiler()(self.nodes)
+        return compiler.Compiler()(self.nodes)
 
     def run(self):
         self.runner.run(do_train=True)

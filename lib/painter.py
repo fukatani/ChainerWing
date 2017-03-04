@@ -1087,6 +1087,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.drawer.delete_node(node)
 
     def exe_runner(self):
+        self.statusBar.showMessage('Run started.', 2000)
         self.drawer.graph.run()
 
     def gotoRunner(self):
@@ -1111,8 +1112,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 'Cannot Pause Interpreter. No Interpreter Available.', 2000)
 
     def compile_runner(self):
-        self.drawer.graph.compile()
-        self.statusBar.showMessage('Code execution started.', 2000)
+        self.statusBar.showMessage('Compile started.', 2000)
+        return self.drawer.graph.compile()
 
     def spawnRunner(self):
         logger.debug('Spawning new Runner.')
