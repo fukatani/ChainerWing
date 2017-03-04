@@ -25,12 +25,7 @@ PINSIZE = 8
 TEXTYOFFSET = 0
 
 
-class Painter(QtWidgets.QWidget):
-    def decorateNode(self, node, position):
-        return node
-
-
-class Painter2D(Painter):
+class Painter2D(QtWidgets.QWidget):
     PINCOLORS = {str: QtGui.QColor(255, 190, 0),
                  int: QtGui.QColor(0, 115, 130),
                  float: QtGui.QColor(0, 200, 0),
