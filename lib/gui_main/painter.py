@@ -1092,14 +1092,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.clear_all_nodes()
         with open(file_name, 'r') as fp:
             line = fp.readline()
-            if not line: return
-            self.drawer.graph.load_from_json(line)
-            self.statusBar.showMessage(
-                'Graph loaded from {}.'.format(file_name), 2000)
-            logger.info('Successfully loaded graph: {}'.format(file_name))
-            line = fp.readline()
-            if not line: return
-            TrainParamServer().from_json(line)
+            proj_dict = json.loads(line)
+            if 'graph' in proj_dict:
+                self.drawer.graph.load_from_dict(proj_dict['graph'])
+                self.statusBar.showMessage(
+                    'Graph loaded from {}.'.format(file_name), 2000)
+                logger.info('Successfully loaded graph: {}'.format(file_name))
+            if 'train' in proj_dict:
+                TrainParamServer().load_from_dict(proj_dict['train'])
 
     def save_graph_and_train(self, *args):
         """
@@ -1115,11 +1115,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             file_name += '.json'
         logger.debug('Attempting to save graph as {}'.format(file_name))
         with open(file_name, 'w') as fp:
-            graph_dump = json.dumps(self.drawer.graph.to_dict(), sort_keys=True)
-            fp.write(graph_dump)
-            fp.write('\n')
-            train_dump = json.dumps(TrainParamServer().to_dict(), sort_keys=True)
-            fp.write(train_dump)
+            proj_dict = {'graph': self.drawer.graph.to_dict(),
+                         'train': TrainParamServer().to_dict()}
+            proj_dump = json.dumps(proj_dict, sort_keys=True)
+            fp.write(proj_dump)
         self.statusBar.showMessage('Graph saved as {}.'.format(file_name), 2000)
         logger.info('Save graph as {}'.format(file_name))
 

@@ -302,16 +302,7 @@ class Graph(object):
         if self.runner is not None:
             self.runner.kill()
 
-    def load_from_json(self, line):
-        """
-        :param line: string
-        :param callback:
-        :return:
-        """
-        graph_state = json.loads(line)
-        self.loadState(graph_state)
-
-    def loadState(self, graph_state, reuseIDs=False):
+    def load_from_dict(self, graph_state, reuseIDs=False):
         """
         Reconstruct a Graph instance from a JSON string representation
         created by the Graph.to_json() method.

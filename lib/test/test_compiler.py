@@ -20,9 +20,9 @@ if __name__ == '__main__':
 
     graph = Graph(painter=painter)
     with open('../../examples/mnist.json', 'r') as fp:
-        graph.load_from_json(fp.readline())
+        graph.load_from_dict(fp.readline())
         graph.compile()
-        TrainParamServer().from_json(fp.readline())
+        TrainParamServer().load_from_dict(fp.readline())
 
     assert filecmp.cmp('MyNet1.py', 'expect.txt')
     assert TrainParamServer().__dict__ == {'Epoch': 10,

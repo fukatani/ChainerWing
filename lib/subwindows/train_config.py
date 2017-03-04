@@ -36,8 +36,8 @@ class TrainParamServer(object):
     def to_dict(cls):
         return cls.__dict__
 
-    def from_json(cls, line):
-        json.loads(line)
+    def load_from_dict(cls, dict):
+        cls.__dict__ = dict
 
     def get_net_name(cls):
         return cls['WorkDir'] + '/' + cls['NetName']
