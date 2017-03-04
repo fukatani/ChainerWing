@@ -60,14 +60,14 @@ class NodeFilter(QLineEdit):
             model.appendRow(item)
         self.listView.setModel(model)
 
-    def registerListView(self, view):
+    def registerListView(self, view, text=''):
         """
         Establishes a reference to the NodeList instance used for displaying the filtering results.
         :param view: Reference to a NodeList instance.
         :return: None
         """
         self.listView = view
-        self.update_node_list()
+        self.update_node_list(text)
 
     def keyPressEvent(self, event):
         """
