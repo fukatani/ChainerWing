@@ -1,7 +1,9 @@
-from importlib import machinery
-import numpy as np
 import csv
-from lib.train_config import TrainParamServer
+from importlib import machinery
+
+import numpy as np
+
+from lib.subwindows.train_config import TrainParamServer
 
 
 class DataManager(object):

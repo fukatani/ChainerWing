@@ -1,8 +1,8 @@
 import importlib
 
-from lib.train_config import TrainParamServer
-from lib.data_fetch import DataManager
 from lib import util
+from lib.data_fetch import DataManager
+from lib.subwindows.train_config import TrainParamServer
 
 
 class Runner(object):

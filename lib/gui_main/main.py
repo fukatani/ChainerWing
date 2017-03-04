@@ -1,9 +1,11 @@
-from lib.graph import Graph
-from lib.painter import Painter2D, MainWindow
-import sys
-from PyQt5 import QtWidgets
 import argparse
 import logging
+import sys
+
+from PyQt5 import QtWidgets
+
+from lib.gui_main.graph import Graph
+from lib.gui_main.painter import Painter2D, MainWindow
 
 logger = logging.getLogger('Floppy')
 logger.setLevel(logging.DEBUG)

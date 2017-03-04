@@ -9,7 +9,7 @@
 from PyQt5 import QtCore, QtWidgets
 
 from lib.node_lib import NodeList, NodeFilter
-from lib.report_widget import ReportWidget
+from lib.subwindows.report_widget import ReportWidget
 
 
 class Ui_MainWindow(object):

@@ -1,9 +1,9 @@
+from lib import util
+from lib.node import InputNotAvailable
 from lib.node import Link
 from lib.node import Loss
-from lib.node import InputNotAvailable
+from lib.subwindows.train_config import TrainParamServer
 from lib.templates import TEMPLATES
-from lib.train_config import TrainParamServer
-from lib import util
 
 
 class Compiler(object):

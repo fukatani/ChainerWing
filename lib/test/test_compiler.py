@@ -4,11 +4,10 @@ import sys
 from PyQt5.QtCore import QSettings
 from PyQt5.QtWidgets import QApplication
 
-from lib import node_lib
-from lib import train_config
-from lib.graph import Graph
-from lib.painter import MainWindow, Painter2D
-from lib.train_config import TrainParamServer
+from lib.gui_main.graph import Graph
+from lib.gui_main.painter import MainWindow, Painter2D
+from lib.subwindows import train_config
+from lib.subwindows.train_config import TrainParamServer
 
 if __name__ == '__main__':
     # To initialize train_parameter.

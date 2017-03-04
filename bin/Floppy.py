@@ -1,4 +1,4 @@
 #!python3
 if __name__ == '__main__':
-    import lib.main
-    lib.main.run()
+    import lib.gui_main.main
+    lib.gui_main.main.run()

@@ -1,6 +1,6 @@
-from lib.train_config import TrainParamServer
-
 from PyQt5 import QtWidgets
+
+from lib.subwindows.train_config import TrainParamServer
 
 
 class DataDialog(QtWidgets.QDialog):

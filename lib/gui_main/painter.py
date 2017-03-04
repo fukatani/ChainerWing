@@ -1,23 +1,22 @@
+import logging
 import os
 
-from lib.mainwindow import Ui_MainWindow
+import chainer
+import numpy
+from PyQt5 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
+from PyQt5.QtCore import Qt
+
+from lib import util
+from lib.gui_main.mainwindow import Ui_MainWindow
 from lib.node import ControlNode
 from lib.node_lib import ContextNodeFilter
 from lib.node_lib import ContextNodeList
-from lib.data_config import DataDialog
-from lib.settings import SettingsDialog
-from lib.train_config import TrainDialog
-from lib.train_config import TrainParamServer
-from lib import util
-
-from PyQt5 import QtWidgets
-from PyQt5.QtCore import Qt
-from PyQt5 import QtCore
-from PyQt5 import QtGui
-
-import chainer
-import logging
-import numpy
+from lib.subwindows.data_config import DataDialog
+from lib.subwindows.settings import SettingsDialog
+from lib.subwindows.train_config import TrainDialog
+from lib.subwindows.train_config import TrainParamServer
 
 logger = logging.getLogger('Floppy')
 
@@ -760,7 +759,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None, painter=None):
         super(MainWindow, self).__init__(parent)
 
-        self.iconRoot = os.path.join(os.path.dirname(__file__), 'resources')
+        self.iconRoot = os.path.join(os.path.dirname(__file__), '../resources')
         self.settings = QtCore.QSettings('Floppy', 'Floppy')
 
         self.select_data_button = QtWidgets.QPushButton('')
