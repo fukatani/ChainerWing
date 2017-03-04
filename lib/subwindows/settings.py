@@ -60,9 +60,15 @@ class SettingsDialog(QtWidgets.QDialog):
                 main_layout.addWidget(l_widget)
             else:
                 section_layout.addRow(name, widget)
+
         close_button = QtWidgets.QPushButton('Apply')
         close_button.clicked.connect(self.close)
         main_layout.addWidget(close_button)
+
+        clear_button = QtWidgets.QPushButton('Reset All Settings')
+        clear_button.clicked.connect(self.clear_settings)
+        main_layout.addWidget(clear_button)
+
         self.setLayout(main_layout)
 
     def close(self):
@@ -73,6 +79,10 @@ class SettingsDialog(QtWidgets.QDialog):
                 pass
         self.settings.sync()
         super(SettingsDialog, self).close()
+
+    def clear_settings(self):
+        self.settings.clear()
+        self.close()
 
     def redraw(self):
         self.parent().drawer.repaint()
