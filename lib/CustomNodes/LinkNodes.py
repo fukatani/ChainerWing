@@ -12,8 +12,6 @@ class Linear(Link):
     def call_init(self):
         # TODO(fukatani): implement systematically.
         # if not self._out_size:
-        # TODO(fukatani): error display
-        #    raise Exception
         return "Linear(None, {out_size}, nobias={nobias})," \
             .format(out_size=self._out_size,
                     nobias=self._nobias)

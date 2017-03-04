@@ -972,7 +972,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.mainToolBar.addSeparator()
         self.mainToolBar.addAction(self.compile_and_exe_action)
         self.mainToolBar.addSeparator()
-        self.mainToolBar.addAction(self.pauseRunnerAction)
+        # self.mainToolBar.addAction(self.pauseRunnerAction)
         self.mainToolBar.addAction(self.compile_action)
         self.mainToolBar.addAction(self.exe_action)
         # self.mainToolBar.addAction(self.gotoRunnerAction)
@@ -1044,7 +1044,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         TrainDialog(self, settings=self.settings).show()
 
     def open_prediction(self):
-        # PredictionWindow(self, settings=self.settings).show()
         PredictionWindow(self, settings=self.settings).show()
 
     def connect(self):
