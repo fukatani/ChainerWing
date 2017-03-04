@@ -61,7 +61,6 @@ class Painter2D(QtWidgets.QWidget):
         self.rightClickedNode = None
         self.lastReport = None
         self.mouseDownPos = None
-        self.dialog = None
         self.relayTo = None
         self.selectFrame = None
         self.selectFrame_End = None
@@ -86,7 +85,6 @@ class Painter2D(QtWidgets.QWidget):
         self.lastReport = None
         self.contextSensitive = False
         self.mouseDownPos = None
-        self.dialog = None
         self.relayTo = None
         self.selectFrame = None
         self.selectFrame_End = None
@@ -202,9 +200,6 @@ class Painter2D(QtWidgets.QWidget):
         self.update()
 
     def mousePressEvent(self, event):
-        if self.dialog:
-            self.dialog.close()
-            self.dialog = None
         self.mouseDownPos = event.pos()
         if event.button() == Qt.RightButton:
             self.rightClickedNode = None
@@ -1420,7 +1415,6 @@ class LineEdit(DrawItem):
             self.text += self._sanitize_string(event.text())
         self.painter.update()
         self.parent.inputs[self.data.name].setDefault(self.text)
-        # print(event.key())
 
     def _sanitize_string(self, string):
         string = string.strip('\r\n')
