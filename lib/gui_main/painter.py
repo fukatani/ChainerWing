@@ -1417,12 +1417,12 @@ class LineEdit(DrawItem):
         if event.key() == 16777219:  # Backspace
             self.text = self.text[:-1]
         else:
-            self.text += self.sanitizeInputString(event.text())
+            self.text += self._sanitize_string(event.text())
         self.painter.update()
         self.parent.inputs[self.data.name].setDefault(self.text)
         # print(event.key())
 
-    def sanitizeInputString(self, string):
+    def _sanitize_string(self, string):
         string = string.strip('\r\n')
         try:
             self.data.info.var_type(string)
