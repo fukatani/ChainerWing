@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import sys
 
 from PyQt5 import QtWidgets
@@ -7,9 +8,11 @@ from PyQt5 import QtWidgets
 from lib.gui_main.graph import Graph
 from lib.gui_main.painter import Painter2D, MainWindow
 
-logger = logging.getLogger('Floppy')
+logger = logging.getLogger('Chainer-Wing')
 logger.setLevel(logging.DEBUG)
-fh = logging.FileHandler('lib.log')
+if os.path.isfile('cw_debug.log'):
+    os.remove('cw_debug.log')
+fh = logging.FileHandler('cw_debug.log')
 fh.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
