@@ -125,9 +125,8 @@ class Painter2D(Painter):
             cons = self.graph.getConnectionsOfOutput(out)
             if cons:
                 for con in cons:
-                    inpNode = con.input_node
-                    if inpNode not in subgraph:
-                        relayOutputs.add((out, inpNode, con.input_name))
+                    if con.input_node not in subgraph:
+                        relayOutputs.add((out, con.input_node, con.input_name))
                         break
             else:
                 relayOutputs.add((out, None, None))
@@ -799,6 +798,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         # to reflect initial configuration
         SettingsDialog(self, settings=self.settings).close()
         TrainDialog(self, settings=self.settings).close()
+        DataDialog(self, settings=self.settings).close()
 
     def setArgs(self, args):
         if args.test:

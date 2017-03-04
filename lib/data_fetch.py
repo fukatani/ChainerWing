@@ -1,5 +1,7 @@
+from importlib import machinery
 import numpy as np
 import csv
+from lib.train_config import TrainParamServer
 
 
 class DataManager(object):
@@ -38,6 +40,26 @@ class DataManager(object):
             return data, superviser
         else:  # Not including superviser
             return data, None
+
+    def get_data_train(self):
+        train_server = TrainParamServer()
+        if train_server['TrainData'][-3:] == '.py':
+            module = machinery.SourceFileLoader("data_getter",
+                                                train_server['TrainData'])
+            module = module.load_module()
+            return module.main()
+        if train_server['UseSameData']:
+            data_file = train_server['TrainData']
+            data = self.get_data_from_file()
+        else:
+            train_file = train_server['TrainData']
+            train_data = self.get_data_from_file(train_file)
+            test_file = train_server['TestData']
+            test_data = self.get_data_from_file(test_file)
+        return train_data, test_data
+
+    def get_data_pred(self):
+        pass
 
 
 if __name__ == '__main__':

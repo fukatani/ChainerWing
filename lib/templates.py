@@ -71,13 +71,11 @@ class TrainerTemplate(Template):
         call_train = '''
 
 
-def training_main(call_by_gui=False):
+def training_main(train, test, call_by_gui=False):
     model = {3}()
 
     optimizer = {0}()
     optimizer.setup(model)
-
-    train, test = chainer.datasets.get_mnist()
 
     train_iter = chainer.iterators.SerialIterator(train, {1})
     test_iter = chainer.iterators.SerialIterator(test, {1},

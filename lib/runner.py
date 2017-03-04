@@ -1,6 +1,7 @@
 import importlib
 
 from lib.train_config import TrainParamServer
+from lib.data_fetch import DataManager
 from lib import util
 
 
@@ -15,9 +16,11 @@ class Runner(object):
                             .format(TrainParamServer().get_net_name()))
             return
         if do_train:
-            module.training_main(True)
+            train_data, test_data = DataManager().get_data_train()
+            module.training_main(train_data, test_data, True)
         else:
-            module.prediction_main()
+            input_data = DataManager().get_data_pred()
+            module.prediction_main(input_data)
         del module
 
     def kill(self):
