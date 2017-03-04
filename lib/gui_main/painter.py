@@ -845,13 +845,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.clear_all_action.setIconVisibleInMenu(True)
         self.addAction(self.clear_all_action)
 
-        self.pauseRunnerAction = QtWidgets.QAction(
-            QtGui.QIcon(os.path.join(self.iconRoot, 'pause.png')),
-            'Pause', self)
-        self.pauseRunnerAction.setShortcut('Ctrl+P')
-        self.pauseRunnerAction.triggered.connect(self.pauseRunner)
-        self.pauseRunnerAction.setIconVisibleInMenu(True)
-        self.addAction(self.pauseRunnerAction)
+        # self.pauseRunnerAction = QtWidgets.QAction(
+        #     QtGui.QIcon(os.path.join(self.iconRoot, 'pause.png')),
+        #     'Pause', self)
+        # self.pauseRunnerAction.setShortcut('Ctrl+P')
+        # self.pauseRunnerAction.triggered.connect(self.pauseRunner)
+        # self.pauseRunnerAction.setIconVisibleInMenu(True)
+        # self.addAction(self.pauseRunnerAction)
 
         self.compile_action = QtWidgets.QAction(
             QtGui.QIcon(os.path.join(self.iconRoot, 'unpause.png')),
@@ -1091,27 +1091,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def exe_runner(self):
         self.statusBar.showMessage('Run started.', 2000)
         self.drawer.graph.run()
-
-    def gotoRunner(self):
-        try:
-            self.drawer.graph.gotoRunner(1)
-        except AttributeError:
-            self.statusBar.showMessage(
-                'Cannot Go To Node. No Interpreter Available.', 2000)
-
-    def updateRunner(self):
-        try:
-            self.drawer.graph.updateRunner()
-        except AttributeError:
-            self.statusBar.showMessage(
-                'Cannot Update Interpreter. No Interpreter Available.', 2000)
-
-    def pauseRunner(self):
-        try:
-            self.drawer.graph.pauseRunner()
-        except AttributeError:
-            self.statusBar.showMessage(
-                'Cannot Pause Interpreter. No Interpreter Available.', 2000)
 
     def compile_runner(self):
         self.statusBar.showMessage('Compile started.', 2000)
