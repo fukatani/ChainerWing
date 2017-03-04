@@ -17,6 +17,7 @@ from lib.subwindows.data_config import DataDialog
 from lib.subwindows.settings import SettingsDialog
 from lib.subwindows.train_config import TrainDialog
 from lib.subwindows.train_config import TrainParamServer
+from lib.subwindows.prediction_widget import PredictionWindow
 
 logger = logging.getLogger('Floppy')
 
@@ -448,10 +449,6 @@ class Painter2D(Painter):
         # painter.translate(self.width()/2., self.height()/2.)
         painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing)
         # painter.drawEllipse(QtCore.QPoint(0,0),5,5)
-        report = self.graph.getReport()
-        if report and not report == self.lastReport:
-            self.reportWidget.updateReport(report)
-            self.lastReport = report
 
         lastDraws = []
         halfPinSize = PINSIZE // 2
@@ -917,12 +914,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.train_configure_action.setIconVisibleInMenu(True)
         self.addAction(self.train_configure_action)
 
-        self.pushAction = QtWidgets.QAction(
+        self.prediction_action = QtWidgets.QAction(
             QtGui.QIcon(os.path.join(self.iconRoot, 'push.png')), 'Push', self)
-        self.pushAction.setShortcut('Ctrl+X')
-        self.pushAction.triggered.connect(self.pushGraph)
-        self.pushAction.setIconVisibleInMenu(True)
-        self.addAction(self.pushAction)
+        self.prediction_action.setShortcut('Ctrl+P')
+        self.prediction_action.triggered.connect(self.open_prediction)
+        self.prediction_action.setIconVisibleInMenu(True)
+        self.addAction(self.prediction_action)
 
         self.settings_action = QtWidgets.QAction(
             QtGui.QIcon(os.path.join(self.iconRoot, 'settings.png')),
@@ -982,7 +979,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.mainToolBar.addSeparator()
         # self.mainToolBar.addAction(self.spawnRunnerAction)
         # self.mainToolBar.addAction(self.spawnRunnerAction)
-        self.mainToolBar.addAction(self.pushAction)
+        self.mainToolBar.addAction(self.prediction_action)
         # self.mainToolBar.addAction(self.updateRunnerAction)
         self.mainToolBar.addAction(self.clear_all_action)
         self.mainToolBar.addSeparator()
@@ -1046,6 +1043,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def open_train_config(self):
         TrainDialog(self, settings=self.settings).show()
 
+    def open_prediction(self):
+        # PredictionWindow(self, settings=self.settings).show()
+        PredictionWindow(self, settings=self.settings).show()
+
     def connect(self):
         # TODO(fukatani): Implement.
         pass
@@ -1070,13 +1071,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except AttributeError:
             self.statusBar.showMessage(
                 'Cannot Drop Graph. No Interpreter Available..', 2000)
-
-    def pushGraph(self):
-        try:
-            self.drawer.graph.push2Runner()
-        except AttributeError:
-            self.statusBar.showMessage(
-                'Cannot Push Graph. No Interpreter Available.', 2000)
 
     def killRunner(self):
         try:
