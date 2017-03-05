@@ -30,7 +30,6 @@ class PredictionRunner(object):
 
     def __init__(self):
         train_server = TrainParamServer()
-        self.pbar = CWProgressBar(train_server['Epoch'])
         module_file = machinery.SourceFileLoader("net_run",
                                                  train_server.get_net_name())
         self.module = module_file.load_module()

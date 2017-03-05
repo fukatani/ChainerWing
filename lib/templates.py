@@ -49,11 +49,17 @@ class {0}(chainer.Chain):
 {1}
         )
 
-    def predict(self, x):
+    def _predict(self, x):
         return {3}
 
+    def predict(self, x):
+        return self._predict(x).data
+
+    def predict_class(self, x):
+        return self.predict(x).data
+
     def __call__(self, x, t):
-        self.y = self.predict(x)
+        self.y = self._predict(x)
         self.loss = {2}
 '''.format(net_name, init_impl, call_impl, pred_impl)
         rtn += "        reporter.report({'loss': self.loss}, self)\n"
@@ -92,8 +98,6 @@ def training_main(train, test, pbar=None):
     '''.format(kwargs['Epoch']) + '''
     trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
     '''.format(kwargs['GPU']-1) + '''
-    trainer.extend(extensions.snapshot(filename='{0}/snapshot_epoch_{1}'), trigger=({1}, 'epoch'))
-    '''.format(kwargs.get_result_dir(), kwargs['Epoch']) + '''
     trainer.extend(extensions.LogReport(log_name='{0}/chainer.log'))
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
@@ -113,13 +117,16 @@ def training_main(train, test, pbar=None):
         trainer.extend(extensions.ProgressBar())
 
     trainer.run()
-    serializers.save_npz("{0}.npz", model)
+    serializers.save_npz("{1}.npz", model)
 
 
-def prediction_main(input, pbar=None):
+def prediction_main(input, classification=False):
     model = {0}()
-    serializers.load_npz("{0}.npz", model)
-    return model.predict(input)
+    serializers.load_npz("{1}.npz", model)
+    if classification:
+        return model.predict_class(input)
+    else:
+        return model.predict(input)
 
 
 if __name__ == '__main__':

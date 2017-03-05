@@ -17,11 +17,17 @@ class MyNet(chainer.Chain):
             l1=Linear(None, 10, nobias=True),
         )
 
-    def predict(self, x):
+    def _predict(self, x):
         return relu(self.l1(relu(self.l0(x))))
 
+    def predict(self, x):
+        return self._predict(x).data
+
+    def predict_class(self, x):
+        return self.predict(x).data
+
     def __call__(self, x, t):
-        self.y = self.predict(x)
+        self.y = self._predict(x)
         self.loss = softmax_cross_entropy(self.y, t)
         reporter.report({'loss': self.loss}, self)
         self.accuracy = accuracy(self.y, t)
@@ -51,8 +57,6 @@ def training_main(train, test, pbar=None):
     
     trainer.extend(extensions.Evaluator(test_iter, model, device=0))
     
-    trainer.extend(extensions.snapshot(filename='/home/ryo/workspace/github/CW_gui/examples/data/result/snapshot_epoch_10'), trigger=(10, 'epoch'))
-    
     trainer.extend(extensions.LogReport(log_name='/home/ryo/workspace/github/CW_gui/examples/data/result/chainer.log'))
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
@@ -69,13 +73,16 @@ def training_main(train, test, pbar=None):
         trainer.extend(extensions.ProgressBar())
 
     trainer.run()
-    serializers.save_npz("MyNet.npz", model)
+    serializers.save_npz("/home/ryo/workspace/github/CW_gui/examples/data/result/MyModel.npz", model)
 
 
-def prediction_main(input, pbar=None):
+def prediction_main(input, classification=False):
     model = MyNet()
-    serializers.load_npz("MyNet.npz", model)
-    return model.predict(input)
+    serializers.load_npz("/home/ryo/workspace/github/CW_gui/examples/data/result/MyModel.npz", model)
+    if classification:
+        return model.predict_class(input)
+    else:
+        return model.predict(input)
 
 
 if __name__ == '__main__':
