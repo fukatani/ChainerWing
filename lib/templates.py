@@ -119,7 +119,7 @@ def training_main(train, test, pbar=None):
 def prediction_main(input, pbar=None):
     model = {0}()
     serializers.load_npz("{0}.npz", model)
-    return model(input)
+    return model.predict(input)
 
 
 if __name__ == '__main__':

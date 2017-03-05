@@ -34,6 +34,7 @@ class PredictionRunner(object):
         module_file = machinery.SourceFileLoader("net_run",
                                                  train_server.get_net_name())
         self.module = module_file.load_module()
+
     def run(self):
         input_data = DataManager().get_data_pred()
         return self.module.prediction_main(input_data)

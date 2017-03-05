@@ -14,7 +14,7 @@ class MyNet(chainer.Chain):
     def __init__(self):
         super(MyNet, self).__init__(
             l0=Linear(None, 200, nobias=False),
-            l1=Linear(None, 300, nobias=True),
+            l1=Linear(None, 10, nobias=True),
         )
 
     def predict(self, x):
@@ -51,9 +51,9 @@ def training_main(train, test, pbar=None):
     
     trainer.extend(extensions.Evaluator(test_iter, model, device=0))
     
-    trainer.extend(extensions.snapshot(), trigger=(10, 'epoch'))
+    trainer.extend(extensions.snapshot(filename='/home/ryo/workspace/github/CW_gui/examples/data/result/snapshot_epoch_10'), trigger=(10, 'epoch'))
     
-    trainer.extend(extensions.LogReport())
+    trainer.extend(extensions.LogReport(log_name='/home/ryo/workspace/github/CW_gui/examples/data/result/chainer.log'))
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
                                'epoch',
@@ -75,7 +75,7 @@ def training_main(train, test, pbar=None):
 def prediction_main(input, pbar=None):
     model = MyNet()
     serializers.load_npz("MyNet.npz", model)
-    return model(input)
+    return model.predict(input)
 
 
 if __name__ == '__main__':

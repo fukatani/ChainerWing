@@ -11,9 +11,9 @@ class DataManager(object):
         self.train_columns = 0
 
     def get_data_from_file(self, file_name, is_supervised):
-        if file_name[-4:] == '.csv':
+        if file_name.endswith('.csv'):
             return self.csv_to_ndarray(file_name, is_supervised)
-        elif file_name[-4:] == '.npz':
+        elif file_name.endswith('.npz'):
             data = np.load(file_name)
             if is_supervised:
                 return data['x'], data['y']
@@ -48,7 +48,7 @@ class DataManager(object):
 
     def get_data_train(self):
         train_server = TrainParamServer()
-        if train_server['TrainData'][-3:] == '.py':
+        if train_server['TrainData'].endswith('.py'):
             module = machinery.SourceFileLoader("data_getter",
                                                 train_server['TrainData'])
             module = module.load_module()
@@ -66,13 +66,13 @@ class DataManager(object):
 
     def get_data_pred(self):
         train_server = TrainParamServer()
-        if train_server['TrainData'][-3:] == '.py':
+        if train_server['PredInputData'].endswith('.py'):
             module = machinery.SourceFileLoader("data_getter",
-                                                train_server['TrainData'])
+                                                train_server['PredInputData'])
             module = module.load_module()
             return module.main()
         else:
-            data_file = train_server['TrainData']
+            data_file = train_server['PredInputData']
             data, _ = self.get_data_from_file(data_file)
             return data
 
