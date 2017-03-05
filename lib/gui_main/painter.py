@@ -1103,7 +1103,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         :return: None
         """
         file_name = QtWidgets.QFileDialog.getSaveFileName(
-            self, 'Save File', '~/')[0]
+            self, 'Save File', '~/',
+            filter='Chainer Wing Files (*.json);; Any (*.*)')[0]
         if not file_name:
             return
         if not file_name.endswith('.json'):
