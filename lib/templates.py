@@ -116,23 +116,13 @@ def training_main(train, test, pbar=None):
     serializers.save_npz("{0}.npz", model)
 
 
-def prediction_main(train, test, pbar=None):
+def prediction_main(input, pbar=None):
     model = {0}()
     serializers.load_npz("{0}.npz", model)
-    return model(prediction)
+    return model(input)
 
 
 if __name__ == '__main__':
     training_main(False)
-'''.format(kwargs.get_model_name())
+'''.format(kwargs['NetName'], kwargs.get_model_name())
         return call_train
-
-
-class PredTemplate(Template):
-    def __call__(self, kwargs):
-        return '''
-def prediction_main(x):
-    model = {0}()
-    serializers.load_npz("{0}.npz", model)
-    return model.predict(x)
-'''.format(kwargs.get_model_name())

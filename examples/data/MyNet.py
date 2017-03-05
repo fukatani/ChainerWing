@@ -13,12 +13,12 @@ class MyNet(chainer.Chain):
 
     def __init__(self):
         super(MyNet, self).__init__(
-            l3=Linear(None, 200, nobias=False),
-            l2=Linear(None, 300, nobias=True),
+            l0=Linear(None, 200, nobias=False),
+            l1=Linear(None, 300, nobias=True),
         )
 
     def predict(self, x):
-        return relu(self.l2(relu(self.l3(x))))
+        return relu(self.l1(relu(self.l0(x))))
 
     def __call__(self, x, t):
         self.y = self.predict(x)
@@ -69,7 +69,14 @@ def training_main(train, test, pbar=None):
         trainer.extend(extensions.ProgressBar())
 
     trainer.run()
-    serializers.save_npz(".//MyModel.npz", model)
+    serializers.save_npz("MyNet.npz", model)
+
+
+def prediction_main(input, pbar=None):
+    model = MyNet()
+    serializers.load_npz("MyNet.npz", model)
+    return model(input)
+
 
 if __name__ == '__main__':
     training_main(False)
