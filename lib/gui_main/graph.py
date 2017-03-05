@@ -280,6 +280,7 @@ class Graph(object):
         except SyntaxError:
             util.disp_error('Generated chainer script ({}) is not valid.'
                             .format(TrainParamServer().get_net_name()))
+            return
         self.runner.run()
 
     def to_dict(self, subgraph=None):
