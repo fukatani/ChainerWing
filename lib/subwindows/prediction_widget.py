@@ -14,12 +14,12 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
         self.input_sel_button.clicked.connect(self.set_input)
         self.input_config = PredInputDataConfig(self.input_data_name, self)
-
         self.output_sel_button.clicked.connect(self.set_output)
         self.output_config = PredOutputDataConfig(self.output_name, self)
-
         self.model_sel_button.clicked.connect(self.set_model)
         self.model_config = PredModelConfig(self.model_name, self)
+
+        self.exe_button.clicked.connect(self.exe_prediction)
 
     def set_input(self):
         self.input_config.set_data()
@@ -32,7 +32,8 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
     def exe_prediction(self):
         runner = PredictionRunner()
-        runner.run()
+        result = runner.run()
+        self.result_table
 
 
 class DataConfig(object):

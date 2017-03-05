@@ -20,7 +20,7 @@ class Compiler(object):
         if not call_impl:
             return False
         classification = 'Class' in TrainParamServer()['TrainMode']
-        net_file = open(net_name + '.py', 'w')
+        net_file = open(TrainParamServer().get_net_name(), 'w')
         net_file.write(TEMPLATES['NetTemplate']()(TrainParamServer()['NetName'],
                                                   init_impl,
                                                   call_impl,

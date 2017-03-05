@@ -1,4 +1,4 @@
-import importlib
+from importlib import machinery
 
 from lib import util
 from lib.data_fetch import DataManager
@@ -10,9 +10,11 @@ from lib.cw_progress_bar import CWProgressBar
 class TrainRunner(object):
 
     def __init__(self):
-        self.pbar = CWProgressBar(TrainParamServer()['Epoch'])
-        module_file = TrainParamServer()['NetName']
-        self.module = importlib.import_module(module_file)
+        train_server = TrainParamServer()
+        self.pbar = CWProgressBar(train_server['Epoch'])
+        module_file = machinery.SourceFileLoader("net_run",
+                                                 train_server.get_net_name())
+        self.module = module_file.load_module()
 
     def run(self):
         train_data, test_data = DataManager().get_data_train()
@@ -25,13 +27,14 @@ class TrainRunner(object):
 class PredictionRunner(object):
 
     def __init__(self):
-        self.pbar = CWProgressBar(TrainParamServer()['Epoch'])
-        module_file = TrainParamServer()['NetName']
-        self.module = importlib.import_module(module_file)
-
+        train_server = TrainParamServer()
+        self.pbar = CWProgressBar(train_server['Epoch'])
+        module_file = machinery.SourceFileLoader("net_run",
+                                                 train_server.get_net_name())
+        self.module = module_file.load_module()
     def run(self):
         input_data = DataManager().get_data_pred()
-        self.module.prediction_main(input_data)
+        return self.module.prediction_main(input_data)
 
     def kill(self):
         self.pbar.finalize()

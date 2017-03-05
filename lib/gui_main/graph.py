@@ -278,7 +278,7 @@ class Graph(object):
         try:
             self.runner = runner.TrainRunner()
         except SyntaxError:
-            util.disp_error('Generated chainer script ({}.py) is not valid.'
+            util.disp_error('Generated chainer script ({}) is not valid.'
                             .format(TrainParamServer().get_net_name()))
         self.runner.run()
 

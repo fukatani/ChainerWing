@@ -40,7 +40,7 @@ class TrainParamServer(object):
         cls.__dict__ = dict
 
     def get_net_name(cls):
-        return cls['WorkDir'] + '/' + cls['NetName']
+        return cls['WorkDir'] + '/' + cls['NetName'] + '.py'
 
     def get_model_name(cls):
         return cls['WorkDir'] + '/' + cls['ModelName']
