@@ -17,6 +17,7 @@ from lib.subwindows.settings import SettingsDialog
 from lib.subwindows.train_config import TrainDialog
 from lib.subwindows.train_config import TrainParamServer
 from lib.subwindows.prediction_widget import PredictionWindow
+from lib.subwindows.report_widget import ReportWidget
 
 logger = logging.getLogger('Floppy')
 
@@ -1063,7 +1064,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def exe_runner(self):
         self.statusBar.showMessage('Run started.', 2000)
         self.drawer.graph.run()
-        self.BottomWidget.update_report()
+        self.BottomWidget = ReportWidget(self.VerticalSplitter)
 
     def compile_runner(self):
         self.statusBar.showMessage('Compile started.', 2000)

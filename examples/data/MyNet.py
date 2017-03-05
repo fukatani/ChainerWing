@@ -45,23 +45,23 @@ def training_main(train, test, pbar=None):
                                        device=0)
     
     if pbar is None:
-        trainer = training.Trainer(updater, (20, 'epoch'))
+        trainer = training.Trainer(updater, (10, 'epoch'))
     else:
         trainer = training.Trainer(updater, pbar.get_stop_trigger)
     
     trainer.extend(extensions.Evaluator(test_iter, model, device=0))
     
-    trainer.extend(extensions.snapshot(), trigger=(20, 'epoch'))
+    trainer.extend(extensions.snapshot(), trigger=(10, 'epoch'))
     
     trainer.extend(extensions.LogReport())
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
                                'epoch',
-                               file_name='loss.png'))
+                               file_name='/home/ryo/workspace/github/CW_gui/examples/data/result/loss.png'))
     
     trainer.extend(
         extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],
-                               'epoch', file_name='accuracy.png'))
+                               'epoch', file_name='/home/ryo/workspace/github/CW_gui/examples/data/result/accuracy.png'))
     
     if pbar is not None:
         trainer.extend(pbar)
