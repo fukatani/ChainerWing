@@ -42,8 +42,11 @@ class TrainParamServer(object):
     def get_net_name(cls):
         return cls['WorkDir'] + '/' + cls['NetName'] + '.py'
 
+    def get_result_dir(cls):
+        return cls['WorkDir'] + '/result'
+
     def get_model_name(cls):
-        return cls['WorkDir'] + '/' + cls['ModelName']
+        return cls.get_result_dir() + cls['ModelName']
 
     def get_train_data_name(cls):
         final_slash_pos = cls['TrainData'].rfind('/')

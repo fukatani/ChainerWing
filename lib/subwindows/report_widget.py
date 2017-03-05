@@ -13,12 +13,25 @@ class ReportWidget(QtWidgets.QTabWidget):
         self.setStyleSheet('''ReportWidget{background: rgb(55,55,55)}
         ''')
         try:
-            loss_image = TrainParamServer()['WorkDir'] + "result/loss.png"
+            loss_image = TrainParamServer().get_result_dir() + "result/loss.png"
         except KeyError:
             loss_image = "result/loss.png"
         self.addTab(GraphWidget(loss_image, parent=self), 'Loss')
         try:
-            acc_image = TrainParamServer()['WorkDir'] + "result/accuracy.png"
+            acc_image = TrainParamServer().get_result_dir() + "accuracy.png"
+        except KeyError:
+            acc_image = "result/accuracy.png"
+        self.addTab(GraphWidget(acc_image, parent=self), 'Accuracy')
+        self.resize(200, 200)
+
+    def update_report(self):
+        try:
+            loss_image = TrainParamServer().get_result_dir() + "result/loss.png"
+        except KeyError:
+            loss_image = "result/loss.png"
+        self.addTab(GraphWidget(loss_image, parent=self), 'Loss')
+        try:
+            acc_image = TrainParamServer().get_result_dir() + "accuracy.png"
         except KeyError:
             acc_image = "result/accuracy.png"
         self.addTab(GraphWidget(acc_image, parent=self), 'Accuracy')
