@@ -225,7 +225,7 @@
     ],
     "train": {
         "BatchSize": 20,
-        "Epoch": 20,
+        "Epoch": 10,
         "GPU": 1,
         "ModelName": "MyModel",
         "NetName": "MyNet",
