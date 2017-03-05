@@ -1086,7 +1086,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         logger.debug('Attempting to load graph: {}'.format(file_name))
         self.clear_all_nodes()
         with open(file_name, 'r') as fp:
-            line = fp.readline()
+            line = ''.join(fp.readlines())
             proj_dict = json.loads(line)
             if 'graph' in proj_dict:
                 self.drawer.graph.load_from_dict(proj_dict['graph'])
@@ -1113,7 +1113,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         with open(file_name, 'w') as fp:
             proj_dict = {'graph': self.drawer.graph.to_dict(),
                          'train': TrainParamServer().to_dict()}
-            proj_dump = json.dumps(proj_dict, sort_keys=True)
+            proj_dump = json.dumps(proj_dict, sort_keys=True, indent=4)
             fp.write(proj_dump)
         self.statusBar.showMessage('Graph saved as {}.'.format(file_name), 2000)
         logger.info('Save graph as {}'.format(file_name))
