@@ -92,9 +92,9 @@ def training_main(train, test, pbar=None):
     '''.format(kwargs['Epoch']) + '''
     trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
     '''.format(kwargs['GPU']-1) + '''
-    trainer.extend(extensions.snapshot(), trigger=({0}, 'epoch'))
-    '''.format(kwargs['Epoch']) + '''
-    trainer.extend(extensions.LogReport())
+    trainer.extend(extensions.snapshot(filename='{0}/snapshot_epoch_{1}'), trigger=({1}, 'epoch'))
+    '''.format(kwargs.get_result_dir(), kwargs['Epoch']) + '''
+    trainer.extend(extensions.LogReport(log_name='{0}/chainer.log'))
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
                                'epoch',
