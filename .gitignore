@@ -2,6 +2,6 @@
 *.npz
 *.log
 bin/MyNet1.py
-bin/result/*
+examples/data/result/*
 floppy/test/ExampleNet.py
 
