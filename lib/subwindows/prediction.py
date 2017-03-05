@@ -33,6 +33,7 @@ class Ui_PredictionWindow(object):
         self.label.setObjectName("label")
         self.verticalLayout_5.addWidget(self.label)
         self.max_disp_rows = QtWidgets.QSpinBox(self.prediction_widget)
+        self.max_disp_rows.setProperty("value", 50)
         self.max_disp_rows.setObjectName("max_disp_rows")
         self.verticalLayout_5.addWidget(self.max_disp_rows)
         self.result_table = QtWidgets.QTableView(self.prediction_widget)

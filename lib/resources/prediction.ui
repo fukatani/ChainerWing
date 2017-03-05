@@ -40,7 +40,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="max_disp_rows"/>
+       <widget class="QSpinBox" name="max_disp_rows">
+        <property name="value">
+         <number>50</number>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QTableView" name="result_table">
