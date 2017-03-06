@@ -5,7 +5,7 @@ from PyQt5 import QtWidgets
 from lib.subwindows.prediction import Ui_PredictionWindow
 from lib.subwindows.train_config import TrainParamServer
 from lib.runner import PredictionRunner
-
+import numpy
 
 class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
     def __init__(self, *args, settings=None):
@@ -33,8 +33,7 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
     def exe_prediction(self):
         runner = PredictionRunner()
-        result = runner.run()
-        #TODO(fukatani): array
+        result = runner.run(self.classification.isChecked())
         result = result[:self.max_disp_rows.value(), :]
         self.result_table.setModel(ResultTableModel(result))
 

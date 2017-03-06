@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'prediction.ui'
+# Form implementation generated from reading ui file './prediction.ui'
 #
 # Created by: PyQt5 UI code generator 5.7.1
 #
@@ -64,6 +64,7 @@ class Ui_PredictionWindow(object):
         self.horizontalLayout.addWidget(self.model_sel_button)
         self.verticalLayout_6.addLayout(self.horizontalLayout)
         self.model_name = QtWidgets.QLabel(self.prediction_widget)
+        self.model_name.setText("")
         self.model_name.setObjectName("model_name")
         self.verticalLayout_6.addWidget(self.model_name)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
@@ -78,6 +79,7 @@ class Ui_PredictionWindow(object):
         self.horizontalLayout_2.addWidget(self.input_sel_button)
         self.verticalLayout_6.addLayout(self.horizontalLayout_2)
         self.input_data_name = QtWidgets.QLabel(self.prediction_widget)
+        self.input_data_name.setText("")
         self.input_data_name.setObjectName("input_data_name")
         self.verticalLayout_6.addWidget(self.input_data_name)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
@@ -92,8 +94,12 @@ class Ui_PredictionWindow(object):
         self.horizontalLayout_3.addWidget(self.output_sel_button)
         self.verticalLayout_6.addLayout(self.horizontalLayout_3)
         self.output_name = QtWidgets.QLabel(self.prediction_widget)
+        self.output_name.setText("")
         self.output_name.setObjectName("output_name")
         self.verticalLayout_6.addWidget(self.output_name)
+        self.classification = QtWidgets.QCheckBox(self.prediction_widget)
+        self.classification.setObjectName("classification")
+        self.verticalLayout_6.addWidget(self.classification)
         self.gridLayout.addLayout(self.verticalLayout_6, 0, 0, 1, 1)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setContentsMargins(11, 11, 11, 11)
@@ -121,13 +127,11 @@ class Ui_PredictionWindow(object):
         self.label.setText(_translate("PredictionWindow", "Max display rows:"))
         self.label_5.setText(_translate("PredictionWindow", "Prediction Model"))
         self.model_sel_button.setText(_translate("PredictionWindow", "Browse"))
-        self.model_name.setText(_translate("PredictionWindow", "TextLabel"))
         self.label_6.setText(_translate("PredictionWindow", "Input Data"))
         self.input_sel_button.setText(_translate("PredictionWindow", "Browse"))
-        self.input_data_name.setText(_translate("PredictionWindow", "TextLabel"))
         self.label_7.setText(_translate("PredictionWindow", "Output File"))
         self.output_sel_button.setText(_translate("PredictionWindow", "Browse"))
-        self.output_name.setText(_translate("PredictionWindow", "TextLabel"))
+        self.classification.setText(_translate("PredictionWindow", "Predict class"))
         self.exe_button.setText(_translate("PredictionWindow", "..."))
         self.toolBar.setWindowTitle(_translate("PredictionWindow", "toolBar"))
 

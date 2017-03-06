@@ -96,7 +96,7 @@
       <item>
        <widget class="QLabel" name="model_name">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -121,7 +121,7 @@
       <item>
        <widget class="QLabel" name="input_data_name">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -146,7 +146,14 @@
       <item>
        <widget class="QLabel" name="output_name">
         <property name="text">
-         <string>TextLabel</string>
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="classification">
+        <property name="text">
+         <string>Predict class</string>
         </property>
        </widget>
       </item>

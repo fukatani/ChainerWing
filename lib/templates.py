@@ -41,6 +41,8 @@ from chainer.training import extensions
 from chainer import reporter
 from chainer import serializers
 
+import numpy
+
 
 class {0}(chainer.Chain):
 
@@ -56,7 +58,8 @@ class {0}(chainer.Chain):
         return self._predict(x).data
 
     def predict_class(self, x):
-        return self.predict(x).data
+        predicted = numpy.argmax(self.predict(x), axis=1)
+        return numpy.atleast_2d(predicted).T
 
     def __call__(self, x, t):
         self.y = self._predict(x)
