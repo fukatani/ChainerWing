@@ -1,5 +1,6 @@
 import os
 
+from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from lib.subwindows.prediction import Ui_PredictionWindow
 from lib.subwindows.train_config import TrainParamServer
@@ -33,7 +34,9 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
     def exe_prediction(self):
         runner = PredictionRunner()
         result = runner.run()
-        self.result_table
+        #TODO(fukatani): array
+        result = result[:self.max_disp_rows.value(), :]
+        self.result_table.setModel(ResultTableModel(result))
 
 
 class DataConfig(object):
@@ -84,3 +87,22 @@ class PredModelConfig(DataConfig):
         super(PredModelConfig, self).__init__(label, window)
         self.direction = 'Select Model File'
         self.filter = '(*.npz);; Any (*.*)'
+
+
+class ResultTableModel(QtCore.QAbstractTableModel):
+    def __init__(self, array_data, parent=None, *args):
+        QtCore.QAbstractTableModel.__init__(self, parent, *args)
+        self.array_data = array_data
+
+    def rowCount(self, parent):
+        return min(1000, self.array_data.shape[0])
+
+    def columnCount(self, parent):
+        return self.array_data.shape[1]
+
+    def data(self, index, role):
+        if not index.isValid():
+            return QtCore.QVariant()
+        elif role != QtCore.Qt.DisplayRole:
+            return QtCore.QVariant()
+        return float(self.array_data[index.row()][index.column()])
