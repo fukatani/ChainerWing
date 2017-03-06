@@ -13,16 +13,35 @@ class ReportWidget(QtWidgets.QTabWidget):
         self.setStyleSheet('''ReportWidget{background: rgb(55,55,55)}
         ''')
         try:
-            loss_image = TrainParamServer().get_result_dir() + "result/loss.png"
+            loss_image = TrainParamServer().get_result_dir() + "/loss.png"
         except KeyError:
             loss_image = "result/loss.png"
-        self.addTab(GraphWidget(loss_image, parent=self), 'Loss')
+
+        self.loss_widget = GraphWidget(loss_image, parent=self)
+        self.addTab(self.loss_widget, 'Loss')
         try:
-            acc_image = TrainParamServer().get_result_dir() + "accuracy.png"
+            acc_image = TrainParamServer().get_result_dir() + "/accuracy.png"
         except KeyError:
             acc_image = "result/accuracy.png"
-        self.addTab(GraphWidget(acc_image, parent=self), 'Accuracy')
+        self.acc_widget = GraphWidget(acc_image, parent=self)
+        self.addTab(self.acc_widget, 'Accuracy')
         self.resize(200, 200)
+
+    def update_report(self):
+        self.removeTab(0)
+        self.removeTab(0)
+        try:
+            loss_image = TrainParamServer().get_result_dir() + "/loss.png"
+        except KeyError:
+            loss_image = "result/loss.png"
+        self.loss_widget = GraphWidget(loss_image, parent=self)
+        self.addTab(self.loss_widget, 'Loss')
+        try:
+            acc_image = TrainParamServer().get_result_dir() + "/accuracy.png"
+        except KeyError:
+            acc_image = "result/accuracy.png"
+        self.acc_widget = GraphWidget(acc_image, parent=self)
+        self.addTab(self.acc_widget, 'Accuracy')
 
 
 class GraphWidget(QtWidgets.QWidget):

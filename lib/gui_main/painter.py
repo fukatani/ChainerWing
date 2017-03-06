@@ -1064,7 +1064,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def exe_runner(self):
         self.statusBar.showMessage('Run started.', 2000)
         self.drawer.graph.run()
-        self.BottomWidget = ReportWidget(self.VerticalSplitter)
+        self.BottomWidget.update_report()
 
     def compile_runner(self):
         self.statusBar.showMessage('Compile started.', 2000)
