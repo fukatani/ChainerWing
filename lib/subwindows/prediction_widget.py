@@ -1,11 +1,13 @@
 import os
 
+from PyQt5 import QtGui
 from PyQt5 import QtCore
+from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
 from lib.subwindows.prediction import Ui_PredictionWindow
 from lib.subwindows.train_config import TrainParamServer
 from lib.runner import PredictionRunner
-import numpy
+import math
 
 class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
     def __init__(self, *args, settings=None):
@@ -32,10 +34,12 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         self.output_config.set_data()
 
     def exe_prediction(self):
+        self.pred_progress.setText('Processing...')
         runner = PredictionRunner()
         result = runner.run(self.classification.isChecked())
         result = result[:self.max_disp_rows.value(), :]
         self.result_table.setModel(ResultTableModel(result))
+        self.pred_progress.setText('Prediction Finished!')
 
 
 class DataConfig(object):

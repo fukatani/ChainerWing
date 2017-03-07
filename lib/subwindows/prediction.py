@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './prediction.ui'
+# Form implementation generated from reading ui file 'prediction.ui'
 #
 # Created by: PyQt5 UI code generator 5.7.1
 #
@@ -108,6 +108,10 @@ class Ui_PredictionWindow(object):
         self.exe_button = QtWidgets.QToolButton(self.prediction_widget)
         self.exe_button.setObjectName("exe_button")
         self.verticalLayout.addWidget(self.exe_button)
+        self.pred_progress = QtWidgets.QLabel(self.prediction_widget)
+        self.pred_progress.setText("")
+        self.pred_progress.setObjectName("pred_progress")
+        self.verticalLayout.addWidget(self.pred_progress)
         self.gridLayout.addLayout(self.verticalLayout, 0, 1, 1, 1)
         PredictionWindow.setCentralWidget(self.prediction_widget)
         self.menuBar = QtWidgets.QMenuBar(PredictionWindow)

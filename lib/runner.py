@@ -1,9 +1,10 @@
 from importlib import machinery
 
-from lib import util
+from PyQt5.QtCore import Qt
+from PyQt5 import QtWidgets
+
 from lib.data_fetch import DataManager
 from lib.subwindows.train_config import TrainParamServer
-
 from lib.cw_progress_bar import CWProgressBar
 
 
@@ -36,7 +37,30 @@ class PredictionRunner(object):
 
     def run(self, classification=False):
         input_data = DataManager().get_data_pred()
-        return self.module.prediction_main(input_data, classification)
+        #pbar = PredProgressBar()
+        #pbar.onStart()
+        result = self.module.prediction_main(input_data, classification)
+        #pbar.onFinished()
+        return result
 
-    def kill(self):
-        self.pbar.finalize()
+
+class PredProgressBar(QtWidgets.QWidget):
+
+    def __init__(self, parent=None):
+        super(PredProgressBar, self).__init__(parent)
+        layout = QtWidgets.QVBoxLayout(self)
+
+        # Create a progress bar and a button and add them to the main layout
+        self.progressBar = QtWidgets.QProgressBar(self)
+        self.progressBar.setRange(0,1)
+        layout.addWidget(self.progressBar)
+        self.setWindowFlags(Qt.WindowStaysOnTopHint)
+
+    def onStart(self):
+        self.progressBar.setValue(0)
+        self.show()
+        self.raise_()
+
+    def onFinished(self):
+        # Stop the pulsation
+        self.progressBar.setValue(1)

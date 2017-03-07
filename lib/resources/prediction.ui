@@ -168,6 +168,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QLabel" name="pred_progress">
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>
