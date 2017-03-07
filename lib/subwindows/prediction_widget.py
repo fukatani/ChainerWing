@@ -41,6 +41,7 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
             result = runner.run(self.classification.isChecked())
             if TrainParamServer()['PredOutputData']:
                 numpy.savetxt(TrainParamServer()['PredOutputData'],
+                              result,
                               delimiter=",")
             result = result[:self.max_disp_rows.value(), :]
             self.result_table.setModel(ResultTableModel(result))
@@ -56,7 +57,7 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
 
 class DataConfig(object):
-    def __init__(self, label, window):
+    def __init__(self, label, window, is_save=False):
         self.param_name = self.__class__.__name__[:-6]  # remove 'Config'
         self.label = label
         train_server = TrainParamServer()
@@ -65,6 +66,7 @@ class DataConfig(object):
         self.window = window
         self.direction = ''
         self.filter = ''
+        self.is_save = is_save
 
     def set_data(self):
         train_server = TrainParamServer()
@@ -73,9 +75,14 @@ class DataConfig(object):
             init_path = os.path.abspath(init_path)
         else:
             init_path = train_server.get_work_dir()
-        data_file = QtWidgets.QFileDialog.getOpenFileName(
-            self.window, self.direction, init_path,
-            filter=self.filter)[0]
+        if self.is_save:
+            data_file = QtWidgets.QFileDialog.getSaveFileName(
+                self.window, self.direction, init_path,
+                filter=self.filter)[0]
+        else:
+            data_file = QtWidgets.QFileDialog.getOpenFileName(
+                self.window, self.direction, init_path,
+                filter=self.filter)[0]
         if data_file:
             self.label.setText(data_file)
             train_server[self.param_name] = data_file
@@ -94,9 +101,9 @@ class PredInputDataConfig(DataConfig):
 
 class PredOutputDataConfig(DataConfig):
     def __init__(self, label, window):
-        super(PredOutputDataConfig, self).__init__(label, window)
+        super(PredOutputDataConfig, self).__init__(label, window, True)
         self.direction = 'Output Data File is not selected.'
-        self.filter = '(*.csv, *.npz);; Any (*.*)'
+        self.filter = '(*.csv);; Any (*.*)'
 
 
 class PredModelConfig(DataConfig):
