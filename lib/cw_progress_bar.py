@@ -7,7 +7,6 @@ from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
 
 from chainer.training import extension
-from chainer.training import trigger
 from chainer.training.triggers import interval
 
 
