@@ -281,7 +281,11 @@ class Graph(object):
             util.disp_error('Generated chainer script ({}) is not valid.'
                             .format(TrainParamServer().get_net_name()))
             return
-        self.runner.run()
+        try:
+            self.runner.run()
+        except util.AbnormalCode as ac:
+            util.disp_error(ac.args[0][0] + ' @' +
+                            TrainParamServer()['TrainData'])
 
     def to_dict(self, subgraph=None):
         """

@@ -46,6 +46,9 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
                 util.disp_error('Input Data for prediction is not set.')
             elif ke.args[0] == 'PredModel':
                 util.disp_error('Model for prediction is not set.')
+        except util.AbnormalCode as ac:
+            util.disp_error(ac.args[0][0] + ' @' +
+                            TrainParamServer()['PredInputData'])
 
 
 class DataConfig(object):

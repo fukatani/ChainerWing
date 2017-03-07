@@ -4,6 +4,7 @@ from importlib import machinery
 import numpy as np
 
 from lib.subwindows.train_config import TrainParamServer
+from lib import util
 
 
 class DataManager(object):
@@ -51,8 +52,11 @@ class DataManager(object):
         if train_server['TrainData'].endswith('.py'):
             module = machinery.SourceFileLoader("data_getter",
                                                 train_server['TrainData'])
-            module = module.load_module()
-            return module.main()
+            try:
+                module = module.load_module()
+                return module.main()
+            except Exception as e:
+                raise util.AbnormalCode(e.args)
         if train_server['UseSameData']:
             # TODO(fukatani): Implement
             data_file = train_server['TrainData']
@@ -69,8 +73,11 @@ class DataManager(object):
         if train_server['PredInputData'].endswith('.py'):
             module = machinery.SourceFileLoader("data_getter",
                                                 train_server['PredInputData'])
-            module = module.load_module()
-            return module.main()
+            try:
+                module = module.load_module()
+                return module.main()
+            except Exception as e:
+                raise util.AbnormalCode(e.args)
         else:
             data_file = train_server['PredInputData']
             data, _ = self.get_data_from_file(data_file)
