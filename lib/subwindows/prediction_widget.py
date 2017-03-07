@@ -1,5 +1,6 @@
 import os
 
+import numpy
 
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
@@ -38,6 +39,9 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         try:
             runner = PredictionRunner()
             result = runner.run(self.classification.isChecked())
+            if TrainParamServer()['PredOutputData']:
+                numpy.savetxt(TrainParamServer()['PredOutputData'],
+                              delimiter=",")
             result = result[:self.max_disp_rows.value(), :]
             self.result_table.setModel(ResultTableModel(result))
             self.pred_progress.setText('Prediction Finished!')
@@ -77,27 +81,28 @@ class DataConfig(object):
             train_server[self.param_name] = data_file
         else:
             self.label.setText(self.direction)
-            del train_server[self.param_name]
+            if 'self.param_name' in train_server.__dict__:
+                del train_server[self.param_name]
 
 
 class PredInputDataConfig(DataConfig):
     def __init__(self, label, window):
         super(PredInputDataConfig, self).__init__(label, window)
-        self.direction = 'Select Input Data File'
+        self.direction = 'Input Data File is not selected.'
         self.filter = '(*.csv, *.npz, *.py);; Any (*.*)'
 
 
 class PredOutputDataConfig(DataConfig):
     def __init__(self, label, window):
         super(PredOutputDataConfig, self).__init__(label, window)
-        self.direction = 'Select Output Data File'
+        self.direction = 'Output Data File is not selected.'
         self.filter = '(*.csv, *.npz);; Any (*.*)'
 
 
 class PredModelConfig(DataConfig):
     def __init__(self, label, window):
         super(PredModelConfig, self).__init__(label, window)
-        self.direction = 'Select Model File'
+        self.direction = 'Model File is not selected.'
         self.filter = '(*.npz);; Any (*.*)'
 
 
