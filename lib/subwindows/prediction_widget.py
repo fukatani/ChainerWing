@@ -1,13 +1,13 @@
 import os
 
-from PyQt5 import QtGui
+
 from PyQt5 import QtCore
-from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
 from lib.subwindows.prediction import Ui_PredictionWindow
 from lib.subwindows.train_config import TrainParamServer
 from lib.runner import PredictionRunner
-import math
+from lib import util
+
 
 class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
     def __init__(self, *args, settings=None):
@@ -35,11 +35,17 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
     def exe_prediction(self):
         self.pred_progress.setText('Processing...')
-        runner = PredictionRunner()
-        result = runner.run(self.classification.isChecked())
-        result = result[:self.max_disp_rows.value(), :]
-        self.result_table.setModel(ResultTableModel(result))
-        self.pred_progress.setText('Prediction Finished!')
+        try:
+            runner = PredictionRunner()
+            result = runner.run(self.classification.isChecked())
+            result = result[:self.max_disp_rows.value(), :]
+            self.result_table.setModel(ResultTableModel(result))
+            self.pred_progress.setText('Prediction Finished!')
+        except KeyError as ke:
+            if ke.args[0] == 'PredInputData':
+                util.disp_error('Input Data for prediction is not set.')
+            elif ke.args[0] == 'PredModel':
+                util.disp_error('Model for prediction is not set.')
 
 
 class DataConfig(object):

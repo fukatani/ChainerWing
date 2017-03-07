@@ -37,30 +37,5 @@ class PredictionRunner(object):
 
     def run(self, classification=False):
         input_data = DataManager().get_data_pred()
-        #pbar = PredProgressBar()
-        #pbar.onStart()
         result = self.module.prediction_main(input_data, classification)
-        #pbar.onFinished()
         return result
-
-
-class PredProgressBar(QtWidgets.QWidget):
-
-    def __init__(self, parent=None):
-        super(PredProgressBar, self).__init__(parent)
-        layout = QtWidgets.QVBoxLayout(self)
-
-        # Create a progress bar and a button and add them to the main layout
-        self.progressBar = QtWidgets.QProgressBar(self)
-        self.progressBar.setRange(0,1)
-        layout.addWidget(self.progressBar)
-        self.setWindowFlags(Qt.WindowStaysOnTopHint)
-
-    def onStart(self):
-        self.progressBar.setValue(0)
-        self.show()
-        self.raise_()
-
-    def onFinished(self):
-        # Stop the pulsation
-        self.progressBar.setValue(1)
