@@ -359,8 +359,8 @@ class Graph(object):
                     self.connect(str(output_node), output_name, str(idMap[id]),
                                  input_name)
                 except KeyError:
-                    print(
-                        'Warning: Could not create connection due to missing node.')
+                    print('Warning: Could not create connection '
+                          'due to missing node.')
 
             for output_name, inputIDs in nodeData['outputConnections'].items():
                 for inputID in inputIDs:
@@ -369,12 +369,11 @@ class Graph(object):
                     input_node, input_name = inputID.split(':I')
                     try:
                         input_node = idMap[int(input_node)]
-                        # print(id, nodeData['inputConnections'], output_node, output_name)
                         self.connect(str(idMap[id]), output_name,
                                      str(input_node), input_name)
                     except KeyError:
-                        print(
-                            'Warning: Could not create connection due to missing node.')
+                        print('Warning: Could not create connection '
+                              'due to missing node.')
 
         self.update()
         return idMap
