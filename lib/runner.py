@@ -1,8 +1,5 @@
 from importlib import machinery
 
-from PyQt5.QtCore import Qt
-from PyQt5 import QtWidgets
-
 from lib.data_fetch import DataManager
 from lib.subwindows.train_config import TrainParamServer
 from lib.cw_progress_bar import CWProgressBar
