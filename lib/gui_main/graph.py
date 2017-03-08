@@ -286,6 +286,9 @@ class Graph(object):
         except util.AbnormalCode as ac:
             util.disp_error(ac.args[0][0] + ' @' +
                             TrainParamServer()['TrainData'])
+        except ValueError:
+            util.disp_error('Irregal data was found @' +
+                            TrainParamServer()['TrainData'])
 
     def to_dict(self, subgraph=None):
         """

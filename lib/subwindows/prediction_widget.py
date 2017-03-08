@@ -54,6 +54,9 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         except util.AbnormalCode as ac:
             util.disp_error(ac.args[0][0] + ' @' +
                             TrainParamServer()['PredInputData'])
+        except ValueError:
+            util.disp_error('Irregal data was found @' +
+                            TrainParamServer()['PredInputData'])
 
 
 class DataConfig(object):
