@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets
 from lib import inspector
+from lib import util
 
 import os
 
@@ -88,7 +89,8 @@ class TrainDialog(QtWidgets.QDialog):
             if name not in TrainParamServer().__dict__:
                 TrainParamServer()[name] = default
         for param in TrainParamServer().iter_for_opt_params():
-            dialog = (param, OptimizeParamEdit(settings, self, param))
+            dialog = (param, OptimizeParamEdit(settings, self, param,
+                                               TrainParamServer()[param]))
             self.dialogs.append(dialog)
 
         super(TrainDialog, self).__init__(*args)
@@ -264,6 +266,23 @@ class OptimizeParamEdit(AbstractTrainEdit):
     def __init__(self, settings, parent, key, default_value=1):
         super(OptimizeParamEdit, self).__init__(settings, parent, default_value)
         TrainParamServer()[key] = self.value()
+
+
+class OptimizeParamEdit(QtWidgets.QLineEdit):
+    def __init__(self, settings, parent, key, value):
+        self.parent = parent
+        self.settings = settings
+        self.key = key
+        super(OptimizeParamEdit, self).__init__()
+        # v = settings.value(str(value), type=float)
+        self.setText(str(value))
+
+    def commit(self):
+        try:
+            # self.settings.setValue(self.key, float(self.text()))
+            TrainParamServer()[self.key] = float(self.text())
+        except ValueError:
+            util.disp_error('Optimizer parameter should be float.')
 
 
 class WorkDirEdit(QtWidgets.QPushButton):
