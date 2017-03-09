@@ -287,9 +287,9 @@ class TrainModeEdit(QtWidgets.QComboBox):
         self.addItems(menu)
         v = settings.value('TrainMode', type=str)
         v = v if v else 'Simple Classification'
-        self.value = v
-        TrainParamServer()['TrainMode'] = self.value
+        self.setCurrentIndex(settings.value('TrainMode', type=int))
+        TrainParamServer()['TrainMode'] = self.currentText()
 
     def commit(self):
-        self.settings.setValue('TrainMode', self.value)
-        TrainParamServer()['TrainMode'] = self.value
+        self.settings.setValue('TrainMode', self.currentIndex())
+        TrainParamServer()['TrainMode'] = self.currentText()
