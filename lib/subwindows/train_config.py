@@ -67,6 +67,8 @@ class TrainDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
         work_edit = WorkDirEdit(settings, self)
+        opt_edit = OptimizerEdit(settings, self)
+        opt_edit.currentTextChanged.connect(self.update_optimizer)
         self.dialogs = [('File Settings', None),
                         ('Working Directory', work_edit),
                         ('', work_edit.label),
@@ -78,7 +80,7 @@ class TrainDialog(QtWidgets.QDialog):
                         ('Epoch', EpochEdit(settings, self)),
                         ('GPU', GPUEdit(settings, self)),
                         ('Optimizer Settings', None),
-                        ('Optimizer', OptimizerEdit(settings, self)),
+                        ('Optimizer', opt_edit),
                         ]
         for param in TrainParamServer().iter_for_opt_params():
             dialog = (param, OptimizeParamEdit(settings, self, param))
@@ -134,9 +136,9 @@ class TrainDialog(QtWidgets.QDialog):
                 # layout.addRow(name)
             else:
                 section_layout.addRow(name, widget)
-        edit_opt_detail_btn = QtWidgets.QPushButton("Update Optimizer")
-        edit_opt_detail_btn.clicked.connect(self.update_optimizer)
-        main_layout.addWidget(edit_opt_detail_btn)
+        # edit_opt_detail_btn = QtWidgets.QPushButton("Update Optimizer")
+        # edit_opt_detail_btn.clicked.connect(self.update_optimizer)
+        # main_layout.addWidget(edit_opt_detail_btn)
         close_button = QtWidgets.QPushButton('Apply')
         close_button.clicked.connect(self.close)
         main_layout.addWidget(close_button)
@@ -154,10 +156,24 @@ class TrainDialog(QtWidgets.QDialog):
     def redraw(self):
         self.parent().drawer.repaint()
 
-    def update_optimizer(self, e):
+    def update_optimizer(self, optimizer_name):
         # TODO(fukatani): temporal.
-        TrainParamServer()['opt_learning_rate'] = 1e-1
-        TrainParamServer()['opt_vvaaabbb'] = 1e-2
+        print(optimizer_name)
+        oi = inspector.OptimizerInspector()
+
+        not_exist_names = []
+        exist_names = []
+        for name in TrainParamServer().iter_for_opt_params():
+            if name in oi.get_signature(optimizer_name):
+                exist_names.append(name)
+            else:
+                not_exist_names.append(name)
+        for name in not_exist_names:
+            del TrainParamServer().__dict__[name]
+        for name, default in oi.get_signature(optimizer_name).items():
+            if name not in exist_names:
+                TrainParamServer()[name] = default
+
         self.parent().open_train_config()
         self.close()
 
@@ -199,7 +215,7 @@ class GPUEdit(AbstractTrainEdit):
 
 class OptimizerEdit(QtWidgets.QComboBox):
     def __init__(self, settings, parent):
-        menu = inspector.optimizer_inspector().get_members()
+        menu = inspector.OptimizerInspector().get_members()
         self.parent = parent
         self.settings = settings
         super(OptimizerEdit, self).__init__()

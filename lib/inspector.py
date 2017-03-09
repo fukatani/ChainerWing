@@ -5,7 +5,7 @@ import chainer
 from chainer import optimizer
 
 
-class optimizer_inspector(object):
+class OptimizerInspector(object):
     def __init__(self):
         self.members = collections.OrderedDict()
         sorted_members = sorted(inspect.getmembers(chainer.optimizers),
@@ -15,8 +15,8 @@ class optimizer_inspector(object):
                 self.members[name] = member
 
     def get_signature(self, name):
-        signature = inspect.signature(self.members[name])
-        return signature.parameters.values()
+        signature = inspect.signature(self.members[name]).parameters
+        return {'opt_' + value.name: value.default for value in signature.values()}
 
     def get_members(self):
         return self.members.keys()
