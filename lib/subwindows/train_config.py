@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
+from lib import inspector
 
-import json
 import os
 
 
@@ -197,18 +197,19 @@ class GPUEdit(AbstractTrainEdit):
         super(GPUEdit, self).__init__(settings, parent, 0)
 
 
-class OptimizerEdit(QtWidgets.QLineEdit):
+class OptimizerEdit(QtWidgets.QComboBox):
     def __init__(self, settings, parent):
+        menu = inspector.optimizer_inspector().get_members()
         self.parent = parent
         self.settings = settings
         super(OptimizerEdit, self).__init__()
-        v = settings.value('Optimizer', type=str)
-        v = v if v else 'AdaDelta'
-        self.setText(v)
+        self.addItems(menu)
+        self.setCurrentIndex(settings.value('Optimizer', type=int))
+        TrainParamServer()['Optimizer'] = self.currentText()
 
     def commit(self):
-        self.settings.setValue('Optimizer', self.text())
-        TrainParamServer()['Optimizer'] = self.text()
+        self.settings.setValue('Optimizer', self.currentIndex())
+        TrainParamServer()['Optimizer'] = self.currentText()
 
 
 class NetNameEdit(QtWidgets.QLineEdit):
