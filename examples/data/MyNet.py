@@ -37,11 +37,16 @@ class MyNet(chainer.Chain):
         reporter.report({'accuracy': self.accuracy}, self)
         return self.loss
 
+def get_optimizer():
+    return AdaDelta(rho=0.95, eps=1e-06)
+
+        
+
 
 def training_main(train, test, pbar=None):
     model = MyNet()
 
-    optimizer = AdaDelta()
+    optimizer = get_optimizer()
     optimizer.setup(model)
 
     train_iter = chainer.iterators.SerialIterator(train, 20)

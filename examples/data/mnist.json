@@ -238,6 +238,8 @@
         "TrainData": "/home/ryo/workspace/github/CW_gui/examples/data/get_mnist_train.py",
         "TrainMode": "Simple Classification",
         "UseSameData": "",
-        "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/data"
+        "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/data",
+        "opt_eps": 1e-06,
+        "opt_rho": 0.95
     }
 }

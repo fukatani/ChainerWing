@@ -12,7 +12,6 @@ class Compiler(object):
             util.disp_error('Please place nodes and connect them'
                             ' before compilation.')
             return
-        net_name = TrainParamServer()['NetName']
         init_impl = self.compile_init(nodes)
         if not init_impl:
             return False
@@ -26,6 +25,7 @@ class Compiler(object):
                                                   call_impl,
                                                   pred_impl,
                                                   classification))
+        net_file.write(TEMPLATES['OptimizerTemplate']()(TrainParamServer()))
         net_file.write(TEMPLATES['TrainerTemplate']()(TrainParamServer()))
         return True
 

@@ -73,6 +73,18 @@ class {0}(chainer.Chain):
         return rtn
 
 
+class OptimizerTemplate(Template):
+    def __call__(self, train_server):
+        opt_params = []
+        for param in train_server.iter_for_opt_params():
+            opt_params.append(''.join((param[4:], '=', str(train_server[param]))))
+        return '''
+
+def get_optimizer():
+    return {0}({1})
+'''.format(train_server['Optimizer'], ', '.join(opt_params))
+
+
 class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
@@ -81,7 +93,7 @@ class TrainerTemplate(Template):
 def training_main(train, test, pbar=None):
     model = {3}()
 
-    optimizer = {0}()
+    optimizer = get_optimizer()
     optimizer.setup(model)
 
     train_iter = chainer.iterators.SerialIterator(train, {1})
