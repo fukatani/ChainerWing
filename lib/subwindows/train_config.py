@@ -82,6 +82,11 @@ class TrainDialog(QtWidgets.QDialog):
                         ('Optimizer Settings', None),
                         ('Optimizer', opt_edit),
                         ]
+        optimizer_name = TrainParamServer()['Optimizer']
+        oi = inspector.OptimizerInspector()
+        for name, default in oi.get_signature(optimizer_name).items():
+            if name not in TrainParamServer().__dict__:
+                TrainParamServer()[name] = default
         for param in TrainParamServer().iter_for_opt_params():
             dialog = (param, OptimizeParamEdit(settings, self, param))
             self.dialogs.append(dialog)
@@ -157,10 +162,8 @@ class TrainDialog(QtWidgets.QDialog):
         self.parent().drawer.repaint()
 
     def update_optimizer(self, optimizer_name):
-        # TODO(fukatani): temporal.
         print(optimizer_name)
         oi = inspector.OptimizerInspector()
-
         not_exist_names = []
         exist_names = []
         for name in TrainParamServer().iter_for_opt_params():
