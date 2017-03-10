@@ -130,7 +130,7 @@ class DataFileEdit(QtWidgets.QPushButton):
             self.parent.state_changed(0)
 
     def python_selected(self):
-        return self.value[-3:] == '.py'
+        return self.value.endswith('.py')
 
 
 class DataFileLabel(QtWidgets.QLabel):

@@ -60,8 +60,8 @@ class TrainParamServer(object):
 
     def get_work_dir(cls):
         if 'WorkDir' not in cls.__dict__:
-            cls.__dict__['WorkDir'] = os.path.abspath(__file__) + '/../../examples/'
-        return cls.__dict__['WorkDir']
+            cls['WorkDir'] = os.path.abspath(__file__) + '/../../examples/'
+        return cls['WorkDir']
 
 
 class TrainDialog(QtWidgets.QDialog):
@@ -260,12 +260,6 @@ class ModelNameEdit(QtWidgets.QLineEdit):
     def commit(self):
         self.settings.setValue('ModelName', self.text())
         TrainParamServer()['ModelName'] = self.text()
-
-
-class OptimizeParamEdit(AbstractTrainEdit):
-    def __init__(self, settings, parent, key, default_value=1):
-        super(OptimizeParamEdit, self).__init__(settings, parent, default_value)
-        TrainParamServer()[key] = self.value()
 
 
 class OptimizeParamEdit(QtWidgets.QLineEdit):

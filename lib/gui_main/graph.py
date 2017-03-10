@@ -297,8 +297,8 @@ class Graph(object):
         :return:
         """
         if subgraph:
-            return [(node.ID, node.to_dict()) for node in self.nodes.values() if
-                 node.subgraph == subgraph]
+            return [(node.ID, node.to_dict()) for node in self.nodes.values()
+                    if node.subgraph == subgraph]
         return [(node.ID, node.to_dict()) for node in self.nodes.values()]
 
     def killRunner(self):
