@@ -3,6 +3,7 @@ import chainer
 from lib.node import Input, Output, Link
 
 
+# TODO(fukatani): implement systematically.
 class Linear(Link):
     Input('in_array', chainer.Variable)
     Input('out_size', int)
@@ -10,11 +11,18 @@ class Linear(Link):
     Output('out_array', chainer.Variable)
 
     def call_init(self):
-        # TODO(fukatani): implement systematically.
-        # if not self._out_size:
-        return "Linear(None, {out_size}, nobias={nobias})," \
+        return 'Linear(None, {out_size}, nobias={nobias}),' \
             .format(out_size=self._out_size,
                     nobias=self._nobias)
+
+
+class Maxout(Link):
+    Input('in_array', chainer.Variable)
+    Input('out_size', int)
+    Input('pool_size', int)
+    def call_init(self):
+        return 'Maxout(None, {out_size}, {pool_size})' \
+            .format(out_size=self._out_size, pool_size=self._pool_size)
 
 
 class Convolution2D(Link):
