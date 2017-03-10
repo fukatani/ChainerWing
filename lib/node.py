@@ -246,14 +246,14 @@ class Node(object, metaclass=MetaNode):
     """
     Base class for Nodes.
 
-    To add Inputs to a custom Node class call 'Input(name, var_type, hints, list)' in the class's
-    body e.g.:
+    To add Inputs to a custom Node class call 'Input(name, var_type, hints,
+    list)' in the class's body.
+    e.g.:
 
         class MyNode(Node):
             Input('myStringInput', str, list=True)
 
-    To access the value of an input during the Node's 'run' method or 'check' method use
-    'myNodeInstance._myStringInput'. An 'InputNotAvailable' Exception is raised is the input is not set yet.
+    An 'InputNotAvailable' Exception is raised is the input is not set yet.
     """
     Input('TRIGGER', object, optional=True)
     Tag('Node')

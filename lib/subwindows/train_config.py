@@ -140,12 +140,8 @@ class TrainDialog(QtWidgets.QDialog):
                 section_layout = QtWidgets.QFormLayout()
                 l_widget.setLayout(section_layout)
                 main_layout.addWidget(l_widget)
-                # layout.addRow(name)
             else:
                 section_layout.addRow(name, widget)
-        # edit_opt_detail_btn = QtWidgets.QPushButton("Update Optimizer")
-        # edit_opt_detail_btn.clicked.connect(self.update_optimizer)
-        # main_layout.addWidget(edit_opt_detail_btn)
         close_button = QtWidgets.QPushButton('Apply')
         close_button.clicked.connect(self.close)
         main_layout.addWidget(close_button)
@@ -268,12 +264,10 @@ class OptimizeParamEdit(QtWidgets.QLineEdit):
         self.settings = settings
         self.key = key
         super(OptimizeParamEdit, self).__init__()
-        # v = settings.value(str(value), type=float)
         self.setText(str(value))
 
     def commit(self):
         try:
-            # self.settings.setValue(self.key, float(self.text()))
             TrainParamServer()[self.key] = float(self.text())
         except ValueError:
             util.disp_error('Optimizer parameter should be float.')
