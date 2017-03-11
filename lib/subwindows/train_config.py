@@ -54,7 +54,7 @@ class TrainParamServer(object):
         final_dot_pos = cls['TrainData'].rfind('.')
         if final_slash_pos > 0 and final_dot_pos > 0:
             assert final_slash_pos < final_dot_pos
-            return cls['TrainData'][final_slash_pos+1: final_dot_pos]
+            return cls['TrainData'][final_slash_pos+1:]
         else:
             return ''
 
