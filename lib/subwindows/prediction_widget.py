@@ -52,6 +52,14 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
             elif ke.args[0] == 'PredModel':
                 util.disp_error('Model for prediction is not set.')
         except util.AbnormalCode as ac:
+            if not os.path.isfile(TrainParamServer()['PredInputData']):
+                util.disp_error('{} is not found'.format(
+                    TrainParamServer()['PredInputData']))
+                return
+            if not os.path.isfile(TrainParamServer()['PredModel']):
+                util.disp_error(
+                    '{} is not found'.format(TrainParamServer()['PredModel']))
+                return
             util.disp_error(ac.args[0][0] + ' @' +
                             TrainParamServer()['PredInputData'])
         except ValueError:
