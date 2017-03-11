@@ -73,7 +73,7 @@ class DataConfig(object):
         self.label = label
         train_server = TrainParamServer()
         if self.param_name in train_server.__dict__:
-            self.label = label.setText(train_server[self.param_name])
+            self.label.setText(train_server[self.param_name])
         self.window = window
         self.direction = ''
         self.filter = ''
