@@ -13,11 +13,12 @@ import numpy
 
 class MyNet(chainer.Chain):
 
-    def __init__(self):
+    def __init__(self, train=False):
         super(MyNet, self).__init__(
             l0=Linear(None, 200, nobias=False),
             l1=Linear(None, 10, nobias=True),
         )
+        self.train=train
 
     def _predict(self, x):
         return relu(self.l1(relu(self.l0(x))))
@@ -38,13 +39,21 @@ class MyNet(chainer.Chain):
         return self.loss
 
 def get_optimizer():
-    return AdaDelta(rho=0.95, eps=1e-06)
+    return AdaDelta(eps=1e-06, rho=0.95)
 
-        
+
+class TestModeEvaluator(extensions.Evaluator):
+
+    def evaluate(self):
+        model = self.get_target('main')
+        model.train = False
+        ret = super(TestModeEvaluator, self).evaluate()
+        model.train = True
+        return ret
 
 
 def training_main(train, test, pbar=None):
-    model = MyNet()
+    model = MyNet(train=True)
 
     optimizer = get_optimizer()
     optimizer.setup(model)
@@ -63,7 +72,7 @@ def training_main(train, test, pbar=None):
     else:
         trainer = training.Trainer(updater, pbar.get_stop_trigger)
     
-    trainer.extend(extensions.Evaluator(test_iter, model, device=0))
+    trainer.extend(TestModeEvaluator(test_iter, model, device=0))
     
     trainer.extend(extensions.LogReport(log_name='/home/ryo/workspace/github/CW_gui/examples/data/result/chainer.log'))
     trainer.extend(
