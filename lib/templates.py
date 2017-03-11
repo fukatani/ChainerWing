@@ -132,12 +132,12 @@ def training_main(train, test, pbar=None):
         trainer.extend(extensions.ProgressBar())
 
     trainer.run()
-    serializers.save_npz("{1}.npz", model)
+    serializers.save_npz('{1}.npz', model)
 
 
 def prediction_main(input, classification=False):
     model = {0}()
-    serializers.load_npz("{1}.npz", model)
+    serializers.load_npz('{1}.npz', model)
     if classification:
         return model.predict_class(input)
     else:
