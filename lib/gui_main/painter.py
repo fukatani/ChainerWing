@@ -18,7 +18,7 @@ from lib.subwindows.train_config import TrainDialog
 from lib.subwindows.train_config import TrainParamServer
 from lib.subwindows.prediction_widget import PredictionWindow
 
-logger = logging.getLogger('Floppy')
+logger = logging.getLogger('ChainerWing')
 
 PINSIZE = 8
 TEXTYOFFSET = 0
@@ -731,7 +731,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
 
         self.iconRoot = os.path.join(os.path.dirname(__file__), '../resources')
-        self.settings = QtCore.QSettings('Floppy', 'Floppy')
+        self.settings = QtCore.QSettings('ChainerWing', 'ChainerWing')
 
         self.select_data_button = QtWidgets.QPushButton('')
         self.select_data_button.clicked.connect(self.open_data_config)

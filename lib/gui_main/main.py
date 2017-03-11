@@ -20,7 +20,7 @@ logger.addHandler(fh)
 
 
 def run():
-    logger.info('Starting Floppy Application with '+' '.join(sys.argv))
+    logger.info('Starting ChainerWing Application with '+' '.join(sys.argv))
     app = QtWidgets.QApplication(sys.argv)
     painter = initialize_painter()
     startUI(app, painter)
