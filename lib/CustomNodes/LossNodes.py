@@ -8,7 +8,7 @@ class SoftmaxCrossEntropy(Loss):
     Input('ground_truth', chainer.Variable)
 
     def call(self):
-        return "softmax_cross_entropy("
+        return "softmax_cross_entropy(self.y, t)"
 
 
 class SigmoidCrossEntropy(Loss):
@@ -16,7 +16,7 @@ class SigmoidCrossEntropy(Loss):
     Input('ground_truth', chainer.Variable)
 
     def call(self):
-        return "sigmoid_cross_entropy("
+        return "sigmoid_cross_entropy(self.y, t)"
 
 
 class MeanSquaredError(Loss):
@@ -24,7 +24,7 @@ class MeanSquaredError(Loss):
     Input('ground_truth', chainer.Variable)
 
     def call(self):
-        return "mean_squared_error("
+        return "mean_squared_error(self.y, t)"
 
 
 class HuberLoss(Loss):
@@ -33,4 +33,4 @@ class HuberLoss(Loss):
     Input('ground_truth', chainer.Variable)
 
     def call(self):
-        return "huber_loss(delta={delta}"
+        return "huber_loss(self.y, t, delta={delta})"

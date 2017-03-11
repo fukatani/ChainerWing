@@ -59,7 +59,7 @@ class Compiler(object):
                 compiled_pred += 'x' + ')' * (len(funcs))
                 call_all_pred.append(compiled_pred)
 
-                compiled_loss = loss.call() + node.call_end()
+                compiled_loss = loss.call()
                 call_all_loss.append(compiled_loss)
 
         return ', '.join(call_all_loss), ', '.join(call_all_pred)

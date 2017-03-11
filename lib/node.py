@@ -715,8 +715,5 @@ class Function(Node):
 
 @abstractNode
 class Loss(Function):
-    def call_end(self):
-        return "self.y, t)"
-
     def color(self):
         return QColor(45, 45, 95)
