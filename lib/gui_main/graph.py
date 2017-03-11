@@ -1,4 +1,4 @@
-import json
+import os
 from collections import OrderedDict
 
 from lib import compiler
@@ -277,6 +277,10 @@ class Graph(object):
         Run compiled chainer code.
         :return:
         """
+        if not os.path.isfile(TrainParamServer()['TrainData']):
+            util.disp_error('{} is not found.'
+                            .format(TrainParamServer()['TrainData']))
+            return
         try:
             self.runner = runner.TrainRunner()
         except SyntaxError:
@@ -286,7 +290,7 @@ class Graph(object):
         try:
             self.runner.run()
         except util.AbnormalCode as ac:
-            util.disp_error(ac.args[0][0] + ' @' +
+            util.disp_error(str(ac.args[0][0]) + ' @' +
                             TrainParamServer()['TrainData'])
         except ValueError:
             util.disp_error('Irregal data was found @' +
