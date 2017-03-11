@@ -14,6 +14,7 @@ The interface may change greatly.
 
 It is scheduled to be released in April 2017.
 
+![Screenshots](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot.png "Screenshots")
 
 ## Software Requirement
 
@@ -42,5 +43,5 @@ Floppy is licenced by BSD 3 Clause.
 
 Part of chainer extension is referenced by chainer.
 (https://github.com/pfnet/chainer)
-Floppy is licenced by MIT License.
+chainer is licenced by MIT License.
 
