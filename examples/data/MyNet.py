@@ -20,7 +20,7 @@ class MyNet(chainer.Chain):
         )
 
     def _predict(self, x):
-        return dropout(ratio=0.5, x=relu(self.l1(dropout(ratio=0.5, x=relu(self.l0(x))))))
+        return relu(self.l1(dropout(ratio=0.5, x=relu(self.l0(x)))))
 
     def predict(self, x):
         return self._predict(x).data
@@ -38,7 +38,7 @@ class MyNet(chainer.Chain):
         return self.loss
 
 def get_optimizer():
-    return AdaDelta(rho=0.95, eps=1e-06)
+    return AdaDelta(eps=1e-06, rho=0.95)
 
 
 

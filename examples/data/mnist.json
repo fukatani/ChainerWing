@@ -168,7 +168,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "6:Iin_array"
+                        "4:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -191,7 +191,7 @@
             {
                 "class": "SoftmaxCrossEntropy",
                 "inputConnections": {
-                    "in_array": "6:Oout_array"
+                    "in_array": "3:Oout_array"
                 },
                 "inputs": [
                     [
@@ -259,53 +259,6 @@
                 "position": [
                     -185,
                     -84
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            6,
-            {
-                "class": "Dropout",
-                "inputConnections": {
-                    "in_array": "3:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        null,
-                        null
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        null
-                    ],
-                    [
-                        "ratio",
-                        "float",
-                        0.5,
-                        0.5
-                    ]
-                ],
-                "outputConnections": {
-                    "out_array": [
-                        "4:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    255,
-                    -143
                 ],
                 "subgraph": "main"
             }
