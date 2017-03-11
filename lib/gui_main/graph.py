@@ -484,9 +484,9 @@ class Graph(object):
         :return:
         """
         for inp in node.inputs.values():
-            self.removeConnection(inp.ID)
+            self.removeConnection(inp.ID, from_self=False)
         for out in node.outputs.values():
-            self.removeConnection(out.ID)
+            self.removeConnection(out.ID, from_self=True)
         del self.nodes[node.ID]
 
 
