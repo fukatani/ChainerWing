@@ -38,7 +38,7 @@ class MyNet(chainer.Chain):
         return self.loss
 
 def get_optimizer():
-    return AdaDelta(rho=0.95, eps=1e-06)
+    return AdaDelta(eps=1e-06, rho=0.95)
 
 
 
@@ -64,15 +64,15 @@ def training_main(train, test, pbar=None):
     
     trainer.extend(extensions.Evaluator(test_iter, model, device=0))
     
-    trainer.extend(extensions.LogReport(log_name='/home/ryo/workspace/github/CW_gui/examples/data/result/chainer.log'))
+    trainer.extend(extensions.LogReport(log_name='/home/ryo/workspace/github/CW_gui/examples/mnist/result/chainer.log'))
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
                                'epoch',
-                               file_name='/home/ryo/workspace/github/CW_gui/examples/data/result/loss.png'))
+                               file_name='/home/ryo/workspace/github/CW_gui/examples/mnist/result/loss.png'))
     
     trainer.extend(
         extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],
-                               'epoch', file_name='/home/ryo/workspace/github/CW_gui/examples/data/result/accuracy.png'))
+                               'epoch', file_name='/home/ryo/workspace/github/CW_gui/examples/mnist/result/accuracy.png'))
     
     if pbar is not None:
         trainer.extend(pbar)
@@ -80,13 +80,13 @@ def training_main(train, test, pbar=None):
         trainer.extend(extensions.ProgressBar())
 
     trainer.run()
-    serializers.save_npz('/home/ryo/workspace/github/CW_gui/examples/data/result/MyModel.npz', model)
+    serializers.save_npz('/home/ryo/workspace/github/CW_gui/examples/mnist/result/MyModel.npz', model)
 
 
 def prediction_main(input, classification=False):
     with chainer.using_config('train', False):
         model = MyNet()
-        serializers.load_npz('/home/ryo/workspace/github/CW_gui/examples/data/result/MyModel.npz', model)
+        serializers.load_npz('/home/ryo/workspace/github/CW_gui/examples/mnist/result/MyModel.npz', model)
         if classification:
             return model.predict_class(input)
         else:
