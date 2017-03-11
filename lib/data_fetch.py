@@ -60,12 +60,12 @@ class DataManager(object):
         if train_server['UseSameData']:
             # TODO(fukatani): Implement
             data_file = train_server['TrainData']
-            data = self.get_data_from_file()
+            data = self.get_data_from_file(data_file, True)
         else:
             train_file = train_server['TrainData']
-            train_data = self.get_data_from_file(train_file)
+            train_data = self.get_data_from_file(train_file, True)
             test_file = train_server['TestData']
-            test_data = self.get_data_from_file(test_file)
+            test_data = self.get_data_from_file(test_file, True)
         return train_data, test_data
 
     def get_data_pred(self):
@@ -80,7 +80,7 @@ class DataManager(object):
                 raise util.AbnormalCode(e.args)
         else:
             data_file = train_server['PredInputData']
-            data, _ = self.get_data_from_file(data_file)
+            data, _ = self.get_data_from_file(data_file, False)
             return data
 
 
