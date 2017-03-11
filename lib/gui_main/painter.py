@@ -17,7 +17,6 @@ from lib.subwindows.settings import SettingsDialog
 from lib.subwindows.train_config import TrainDialog
 from lib.subwindows.train_config import TrainParamServer
 from lib.subwindows.prediction_widget import PredictionWindow
-from lib.subwindows.report_widget import ReportWidget
 
 logger = logging.getLogger('Floppy')
 
