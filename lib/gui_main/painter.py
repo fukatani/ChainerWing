@@ -218,10 +218,10 @@ class Painter2D(QtWidgets.QWidget):
                 self.drag = event.pos()
 
         if event.button() == Qt.LeftButton:
-            # for item in self.watchingItems:
-            #     item.watchDown(event.pos())
-            #     item.collide(event.pos())
-            #     return
+            for item in self.watchingItems:
+                item.watchDown(event.pos())
+                item.collide(event.pos())
+                return
 
             for drawItem in self.drawItems:
                 if issubclass(type(drawItem), Selector) or issubclass(
