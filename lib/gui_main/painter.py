@@ -237,7 +237,7 @@ class Painter2D(QtWidgets.QWidget):
                     if i[-8:] != 'in_array':
                         self.clickedPin = None
                         return
-                    self.graph.removeConnection(i)
+                    self.graph.removeConnection(i, from_self=False)
                     self.update()
                     return
             for point, i in self.outputPinPositions:
@@ -246,7 +246,7 @@ class Painter2D(QtWidgets.QWidget):
                 if abs(event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
                             event.pos().y() - point.y()) < PINSIZE * self.scale:
                     self.clickedPin = i
-                    self.graph.removeConnection(i)
+                    self.graph.removeConnection(i, from_self=True)
                     self.update()
                     return
             for nodePoints in self.nodePoints:

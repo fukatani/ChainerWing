@@ -32,9 +32,11 @@ class Graph(object):
         self.connected = False
         self.nextFreeNodeID = 0
         self.nodes = {}
-        self.connections = {}
         self.runner = None
         self.status = None
+        # from self to other
+        self.connections = {}
+        # from other to self
         self.reverseConnections = {}
         # self.statusLock = Lock()
         if painter:
@@ -425,9 +427,7 @@ class Graph(object):
         :param pinID: string representing a Pin instance's ID.
         :return: Pin instance.
         """
-        nodeID, pinName = pinID.split(':')
-        pinName = pinName[1:]
-        node = self.nodes[int(nodeID)]
+        pinName, node = self.getNodeFromPinID(pinID)
         try:
             return node.getInputPin(pinName)
         except KeyError:
@@ -440,8 +440,7 @@ class Graph(object):
         :return: Node instance.
         """
         nodeID, pinName = pinID.split(':')
-        pinName = pinName[1:]
-        return self.nodes[int(nodeID)]
+        return pinName[1:], self.nodes[int(nodeID)]
 
     def getNewestNode(self):
         """
@@ -450,31 +449,33 @@ class Graph(object):
         """
         return self.newestNode
 
-    def removeConnection(self, pinID):
+    def removeConnection(self, pinID, from_self):
         """
         Remove the connection that involves the Pin instance with pinID.
         :param pinID: string representing a Pin instance's ID.
         :return:
         """
-        node = self.getNodeFromPinID(pinID)
-        pinName = self.getPinWithID(pinID).name
+        pinName, node = self.getNodeFromPinID(pinID)
         thisConn = None
-        for conn in self.reverseConnections[node]:
-            if any([conn.input_name == pinName, conn.output_name == pinName]):
+        if from_self:
+            connections = self.connections[node]
+        else:
+            connections = self.reverseConnections[node]
+        for conn in connections:
+            if from_self:
+                target_pin = conn.output_name
+            else:
+                target_pin = conn.input_name
+            if target_pin == pinName:
                 thisConn = conn
                 break
         if thisConn:
-            self.reverseConnections[node].remove(thisConn)
-            self.connections[conn.output_node].remove(thisConn)
-            return
-        thisConn = None
-        for conn in self.connections[node]:
-            if any([conn.input_name == pinName, conn.output_name == pinName]):
-                thisConn = conn
-                break
-        if thisConn:
-            self.connections[node].remove(thisConn)
-            self.reverseConnections[conn.input_node].remove(thisConn)
+            if from_self:
+                self.connections[node].remove(thisConn)
+                self.reverseConnections[conn.input_node].remove(thisConn)
+            else:
+                self.reverseConnections[node].remove(thisConn)
+                self.connections[conn.output_node].remove(thisConn)
 
     def deleteNode(self, node):
         """
