@@ -33,4 +33,4 @@ class Dropout(Function):
     Output('out_array', chainer.Variable)
 
     def call(self):
-        return 'dropout(ratio=ratio, x='
+        return 'dropout(ratio={0}, x='.format(self._ratio)
