@@ -39,7 +39,7 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         try:
             runner = PredictionRunner()
             result = runner.run(self.classification.isChecked())
-            if TrainParamServer()['PredOutputData']:
+            if 'PredOutputData' in TrainParamServer().__dict__:
                 numpy.savetxt(TrainParamServer()['PredOutputData'],
                               result,
                               delimiter=",")
