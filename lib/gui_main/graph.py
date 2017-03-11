@@ -277,10 +277,6 @@ class Graph(object):
         Run compiled chainer code.
         :return:
         """
-        if not os.path.isfile(TrainParamServer()['TrainData']):
-            util.disp_error('{} is not found.'
-                            .format(TrainParamServer()['TrainData']))
-            return
         try:
             self.runner = runner.TrainRunner()
         except SyntaxError:
@@ -289,12 +285,18 @@ class Graph(object):
             return
         try:
             self.runner.run()
-        except util.AbnormalCode as ac:
-            util.disp_error(str(ac.args[0][0]) + ' @' +
+        except util.AbnormalCode as error:
+            util.disp_error(str(error.args[0][0]) + ' @' +
                             TrainParamServer()['TrainData'])
         except ValueError:
             util.disp_error('Irregal data was found @' +
                             TrainParamServer()['TrainData'])
+        except FileNotFoundError as error:
+            util.disp_error('{} is not found.'
+                            .format(error.filename))
+        except util.UnexpectedFileExtension:
+            util.disp_error('Unexpected file extension was found.'
+                            'data should be ".csv", ".npz" or ".py"')
 
     def to_dict(self, subgraph=None):
         """

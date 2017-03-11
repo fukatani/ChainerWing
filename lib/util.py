@@ -9,3 +9,7 @@ def disp_error(message: str):
 
 class AbnormalCode(Exception):
     pass
+
+
+class UnexpectedFileExtension(Exception):
+    pass

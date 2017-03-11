@@ -21,8 +21,7 @@ class DataManager(object):
             else:
                 return data['x'], None
         else:
-            raise Exception('Unexpected data format.'
-                            'Input shold be *.csv or *.npz')
+            raise util.UnexpectedFileExtension()
 
     def csv_to_ndarray(self, csv_file, is_supervised):
         exists_header = 0
