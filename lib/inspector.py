@@ -16,26 +16,33 @@ class OptimizerInspector(object):
 
     def get_signature(self, name):
         signature = inspect.signature(self.members[name]).parameters
-        return {'opt_' + value.name: value.default for value in signature.values()}
+        signature_dict = {}
+        for value in signature.values():
+            signature_dict['opt_' + value.name] = value.default
+        order_signature_dict = collections.OrderedDict()
+        for name in sorted(signature_dict.keys()):
+            order_signature_dict[name] = signature_dict[name]
+        return order_signature_dict
 
     def get_members(self):
         return self.members.keys()
 
-# oi = optimizer_inspector()
-# print(oi.get_signature('AdaDelta'))
 
 # from chainer import link
 # print('links')
 # for name, member in inspect.getmembers(chainer.links):
 #     if inspect.isclass(member):
 #         if issubclass(member, link.Chain) or issubclass(member, link.Link):
+#             print(member)
 #             print(inspect.signature(member))
 #             for key, value in inspect.signature(member).parameters.items():
 #                 print(key, value.default)
 #
 #
+#
 # print('functions')
 # for name, member in inspect.getmembers(chainer.functions):
 #     if inspect.isfunction(member):
+#         print(member)
 #         for key, value in inspect.signature(member).parameters.items():
 #             print(key, value.default)
