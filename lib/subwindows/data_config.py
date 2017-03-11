@@ -79,6 +79,7 @@ class DataDialog(QtWidgets.QDialog):
             except AttributeError:
                 pass
         self.settings.sync()
+        self.parent().update_data_label()
         super(DataDialog, self).close()
 
     def redraw(self):
