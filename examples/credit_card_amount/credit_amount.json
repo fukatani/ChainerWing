@@ -1,0 +1,255 @@
+{
+    "graph": [
+        [
+            0,
+            {
+                "class": "Linear",
+                "inputConnections": {},
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        null,
+                        null
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        null
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        40,
+                        40
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        null,
+                        null
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "3:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -391,
+                    -161
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            1,
+            {
+                "class": "Linear",
+                "inputConnections": {
+                    "in_array": "2:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        null,
+                        null
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        null
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        20,
+                        20
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        null,
+                        null
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "4:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    60,
+                    -172
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            2,
+            {
+                "class": "Dropout",
+                "inputConnections": {
+                    "in_array": "3:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        null,
+                        null
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        null
+                    ],
+                    [
+                        "ratio",
+                        "float",
+                        0.5,
+                        0.5
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "1:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -107,
+                    -177
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            3,
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        null,
+                        null
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        null
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "2:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -243,
+                    -178
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            4,
+            {
+                "class": "HuberLoss",
+                "inputConnections": {
+                    "in_array": "1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        null,
+                        null
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        null
+                    ],
+                    [
+                        "delta",
+                        "float",
+                        0.1,
+                        0.1
+                    ],
+                    [
+                        "ground_truth",
+                        "Variable",
+                        null,
+                        null
+                    ]
+                ],
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    230,
+                    -143
+                ],
+                "subgraph": "main"
+            }
+        ]
+    ],
+    "train": {
+        "BatchSize": 20,
+        "Epoch": 20,
+        "GPU": 1,
+        "ModelName": "MyModel",
+        "NetName": "MyNet",
+        "Optimizer": "AdaDelta",
+        "Shuffle": "",
+        "TestData": "./",
+        "TestDataRatio": 0.5,
+        "TrainData": "/home/ryo/workspace/github/CW_gui/examples/data/get_mnist_train.py",
+        "TrainMode": "Simple Regression",
+        "UseSameData": "",
+        "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount",
+        "opt_eps": 1e-06,
+        "opt_rho": 0.95
+    }
+}
