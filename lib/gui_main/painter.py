@@ -741,8 +741,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setWindowIcon(
             QtGui.QIcon(os.path.join(self.iconRoot, 'appIcon.png')))
 
-        self.resize(self.settings.value("size", (900, 700)))
-        self.move(self.settings.value("pos", QtCore.QPoint(50, 50)))
+        try:
+            self.resize(self.settings.value("size", (900, 700)))
+            self.move(self.settings.value("pos", QtCore.QPoint(50, 50)))
+        except:
+            pass
         self.setWindowTitle('ChainerWind')
 
         self.initActions()
