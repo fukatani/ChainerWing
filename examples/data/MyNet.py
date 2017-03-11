@@ -38,7 +38,7 @@ class MyNet(chainer.Chain):
         return self.loss
 
 def get_optimizer():
-    return AdaDelta(eps=1e-06, rho=0.95)
+    return AdaDelta(rho=0.95, eps=1e-06)
 
 
 
@@ -84,12 +84,13 @@ def training_main(train, test, pbar=None):
 
 
 def prediction_main(input, classification=False):
-    model = MyNet()
-    serializers.load_npz('/home/ryo/workspace/github/CW_gui/examples/data/result/MyModel.npz', model)
-    if classification:
-        return model.predict_class(input)
-    else:
-        return model.predict(input)
+    with chainer.using_config('train', False):
+        model = MyNet()
+        serializers.load_npz('/home/ryo/workspace/github/CW_gui/examples/data/result/MyModel.npz', model)
+        if classification:
+            return model.predict_class(input)
+        else:
+            return model.predict(input)
 
 
 if __name__ == '__main__':

@@ -136,12 +136,13 @@ def training_main(train, test, pbar=None):
 
 
 def prediction_main(input, classification=False):
-    model = {0}()
-    serializers.load_npz('{1}.npz', model)
-    if classification:
-        return model.predict_class(input)
-    else:
-        return model.predict(input)
+    with chainer.using_config('train', False):
+        model = {0}()
+        serializers.load_npz('{1}.npz', model)
+        if classification:
+            return model.predict_class(input)
+        else:
+            return model.predict(input)
 
 
 if __name__ == '__main__':
