@@ -276,7 +276,7 @@
         "Shuffle": "",
         "TestData": "./",
         "TestDataRatio": 0.5,
-        "TrainData": "/home/ryo/workspace/github/CW_gui/examples/data/get_mnist_train.py",
+        "TrainData": "/home/ryo/workspace/github/CW_gui/examples/mnist/get_mnist_train.py",
         "TrainMode": "Simple Classification",
         "UseSameData": "",
         "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/mnist",
