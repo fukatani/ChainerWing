@@ -23,7 +23,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "2:Iin_array"
+                        "5:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -35,8 +35,8 @@
                     ]
                 ],
                 "position": [
-                    -212,
-                    -57
+                    -353,
+                    -53
                 ],
                 "subgraph": "main"
             }
@@ -86,8 +86,8 @@
                     ]
                 ],
                 "position": [
-                    -379,
-                    -104
+                    -526,
+                    -101
                 ],
                 "subgraph": "main"
             }
@@ -97,7 +97,7 @@
             {
                 "class": "Linear",
                 "inputConnections": {
-                    "in_array": "0:Oout_array"
+                    "in_array": "5:Oout_array"
                 },
                 "inputs": [
                     [
@@ -168,7 +168,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "4:Iin_array"
+                        "6:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -180,8 +180,8 @@
                     ]
                 ],
                 "position": [
-                    162,
-                    -112
+                    116,
+                    -126
                 ],
                 "subgraph": "main"
             }
@@ -190,6 +190,83 @@
             4,
             {
                 "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "6:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        null,
+                        null
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        null
+                    ]
+                ],
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    420,
+                    -131
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            5,
+            {
+                "class": "Dropout",
+                "inputConnections": {
+                    "in_array": "0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        null,
+                        null
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        null
+                    ],
+                    [
+                        "ratio",
+                        "float",
+                        0.5,
+                        0.5
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "2:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -185,
+                    -84
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            6,
+            {
+                "class": "Dropout",
                 "inputConnections": {
                     "in_array": "3:Oout_array"
                 },
@@ -207,17 +284,28 @@
                         null
                     ],
                     [
-                        "ground_truth",
-                        "Variable",
-                        null,
-                        null
+                        "ratio",
+                        "float",
+                        0.5,
+                        0.5
                     ]
                 ],
-                "outputConnections": {},
-                "outputs": [],
+                "outputConnections": {
+                    "out_array": [
+                        "4:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
                 "position": [
-                    324,
-                    -149
+                    255,
+                    -143
                 ],
                 "subgraph": "main"
             }
