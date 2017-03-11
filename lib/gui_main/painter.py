@@ -1421,6 +1421,8 @@ class LineEdit(DrawItem):
     def _sanitize_string(self, string):
         string = string.strip('\r\n')
         try:
+            if self.data.info.var_type is float and string == '.':
+                return '0.'
             self.data.info.var_type(string)
         except ValueError:
             return ''
