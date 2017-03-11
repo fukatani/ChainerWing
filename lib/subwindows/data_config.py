@@ -124,7 +124,7 @@ class DataFileEdit(QtWidgets.QPushButton):
         init_path = TrainParamServer().get_work_dir()
         data_file = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Select Data File', init_path,
-            filter='(*.csv, *.npz, *.py);; Any (*.*)')[0]
+            filter='(*.csv *.npz *.py);; Any (*.*)')[0]
         if data_file:
             self.value = data_file
             self.label.setText(self.value)

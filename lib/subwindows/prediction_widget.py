@@ -99,7 +99,7 @@ class PredInputDataConfig(DataConfig):
     def __init__(self, label, window):
         super(PredInputDataConfig, self).__init__(label, window)
         self.direction = 'Input Data File is not selected.'
-        self.filter = '(*.csv, *.npz, *.py);; Any (*.*)'
+        self.filter = '(*.csv *.npz *.py);; Any (*.*)'
 
 
 class PredOutputDataConfig(DataConfig):
