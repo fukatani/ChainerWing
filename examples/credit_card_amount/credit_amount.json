@@ -1,7 +1,7 @@
 {
     "graph": [
         [
-            0,
+            6,
             {
                 "class": "Linear",
                 "inputConnections": {},
@@ -27,13 +27,13 @@
                     [
                         "nobias",
                         "bool",
-                        null,
-                        null
+                        true,
+                        true
                     ]
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "3:Iin_array"
+                        "9:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -45,18 +45,18 @@
                     ]
                 ],
                 "position": [
-                    -391,
+                    -392,
                     -161
                 ],
                 "subgraph": "main"
             }
         ],
         [
-            1,
+            7,
             {
                 "class": "Linear",
                 "inputConnections": {
-                    "in_array": "2:Oout_array"
+                    "in_array": "8:Oout_array"
                 },
                 "inputs": [
                     [
@@ -80,13 +80,13 @@
                     [
                         "nobias",
                         "bool",
-                        null,
-                        null
+                        true,
+                        true
                     ]
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "4:Iin_array"
+                        "10:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -105,11 +105,11 @@
             }
         ],
         [
-            2,
+            8,
             {
                 "class": "Dropout",
                 "inputConnections": {
-                    "in_array": "3:Oout_array"
+                    "in_array": "9:Oout_array"
                 },
                 "inputs": [
                     [
@@ -133,7 +133,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "1:Iin_array"
+                        "7:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -152,11 +152,11 @@
             }
         ],
         [
-            3,
+            9,
             {
                 "class": "Relu",
                 "inputConnections": {
-                    "in_array": "0:Oout_array"
+                    "in_array": "6:Oout_array"
                 },
                 "inputs": [
                     [
@@ -174,7 +174,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "2:Iin_array"
+                        "8:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -193,11 +193,11 @@
             }
         ],
         [
-            4,
+            10,
             {
                 "class": "HuberLoss",
                 "inputConnections": {
-                    "in_array": "1:Oout_array"
+                    "in_array": "7:Oout_array"
                 },
                 "inputs": [
                     [
@@ -217,12 +217,6 @@
                         "float",
                         0.1,
                         0.1
-                    ],
-                    [
-                        "ground_truth",
-                        "Variable",
-                        null,
-                        null
                     ]
                 ],
                 "outputConnections": {},
@@ -237,7 +231,7 @@
     ],
     "train": {
         "BatchSize": 20,
-        "Epoch": 20,
+        "Epoch": 10,
         "GPU": 1,
         "ModelName": "MyModel",
         "NetName": "MyNet",
@@ -245,8 +239,8 @@
         "Shuffle": "",
         "TestData": "./",
         "TestDataRatio": 0.5,
-        "TrainData": "/home/ryo/workspace/github/CW_gui/examples/data/get_mnist_train.py",
-        "TrainMode": "Simple Regression",
+        "TrainData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
+        "TrainMode": "Simple Classification",
         "UseSameData": "",
         "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount",
         "opt_eps": 1e-06,
