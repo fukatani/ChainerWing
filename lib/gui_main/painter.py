@@ -731,7 +731,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
 
         self.iconRoot = os.path.join(os.path.dirname(__file__), '../resources')
-        self.settings = QtCore.QSettings('ChainerWing', 'ChainerWing')
+        self.settings = QtCore.QSettings('ChainerWinga', 'ChainerWinga')
 
         self.select_data_button = QtWidgets.QPushButton('')
         self.select_data_button.clicked.connect(self.open_data_config)
@@ -744,7 +744,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             self.resize(self.settings.value("size", (900, 700)))
             self.move(self.settings.value("pos", QtCore.QPoint(50, 50)))
-        except:
+        except TypeError:
             pass
         self.setWindowTitle('ChainerWind')
 
