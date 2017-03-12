@@ -147,13 +147,13 @@ class DataCheckBox(QtWidgets.QCheckBox):
         self.settings = settings
         super(DataCheckBox, self).__init__()
         self.key = key
-        v = settings.value(key, type=str)
-        self.value = v
-        TrainParamServer()[key] = self.value
+        v = settings.value(key, type=bool)
+        self.setChecked(v)
+        TrainParamServer()[key] = self.isChecked()
 
     def commit(self):
-        self.settings.setValue(self.key, self.value)
-        TrainParamServer()[self.key] = self.value
+        self.settings.setValue(self.key, self.isChecked())
+        TrainParamServer()[self.key] = self.isChecked()
 
 
 class DataLineEdit(QtWidgets.QLineEdit):

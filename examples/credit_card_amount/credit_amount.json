@@ -1,7 +1,7 @@
 {
     "graph": [
         [
-            6,
+            0,
             {
                 "class": "Linear",
                 "inputConnections": {},
@@ -9,14 +9,14 @@
                     [
                         "TRIGGER",
                         "object",
-                        null,
-                        null
+                        "",
+                        ""
                     ],
                     [
                         "in_array",
                         "Variable",
-                        null,
-                        null
+                        "",
+                        ""
                     ],
                     [
                         "out_size",
@@ -33,7 +33,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "9:Iin_array"
+                        "3:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -52,24 +52,24 @@
             }
         ],
         [
-            7,
+            1,
             {
                 "class": "Linear",
                 "inputConnections": {
-                    "in_array": "8:Oout_array"
+                    "in_array": "2:Oout_array"
                 },
                 "inputs": [
                     [
                         "TRIGGER",
                         "object",
-                        null,
-                        null
+                        "",
+                        ""
                     ],
                     [
                         "in_array",
                         "Variable",
                         null,
-                        null
+                        ""
                     ],
                     [
                         "out_size",
@@ -86,7 +86,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "10:Iin_array"
+                        "4:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -105,24 +105,24 @@
             }
         ],
         [
-            8,
+            2,
             {
                 "class": "Dropout",
                 "inputConnections": {
-                    "in_array": "9:Oout_array"
+                    "in_array": "3:Oout_array"
                 },
                 "inputs": [
                     [
                         "TRIGGER",
                         "object",
-                        null,
-                        null
+                        "",
+                        ""
                     ],
                     [
                         "in_array",
                         "Variable",
                         null,
-                        null
+                        ""
                     ],
                     [
                         "ratio",
@@ -133,7 +133,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "7:Iin_array"
+                        "1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -152,29 +152,29 @@
             }
         ],
         [
-            9,
+            3,
             {
                 "class": "Relu",
                 "inputConnections": {
-                    "in_array": "6:Oout_array"
+                    "in_array": "0:Oout_array"
                 },
                 "inputs": [
                     [
                         "TRIGGER",
                         "object",
-                        null,
-                        null
+                        "",
+                        ""
                     ],
                     [
                         "in_array",
                         "Variable",
                         null,
-                        null
+                        ""
                     ]
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "8:Iin_array"
+                        "2:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -193,24 +193,24 @@
             }
         ],
         [
-            10,
+            4,
             {
                 "class": "HuberLoss",
                 "inputConnections": {
-                    "in_array": "7:Oout_array"
+                    "in_array": "1:Oout_array"
                 },
                 "inputs": [
                     [
                         "TRIGGER",
                         "object",
-                        null,
-                        null
+                        "",
+                        ""
                     ],
                     [
                         "in_array",
                         "Variable",
                         null,
-                        null
+                        ""
                     ],
                     [
                         "delta",
@@ -236,12 +236,12 @@
         "ModelName": "MyModel",
         "NetName": "MyNet",
         "Optimizer": "AdaDelta",
-        "Shuffle": "",
+        "Shuffle": false,
         "TestData": "./",
         "TestDataRatio": 0.5,
         "TrainData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
         "TrainMode": "Simple Classification",
-        "UseSameData": "",
+        "UseSameData": true,
         "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount",
         "opt_eps": 1e-06,
         "opt_rho": 0.95
