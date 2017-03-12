@@ -74,8 +74,8 @@
                     [
                         "out_size",
                         "int",
-                        20,
-                        20
+                        1,
+                        1
                     ],
                     [
                         "nobias",
@@ -98,8 +98,8 @@
                     ]
                 ],
                 "position": [
-                    60,
-                    -172
+                    59,
+                    -171
                 ],
                 "subgraph": "main"
             }
@@ -230,9 +230,9 @@
         ]
     ],
     "train": {
-        "BatchSize": 20,
-        "Epoch": 10,
-        "GPU": 1,
+        "BatchSize": 30,
+        "Epoch": 20,
+        "GPU": 0,
         "ModelName": "MyModel",
         "NetName": "MyNet",
         "Optimizer": "AdaDelta",
@@ -240,9 +240,9 @@
         "TestData": "./",
         "TestDataRatio": 0.5,
         "TrainData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
-        "TrainMode": "Simple Classification",
+        "TrainMode": "Simple Regression",
         "UseSameData": true,
-        "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount",
+        "WorkDir": "./",
         "opt_eps": 1e-06,
         "opt_rho": 0.95
     }

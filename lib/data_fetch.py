@@ -36,7 +36,8 @@ class DataManager(object):
                           delimiter=',', skiprows=exists_header)
 
     def separate_supervisor(self, data):
-        return tuple_dataset.TupleDataset(data[:, :-1], data[:, -1])
+        return tuple_dataset.TupleDataset(data[:, :-1],
+                                          np.atleast_2d(data[:, -1]).T)
 
     def get_data_train(self):
         train_server = TrainParamServer()
