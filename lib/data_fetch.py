@@ -30,6 +30,7 @@ class DataManager(object):
             for line in reader:
                 if isinstance(line[0], str):
                     exists_header = 1
+                break
         data = np.loadtxt(csv_file, delimiter=',', skiprows=exists_header)
         return self.separate_supervisor(data, is_supervised)
 
