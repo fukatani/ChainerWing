@@ -43,7 +43,7 @@ class Info(object):
     Class for handling all information related to both inputs and outputs.
     """
 
-    def __init__(self, name, var_type, hints=None, default=None, select=None,
+    def __init__(self, name, var_type, hints=None, default='', select=None,
                  owner=False, list=False, optional=False):
         self.name = name
         self.connected = False
@@ -187,7 +187,7 @@ class MetaNode(type):
     def addInput(name: str,
                  var_type: object,
                  hints=None,
-                 default=None,
+                 default='',
                  select=None,
                  list=False,
                  optional=False):
