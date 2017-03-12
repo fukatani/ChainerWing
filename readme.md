@@ -35,6 +35,11 @@ git clone https://github.com/fukatani/ChainerWing.git
 python setup.py install
 ```
 
+## Usage
+```
+python bin/ChainerWing.py
+```
+
 ## Licence
 
 Many of GUI design is referenced by Floppy.
