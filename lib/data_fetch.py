@@ -1,6 +1,7 @@
 import csv
 from importlib import machinery
 
+from chainer.datasets import tuple_dataset
 import numpy as np
 
 from lib.subwindows.train_config import TrainParamServer
@@ -31,26 +32,15 @@ class DataManager(object):
                 if isinstance(line[0], str):
                     exists_header = 1
                 break
-        data = np.loadtxt(csv_file, delimiter=',', skiprows=exists_header)
-        return self.separate_supervisor(data, is_supervised)
+        return np.loadtxt(csv_file, delimiter=',', skiprows=exists_header)
 
-    def separate_supervisor(self, data, is_supervised):
-        if is_supervised:
-            self.train_columns = data.shape[1]
-            superviser = data[:, -1]
-            data = data[:, :-1]
-            return data, superviser
-        elif data.shape[1] == self.train_columns:
-            superviser = data[:, -1]
-            data = data[:, :-1]
-            return data, superviser
-        else:  # Not including superviser
-            return data, None
+    def separate_supervisor(self, data):
+        return tuple_dataset.TupleDataset(data[:, :-1], data[:, -1])
 
     def get_data_train(self):
         train_server = TrainParamServer()
         if train_server['TrainData'].endswith('.py'):
-            module = machinery.SourceFileLoader("data_getter",
+            module = machinery.SourceFileLoader('data_getter',
                                                 train_server['TrainData'])
             try:
                 module = module.load_module()
@@ -58,20 +48,26 @@ class DataManager(object):
             except Exception as e:
                 raise util.AbnormalCode(e.args)
         if train_server['UseSameData']:
-            # TODO(fukatani): Implement
             data_file = train_server['TrainData']
             data = self.get_data_from_file(data_file, True)
+            if train_server['Shuffle']:
+                np.random.shuffle(data)
+            split_idx = int(data.shape[0] * train_server['TestDataRatio'])
+            train_data, test_data = data[:split_idx], data[split_idx:]
         else:
             train_file = train_server['TrainData']
             train_data = self.get_data_from_file(train_file, True)
             test_file = train_server['TestData']
             test_data = self.get_data_from_file(test_file, True)
+
+        test_data = self.separate_supervisor(test_data)
+        train_data = self.separate_supervisor(train_data)
         return train_data, test_data
 
     def get_data_pred(self):
         train_server = TrainParamServer()
         if train_server['PredInputData'].endswith('.py'):
-            module = machinery.SourceFileLoader("data_getter",
+            module = machinery.SourceFileLoader('data_getter',
                                                 train_server['PredInputData'])
             try:
                 module = module.load_module()
@@ -80,7 +76,7 @@ class DataManager(object):
                 raise util.AbnormalCode(e.args)
         else:
             data_file = train_server['PredInputData']
-            data, _ = self.get_data_from_file(data_file, False)
+            data = self.get_data_from_file(data_file, False)
             return data
 
 
