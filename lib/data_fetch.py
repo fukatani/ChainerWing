@@ -32,7 +32,8 @@ class DataManager(object):
                 if isinstance(line[0], str):
                     exists_header = 1
                 break
-        return np.loadtxt(csv_file, delimiter=',', skiprows=exists_header)
+        return np.loadtxt(csv_file, dtype=np.float32,
+                          delimiter=',', skiprows=exists_header)
 
     def separate_supervisor(self, data):
         return tuple_dataset.TupleDataset(data[:, :-1], data[:, -1])

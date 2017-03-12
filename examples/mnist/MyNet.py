@@ -15,12 +15,12 @@ class MyNet(chainer.Chain):
 
     def __init__(self):
         super(MyNet, self).__init__(
-            l0=Linear(None, 200, nobias=False),
-            l1=Linear(None, 10, nobias=True),
+            l2=Linear(None, 200, nobias=False),
+            l3=Linear(None, 10, nobias=True),
         )
 
     def _predict(self, x):
-        return relu(self.l1(dropout(ratio=0.5, x=relu(self.l0(x)))))
+        return relu(self.l3(dropout(ratio=0.5, x=relu(self.l2(x)))))
 
     def predict(self, x):
         return self._predict(x).data

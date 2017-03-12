@@ -29,4 +29,4 @@ class HuberLoss(Loss):
     Input('delta', float)
 
     def call(self):
-        return 'huber_loss(self.y, t, delta={delta})'
+        return 'huber_loss(self.y, t, delta={0})'.format(self._delta)
