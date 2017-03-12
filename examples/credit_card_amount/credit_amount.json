@@ -86,7 +86,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "4:Iin_array"
+                        "5:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -193,9 +193,9 @@
             }
         ],
         [
-            4,
+            5,
             {
-                "class": "HuberLoss",
+                "class": "MeanSquaredError",
                 "inputConnections": {
                     "in_array": "1:Oout_array"
                 },
@@ -211,19 +211,13 @@
                         "Variable",
                         null,
                         ""
-                    ],
-                    [
-                        "delta",
-                        "float",
-                        0.1,
-                        0.1
                     ]
                 ],
                 "outputConnections": {},
                 "outputs": [],
                 "position": [
-                    230,
-                    -143
+                    221,
+                    -121
                 ],
                 "subgraph": "main"
             }
@@ -242,7 +236,7 @@
         "TrainData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
         "TrainMode": "Simple Regression",
         "UseSameData": true,
-        "WorkDir": "./",
+        "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount",
         "opt_eps": 1e-06,
         "opt_rho": 0.95
     }

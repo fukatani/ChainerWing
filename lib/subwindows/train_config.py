@@ -295,6 +295,7 @@ class WorkDirEdit(QtWidgets.QPushButton):
                                  'Result file storage',
                                  self.value)
         self.label.setText(self.value)
+        self.commit()
 
 
 class WorkDirLabel(QtWidgets.QLabel):
