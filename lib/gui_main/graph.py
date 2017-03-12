@@ -1,5 +1,6 @@
-import os
 from collections import OrderedDict
+
+from chainer.utils import type_check
 
 from lib import compiler
 from lib import runner
@@ -297,6 +298,8 @@ class Graph(object):
         except util.UnexpectedFileExtension:
             util.disp_error('Unexpected file extension was found.'
                             'data should be ".csv", ".npz" or ".py"')
+        except type_check.InvalidType as error:
+            util.disp_error(str(error.args))
 
     def to_dict(self, subgraph=None):
         """
