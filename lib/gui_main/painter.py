@@ -1369,7 +1369,7 @@ class LineEdit(DrawItem):
             self.state = 0
         return collides
 
-    def draw(self, painter, as_label=False):
+    def draw(self, painter, as_label=''):
         if not self.text and not self.data.info.default:
             text = self.data.name
         else:
