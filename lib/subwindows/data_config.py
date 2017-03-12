@@ -109,11 +109,15 @@ class DataFileEdit(QtWidgets.QPushButton):
         super(DataFileEdit, self).__init__('Browse')
         v = settings.value(key, type=str)
         v = v if v else './'
-        self.value = v
-        self.clicked.connect(self.open_dialog)
+        if key in TrainParamServer().__dict__:
+            self.value = TrainParamServer()[key]
+        else:
+            self.value = v
+            TrainParamServer()[key] = v
         self.key = key
-        TrainParamServer()[self.key] = self.value
         self.label = DataFileLabel(settings, parent, key)
+        self.label.setText(self.value)
+        self.clicked.connect(self.open_dialog)
 
     def commit(self):
         self.settings.setValue(self.key, self.value)
