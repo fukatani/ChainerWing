@@ -288,9 +288,9 @@ class Graph(object):
         except util.AbnormalCode as error:
             util.disp_error(str(error.args[0][0]) + ' @' +
                             TrainParamServer()['TrainData'])
-        except ValueError:
-            util.disp_error('Irregal data was found @' +
-                            TrainParamServer()['TrainData'])
+        except ValueError as error:
+            util.disp_error('{0}\n'.format(error.args[0]) +
+                'Irregal data was found @' + TrainParamServer()['TrainData'])
         except FileNotFoundError as error:
             util.disp_error('{} is not found.'
                             .format(error.filename))
