@@ -1,8 +1,8 @@
 from importlib import machinery
 
 from lib.data_fetch import DataManager
+from lib.extension.cw_progress_bar import CWProgressBar
 from lib.subwindows.train_config import TrainParamServer
-from lib.cw_progress_bar import CWProgressBar
 
 
 class TrainRunner(object):
