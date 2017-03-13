@@ -90,7 +90,7 @@ class TrainerTemplate(Template):
         call_train = '''
 
 
-def training_main(train, test, pbar=None):
+def training_main(train, test, pbar=None, plot_postprocess=None):
     model = {3}()
 
     optimizer = get_optimizer()
@@ -117,7 +117,8 @@ def training_main(train, test, pbar=None):
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
                                'epoch',
-                               file_name='{0}/loss.png'))
+                               file_name='{0}/loss.png',
+                               postprocess=plot_postprocess))
     '''.format(kwargs.get_result_dir())
         if 'Class' in kwargs['TrainMode']:
             call_train += '''

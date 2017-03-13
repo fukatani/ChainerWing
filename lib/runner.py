@@ -2,6 +2,7 @@ from importlib import machinery
 
 from lib.data_fetch import DataManager
 from lib.extension.cw_progress_bar import CWProgressBar
+from lib.extension.plot_extension import cw_postprocess
 from lib.subwindows.train_config import TrainParamServer
 
 
@@ -18,7 +19,8 @@ class TrainRunner(object):
 
     def run(self):
         train_data, test_data = DataManager().get_data_train()
-        self.module.training_main(train_data, test_data, self.pbar)
+        self.module.training_main(train_data, test_data, self.pbar,
+                                  cw_postprocess)
 
     def kill(self):
         self.pbar.finalize()

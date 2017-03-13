@@ -38,11 +38,11 @@ class MyNet(chainer.Chain):
         return self.loss
 
 def get_optimizer():
-    return AdaDelta(rho=0.95, eps=1e-06)
+    return AdaDelta(eps=1e-06, rho=0.95)
 
 
 
-def training_main(train, test, pbar=None):
+def training_main(train, test, pbar=None, plot_postprocess=None):
     model = MyNet()
 
     optimizer = get_optimizer()
@@ -68,7 +68,8 @@ def training_main(train, test, pbar=None):
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
                                'epoch',
-                               file_name='/home/ryo/workspace/github/CW_gui/examples/mnist/result/loss.png'))
+                               file_name='/home/ryo/workspace/github/CW_gui/examples/mnist/result/loss.png',
+                               postprocess=plot_postprocess))
     
     trainer.extend(
         extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],
