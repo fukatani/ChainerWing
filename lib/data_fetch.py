@@ -12,11 +12,13 @@ class DataManager(object):
     def __init__(self):
         self.train_columns = 0
 
-    def get_data_from_file(self, file_name, is_supervised):
+    def get_data_from_file(self, file_name, is_supervised, shuffle=False):
         if file_name.endswith('.csv'):
-            return self.csv_to_ndarray(file_name, is_supervised)
+            return self.csv_to_ndarray(file_name, is_supervised, shuffle)
         elif file_name.endswith('.npz'):
             data = np.load(file_name)
+            if shuffle:
+                np.random.shuffle(data)
             if is_supervised:
                 return data['x'], data['y']
             else:
@@ -24,7 +26,7 @@ class DataManager(object):
         else:
             raise util.UnexpectedFileExtension()
 
-    def csv_to_ndarray(self, csv_file, is_supervised):
+    def csv_to_ndarray(self, csv_file, is_supervised, shuffle):
         exists_header = 0
         with open(csv_file, 'r') as f:
             reader = csv.reader(f)
@@ -32,12 +34,16 @@ class DataManager(object):
                 if isinstance(line[0], str):
                     exists_header = 1
                 break
-        return np.loadtxt(csv_file, dtype=np.float32,
-                          delimiter=',', skiprows=exists_header)
+        array = np.loadtxt(csv_file, dtype=np.float32,
+                           delimiter=',', skiprows=exists_header)
+        if shuffle:
+            np.random.shuffle(array)
+        if is_supervised:
+            return array[:, :-1], np.atleast_2d(array[:, -1]).T
+        return array, None
 
-    def separate_supervisor(self, data):
-        return tuple_dataset.TupleDataset(data[:, :-1],
-                                          np.atleast_2d(data[:, -1]).T)
+    def pack_data(self, data, label):
+        return tuple_dataset.TupleDataset(data, label)
 
     def get_data_train(self):
         train_server = TrainParamServer()
@@ -51,19 +57,24 @@ class DataManager(object):
                 raise util.AbnormalCode(e.args)
         if train_server['UseSameData']:
             data_file = train_server['TrainData']
-            data = self.get_data_from_file(data_file, True)
+            data, label = self.get_data_from_file(data_file, True,
+                                                  train_server['Shuffle'])
             if train_server['Shuffle']:
                 np.random.shuffle(data)
             split_idx = int(data.shape[0] * train_server['TestDataRatio'])
-            train_data, test_data = data[:split_idx], data[split_idx:]
+            train_data = data[:split_idx]
+            train_label = label[:split_idx]
+            test_data = data[split_idx:]
+            test_label = label[:split_idx]
         else:
             train_file = train_server['TrainData']
-            train_data = self.get_data_from_file(train_file, True)
+            train_data, train_label = self.get_data_from_file(train_file, True,
+                                                              train_server['Shuffle'])
             test_file = train_server['TestData']
-            test_data = self.get_data_from_file(test_file, True)
+            test_data, test_label = self.get_data_from_file(test_file, True)
 
-        test_data = self.separate_supervisor(test_data)
-        train_data = self.separate_supervisor(train_data)
+        test_data = self.pack_data(test_data, test_label)
+        train_data = self.pack_data(train_data, train_label)
         return train_data, test_data
 
     def get_data_pred(self):
