@@ -89,7 +89,6 @@ class TrainerTemplate(Template):
     def __call__(self, kwargs):
         call_train = '''
 
-
 def training_main(train, test, pbar=None, plot_postprocess=None):
     model = {3}()
 

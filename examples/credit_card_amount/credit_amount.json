@@ -86,7 +86,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "5:Iin_array"
+                        "4:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -193,7 +193,7 @@
             }
         ],
         [
-            5,
+            4,
             {
                 "class": "MeanSquaredError",
                 "inputConnections": {
@@ -230,6 +230,8 @@
         "ModelName": "MyModel",
         "NetName": "MyNet",
         "Optimizer": "AdaDelta",
+        "PredInputData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
+        "PredModel": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/result/MyModel.npz",
         "Shuffle": false,
         "TestData": "./",
         "TestDataRatio": 0.5,

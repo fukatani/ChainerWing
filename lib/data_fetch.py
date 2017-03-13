@@ -89,7 +89,7 @@ class DataManager(object):
                 raise util.AbnormalCode(e.args)
         else:
             data_file = train_server['PredInputData']
-            data = self.get_data_from_file(data_file, False)
+            data, _ = self.get_data_from_file(data_file, False)
             return data
 
 
