@@ -306,9 +306,6 @@ class Painter2D(QtWidgets.QWidget):
                                        input_name)
                 except TypeError:
                     util.disp_error('Cannot connect pins of different type')
-            else:
-                # TODO(fukatani): remove connection
-                pass
             self.looseConnection = False
             self.clickedPin = None
         self.drag = False
