@@ -38,12 +38,16 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         self.pred_progress.setText('Processing...')
         try:
             runner = PredictionRunner()
-            result = runner.run(self.classification.isChecked())
+            result, label = runner.run(self.classification.isChecked(),
+                                       self.including_label.isChecked())
             if 'PredOutputData' in TrainParamServer().__dict__:
                 numpy.savetxt(TrainParamServer()['PredOutputData'],
                               result,
                               delimiter=",")
             result = result[:self.max_disp_rows.value(), :]
+            if label is not None:
+                label = label[:self.max_disp_rows.value(), :]
+                result = numpy.hstack((result, label))
             self.result_table.setModel(ResultTableModel(result))
             self.pred_progress.setText('Prediction Finished!')
         except KeyError as ke:

@@ -77,20 +77,23 @@ class DataManager(object):
         train_data = self.pack_data(train_data, train_label)
         return train_data, test_data
 
-    def get_data_pred(self):
+    def get_data_pred(self, including_label):
         train_server = TrainParamServer()
         if train_server['PredInputData'].endswith('.py'):
             module = machinery.SourceFileLoader('data_getter',
                                                 train_server['PredInputData'])
             try:
                 module = module.load_module()
-                return module.main()
+                if including_label:
+                    return module.main()
+                else:
+                    return module.main(), None
             except Exception as e:
                 raise util.AbnormalCode(e.args)
         else:
             data_file = train_server['PredInputData']
-            data, _ = self.get_data_from_file(data_file, False)
-            return data
+            data, label = self.get_data_from_file(data_file, including_label)
+            return data, label
 
 
 if __name__ == '__main__':

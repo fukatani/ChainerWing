@@ -34,7 +34,7 @@ class PredictionRunner(object):
                                                  train_server.get_net_name())
         self.module = module_file.load_module()
 
-    def run(self, classification=False):
-        input_data = DataManager().get_data_pred()
+    def run(self, classification, including_label):
+        input_data, label = DataManager().get_data_pred(including_label)
         result = self.module.prediction_main(input_data, classification)
-        return result
+        return result, label
