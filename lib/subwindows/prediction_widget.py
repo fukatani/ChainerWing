@@ -24,6 +24,11 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         self.model_config = PredModelConfig(self.model_name, self)
 
         self.exe_button.clicked.connect(self.exe_prediction)
+        self.including_label.stateChanged.connect(self.set_including_label)
+        if 'IncludingLabel' in TrainParamServer().__dict__:
+            self.including_label.setChecked(TrainParamServer()['IncludingLabel'])
+        if 'PredClass' in TrainParamServer().__dict__:
+            self.classification.setChecked(TrainParamServer()['PredClass'])
 
     def set_input(self):
         self.input_config.set_data()
@@ -33,6 +38,12 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
     def set_output(self):
         self.output_config.set_data()
+
+    def set_including_label(self, value):
+        TrainParamServer()['IncludingLabel'] = value
+
+    def set_classification(self, value):
+        TrainParamServer()['PredClass'] = value
 
     def exe_prediction(self):
         self.pred_progress.setText('Processing...')
@@ -132,6 +143,18 @@ class ResultTableModel(QtCore.QAbstractTableModel):
     def __init__(self, array_data, parent=None, *args):
         QtCore.QAbstractTableModel.__init__(self, parent, *args)
         self.array_data = array_data
+
+    def headerData(self, column, orientation, role=QtCore.Qt.DisplayRole):
+        if role!=QtCore.Qt.DisplayRole:
+            return QtCore.QVariant()
+        if orientation==QtCore.Qt.Horizontal:
+            if (TrainParamServer()['IncludingLabel'] and
+                        column == self.array_data.shape[1] - 1):
+                return QtCore.QVariant('Label')
+            else:
+                return QtCore.QVariant('Pred {0}'.format(column))
+        else:
+            return QtCore.QVariant(column)
 
     def rowCount(self, parent):
         return min(1000, self.array_data.shape[0])
