@@ -187,6 +187,10 @@ class AbstractTrainEdit(QtWidgets.QSpinBox):
         self.globals_key = self.__class__.__name__[:-4]
         v = settings.value(self.globals_key, type=val_type)
         v = v if v else default
+        if self.globals_key in TrainParamServer().__dict__:
+            v = TrainParamServer()[self.globals_key]
+        else:
+            TrainParamServer()[self.globals_key] = v
         self.setValue(v)
         self.valueChanged.connect(self.redraw)
 
@@ -221,11 +225,15 @@ class OptimizerEdit(QtWidgets.QComboBox):
         self.settings = settings
         super(OptimizerEdit, self).__init__()
         self.addItems(menu)
-        self.setCurrentIndex(settings.value('Optimizer', type=int))
+        if 'Optimizer_idx' in TrainParamServer().__dict__:
+            self.setCurrentIndex(TrainParamServer()['Optimizer_idx'])
+        else:
+            self.setCurrentIndex(settings.value('Optimizer', type=int))
         TrainParamServer()['Optimizer'] = self.currentText()
 
     def commit(self):
         self.settings.setValue('Optimizer', self.currentIndex())
+        TrainParamServer()['Optimizer_idx'] = self.currentIndex()
         TrainParamServer()['Optimizer'] = self.currentText()
 
 
@@ -236,6 +244,10 @@ class NetNameEdit(QtWidgets.QLineEdit):
         super(NetNameEdit, self).__init__()
         v = settings.value('NetName', type=str)
         v = v if v else 'MyNet'
+        if 'NetName' in TrainParamServer().__dict__:
+            v = TrainParamServer()['NetName']
+        else:
+            TrainParamServer()['NetName'] = v
         self.setText(v)
 
     def commit(self):
@@ -250,8 +262,11 @@ class ModelNameEdit(QtWidgets.QLineEdit):
         super(ModelNameEdit, self).__init__()
         v = settings.value('ModelName', type=str)
         v = v if v else 'MyModel'
+        if 'ModelName' in TrainParamServer().__dict__:
+            v = TrainParamServer()['ModelName']
+        else:
+            TrainParamServer()['ModelName'] = v
         self.setText(v)
-        TrainParamServer()['ModelName'] = self.text()
 
     def commit(self):
         self.settings.setValue('ModelName', self.text())
@@ -264,6 +279,10 @@ class OptimizeParamEdit(QtWidgets.QLineEdit):
         self.settings = settings
         self.key = key
         super(OptimizeParamEdit, self).__init__()
+        if key in TrainParamServer().__dict__:
+            value = TrainParamServer()[key]
+        else:
+            TrainParamServer()[key] = value
         self.setText(str(value))
 
     def commit(self):
@@ -280,10 +299,14 @@ class WorkDirEdit(QtWidgets.QPushButton):
         super(WorkDirEdit, self).__init__('Browse')
         v = settings.value('WorkDir', type=str)
         v = v if v else './'
-        self.value = v
-        self.clicked.connect(self.open_dialog)
-        TrainParamServer()['WorkDir'] = self.value
+        if 'WorkDir' in TrainParamServer().__dict__:
+            TrainParamServer()['WorkDir']
+        else:
+            self.value = v
+            TrainParamServer()['WorkDir'] = self.value
+
         self.label = WorkDirLabel(settings, parent)
+        self.clicked.connect(self.open_dialog)
 
     def commit(self):
         self.settings.setValue('WorkDir', self.value)
@@ -312,11 +335,13 @@ class TrainModeEdit(QtWidgets.QComboBox):
         self.settings = settings
         super(TrainModeEdit, self).__init__()
         self.addItems(menu)
-        v = settings.value('TrainMode', type=str)
-        v = v if v else 'Simple Classification'
-        self.setCurrentIndex(settings.value('TrainMode', type=int))
+        if 'TrainMode_idx' in TrainParamServer().__dict__:
+            self.setCurrentIndex(TrainParamServer()['TrainMode_idx'])
+        else:
+            self.setCurrentIndex(settings.value('TrainMode', type=int))
         TrainParamServer()['TrainMode'] = self.currentText()
 
     def commit(self):
         self.settings.setValue('TrainMode', self.currentIndex())
         TrainParamServer()['TrainMode'] = self.currentText()
+        TrainParamServer()['TrainMode_idx'] = self.currentIndex()
