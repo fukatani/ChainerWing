@@ -161,6 +161,7 @@ class TrainDialog(QtWidgets.QDialog):
 
     def update_optimizer(self, optimizer_name):
         print(optimizer_name)
+        TrainParamServer()['Optimizer'] = optimizer_name
         oi = inspector.OptimizerInspector()
         not_exist_names = []
         exist_names = []
@@ -225,16 +226,17 @@ class OptimizerEdit(QtWidgets.QComboBox):
         self.settings = settings
         super(OptimizerEdit, self).__init__()
         self.addItems(menu)
-        if 'Optimizer_idx' in TrainParamServer().__dict__:
-            self.setCurrentIndex(TrainParamServer()['Optimizer_idx'])
+        self.length = len(menu)
+        if 'Optimizer' in TrainParamServer().__dict__:
+            selected_optimizer = TrainParamServer()['Optimizer']
         else:
-            self.setCurrentIndex(settings.value('Optimizer', type=int))
+            selected_optimizer = settings.value('Optimizer', type=str)
+        self.setCurrentText(selected_optimizer)
         TrainParamServer()['Optimizer'] = self.currentText()
 
     def commit(self):
-        self.settings.setValue('Optimizer', self.currentIndex())
-        TrainParamServer()['Optimizer_idx'] = self.currentIndex()
-        TrainParamServer()['Optimizer'] = self.currentText()
+        self.settings.setValue('Optimizer', self.currentText())
+        self.setCurrentText(TrainParamServer()['Optimizer'])
 
 
 class NetNameEdit(QtWidgets.QLineEdit):
