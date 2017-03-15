@@ -300,7 +300,7 @@ class WorkDirEdit(QtWidgets.QPushButton):
         v = settings.value('WorkDir', type=str)
         v = v if v else './'
         if 'WorkDir' in TrainParamServer().__dict__:
-            TrainParamServer()['WorkDir']
+            self.value = TrainParamServer()['WorkDir']
         else:
             self.value = v
             TrainParamServer()['WorkDir'] = self.value
