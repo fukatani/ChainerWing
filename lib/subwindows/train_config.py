@@ -153,6 +153,7 @@ class TrainDialog(QtWidgets.QDialog):
                 widget.commit()
             except AttributeError:
                 pass
+        self.update_opt_params(TrainParamServer()['Optimizer'])
         self.settings.sync()
         super(TrainDialog, self).close()
 
@@ -161,6 +162,11 @@ class TrainDialog(QtWidgets.QDialog):
 
     def update_optimizer(self, optimizer_name):
         print(optimizer_name)
+        self.update_opt_params(optimizer_name)
+        self.parent().open_train_config()
+        self.close()
+
+    def update_opt_params(self, optimizer_name):
         TrainParamServer()['Optimizer'] = optimizer_name
         oi = inspector.OptimizerInspector()
         not_exist_names = []
@@ -175,9 +181,6 @@ class TrainDialog(QtWidgets.QDialog):
         for name, default in oi.get_signature(optimizer_name).items():
             if name not in exist_names:
                 TrainParamServer()[name] = default
-
-        self.parent().open_train_config()
-        self.close()
 
 
 class AbstractTrainEdit(QtWidgets.QSpinBox):
