@@ -26,7 +26,7 @@ class TrainParamServer(object):
 
     def iter_for_opt_params(cls):
         for param in cls.__dict__:
-            if param[:4] == 'opt_':
+            if param.beginswith('opt_'):
                 yield param
 
     def clear_opt_params(cls):
