@@ -396,6 +396,7 @@ class Painter2D(QtWidgets.QWidget):
     def delete_node(self, node):
         self.graph.deleteNode(node)
         self.unregisterNode(node)
+        node.clear()
         self.repaint()
 
     def paintEvent(self, event):

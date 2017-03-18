@@ -579,6 +579,9 @@ class Node(object, metaclass=MetaNode):
     def id_from_cnt(self, cnt):
         raise NotImplementedError
 
+    def clear(self):
+        Node.registered_id.remove(self.node_id)
+
 
 class Pin(object):
     """
