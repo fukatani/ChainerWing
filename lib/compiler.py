@@ -34,8 +34,8 @@ class Compiler(object):
         for node in nodes.values():
             if issubclass(type(node), Link):
                 try:
-                    links.append('            l{0}={1}'.
-                                 format(node.link_id, node.call_init()))
+                    links.append('            {0}={1}'.
+                                 format(node.node_id, node.call_init()))
                 except:
                     util.disp_error(
                         'Unset parameter was found in {0}'.format(node))

@@ -15,8 +15,17 @@ class TrainParamServer(object):
             cls.__instance = object.__new__(cls)
         return cls.__instance
 
+
     def __getitem__(cls, key):
-        return cls.__dict__[key]
+        if key in cls.__dict__:
+            return cls.__dict__[key]
+        else:
+            if key == 'IncludingLabel':
+                return False
+            elif key == 'WorkDir':
+                return os.path.abspath(__file__) + '/../../examples/'
+            else:
+                raise Exception('Default option for {} is unset.')
 
     def __setitem__(cls, key, value):
         cls.__dict__[key] = value

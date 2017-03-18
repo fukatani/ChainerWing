@@ -257,6 +257,7 @@ class Node(object, metaclass=MetaNode):
     """
     Input('TRIGGER', object, optional=True)
     Tag('Node')
+    registered_id = []
 
     def __init__(self, nodeID, graph):
         self.loopLevel = 0
@@ -290,6 +291,16 @@ class Node(object, metaclass=MetaNode):
             raise AttributeError('Nodes without any input are not valid.')
         if len(self.inputs.keys()) == 2:
             self.inputs[list(self.inputs.keys())[1]].setPure()
+
+        cnt = 0
+        while True:
+            id_proposal = self.id_from_cnt(cnt)
+            if id_proposal not in Node.registered_id:
+                self.node_id = id_proposal
+                Node.registered_id.append(id_proposal)
+                break
+            cnt += 1
+
         self.setup()
 
     def setup(self):
@@ -514,6 +525,7 @@ class Node(object, metaclass=MetaNode):
                      outputConn in conns]
             outputConns[key] = conns
         return {'class': self.__class__.__name__,
+                'node_id': self.node_id,
                 'position': self.__pos__,
                 'inputs': [
                     (input_name, inp.var_type.__name__, inp(True), inp.default)
@@ -563,6 +575,9 @@ class Node(object, metaclass=MetaNode):
         if any([any([hint.startswith(text) for hint in out.hints]) for out in
                 cls.__outputs__.values()]):
             return True
+
+    def id_from_cnt(self, cnt):
+        raise NotImplementedError
 
 
 class Pin(object):
@@ -693,15 +708,12 @@ class ForLoop(ControlNode):
 
 @abstractNode
 class Link(Node):
-    link_cnt = 0
 
-    def __init__(self, nodeID, graph):
-        super(Link, self).__init__(nodeID, graph)
-        self.link_id = Link.link_cnt
-        Link.link_cnt += 1
+    def id_from_cnt(self, cnt):
+        return 'l' + str(cnt)
 
     def call(self):
-        return "self.l{0}(".format(self.link_id)
+        return "self.{0}(".format(self.node_id)
 
     def color(self):
         return QColor(45, 95, 45)
@@ -709,6 +721,9 @@ class Link(Node):
 
 @abstractNode
 class Function(Node):
+    def id_from_cnt(self, cnt):
+        return 'f' + str(cnt)
+
     def color(self):
         return QColor(95, 45, 45)
 
