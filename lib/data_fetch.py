@@ -54,7 +54,7 @@ class DataManager(object):
                 module = module.load_module()
                 return module.main()
             except Exception as e:
-                raise util.AbnormalCode(e.args)
+                raise util.AbnormalDataCode(e.args)
         if train_server['UseSameData']:
             data_file = train_server['TrainData']
             data, label = self.get_data_from_file(data_file, True,
@@ -89,7 +89,7 @@ class DataManager(object):
                 else:
                     return module.main(), None
             except Exception as e:
-                raise util.AbnormalCode(e.args)
+                raise util.AbnormalDataCode(e.args)
         else:
             data_file = train_server['PredInputData']
             data, label = self.get_data_from_file(data_file, including_label)

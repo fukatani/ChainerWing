@@ -286,7 +286,7 @@ class Graph(object):
             return
         try:
             self.runner.run()
-        except util.AbnormalCode as error:
+        except util.AbnormalDataCode as error:
             util.disp_error(str(error.args[0][0]) + ' @' +
                             TrainParamServer()['TrainData'])
         except ValueError as error:

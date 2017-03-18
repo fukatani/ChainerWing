@@ -7,7 +7,7 @@ def disp_error(message: str):
     error.exec_()
 
 
-class AbnormalCode(Exception):
+class AbnormalDataCode(Exception):
     pass
 
 
