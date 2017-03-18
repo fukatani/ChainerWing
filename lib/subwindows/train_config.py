@@ -22,6 +22,8 @@ class TrainParamServer(object):
         else:
             if key == 'IncludingLabel':
                 return False
+            elif key == 'PredClass':
+                return False
             elif key == 'WorkDir':
                 return os.path.abspath(__file__) + '/../../examples/'
             else:
