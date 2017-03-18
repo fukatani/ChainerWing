@@ -52,7 +52,7 @@ class {0}(chainer.Chain):
         )
 
     def _predict(self, x):
-        return {3}
+{3}
 
     def predict(self, x):
         return self._predict(x).data

@@ -46,21 +46,30 @@ class Compiler(object):
         call_all_loss = []
         call_all_pred = []
         for node in nodes.values():
-            if issubclass(type(node), Loss):
-                chains = self.compile_node(node, nodes, [])
-                loss = chains[0]
-                funcs = chains[1:]
+            if not issubclass(type(node), Loss):
+                continue
 
-                try:
-                    compiled_pred = "".join([func.call() for func in funcs])
-                except InputNotAvailable:
-                    util.disp_error('Unset parameter was found in {0}'.format(node))
-                    return ''
-                compiled_pred += 'x' + ')' * (len(funcs))
-                call_all_pred.append(compiled_pred)
+            chains = self.compile_node(node, nodes, [])
+            loss = chains[0]
+            funcs = chains[1:]
+            compiled_pred = []
+            previous_node_id = ''
+            try:
+                for func in reversed(funcs):
+                    if previous_node_id:
+                        pred_call = ''.join((' '*8, func.call(), previous_node_id, ')'))
+                    else:
+                        pred_call = ''.join((' '*8, func.call(), 'x)'))
+                    compiled_pred.append(pred_call)
+                    previous_node_id = func.node_id
+            except InputNotAvailable:
+                util.disp_error('Unset parameter was found in {0}'.format(node))
+                return ''
 
-                compiled_loss = loss.call()
-                call_all_loss.append(compiled_loss)
+            compiled_pred.append('        return ' + previous_node_id)
+            compiled_pred = '\n'.join(compiled_pred)
+            call_all_pred.append(compiled_pred)
+            call_all_loss.append(loss.call())
 
         return ', '.join(call_all_loss), ', '.join(call_all_pred)
 

@@ -31,6 +31,7 @@
                         true
                     ]
                 ],
+                "node_id": "l0",
                 "outputConnections": {
                     "out_array": [
                         "3:Iin_array"
@@ -84,6 +85,7 @@
                         true
                     ]
                 ],
+                "node_id": "l1",
                 "outputConnections": {
                     "out_array": [
                         "4:Iin_array"
@@ -131,6 +133,7 @@
                         0.5
                     ]
                 ],
+                "node_id": "f0",
                 "outputConnections": {
                     "out_array": [
                         "1:Iin_array"
@@ -172,6 +175,7 @@
                         ""
                     ]
                 ],
+                "node_id": "f1",
                 "outputConnections": {
                     "out_array": [
                         "2:Iin_array"
@@ -213,6 +217,7 @@
                         ""
                     ]
                 ],
+                "node_id": "f2",
                 "outputConnections": {},
                 "outputs": [],
                 "position": [
@@ -227,6 +232,7 @@
         "BatchSize": 30,
         "Epoch": 20,
         "GPU": 0,
+        "IncludingLabel": 2,
         "ModelName": "MyModel",
         "NetName": "MyNet",
         "Optimizer": "Adam",

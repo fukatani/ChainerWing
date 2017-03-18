@@ -8,7 +8,7 @@ class Relu(Function):
     Output('out_array', chainer.Variable)
 
     def call(self):
-        return 'relu('
+        return self.node_id + ' = relu('
 
 
 class Sigmoid(Function):
@@ -16,7 +16,7 @@ class Sigmoid(Function):
     Output('out_array', chainer.Variable)
 
     def call(self):
-        return 'sigmoid('
+        return self.node_id + ' = sigmoid('
 
 
 class Tanh(Function):
@@ -24,7 +24,7 @@ class Tanh(Function):
     Output('out_array', chainer.Variable)
 
     def call(self):
-        return 'tanh('
+        return self.node_id + ' = tanh('
 
 
 class Dropout(Function):
@@ -33,4 +33,4 @@ class Dropout(Function):
     Output('out_array', chainer.Variable)
 
     def call(self):
-        return 'dropout(ratio={0}, x='.format(self._ratio)
+        return self.node_id + ' = dropout(ratio={0}, x='.format(self._ratio)

@@ -713,7 +713,7 @@ class Link(Node):
         return 'l' + str(cnt)
 
     def call(self):
-        return "self.{0}(".format(self.node_id)
+        return'{0} = self.{0}('.format(self.node_id)
 
     def color(self):
         return QColor(45, 95, 45)
