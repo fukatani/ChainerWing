@@ -124,7 +124,7 @@ class DataFileEdit(QtWidgets.QPushButton):
         TrainParamServer()[self.key] = self.value
 
     def open_dialog(self):
-        init_path = TrainParamServer().get_work_dir()
+        init_path = TrainParamServer()['WorkDir']
         data_file = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Select Data File', init_path,
             filter='(*.csv *.npz *.py);; Any (*.*)')[0]

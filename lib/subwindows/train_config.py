@@ -67,11 +67,6 @@ class TrainParamServer(object):
         else:
             return ''
 
-    def get_work_dir(cls):
-        if 'WorkDir' not in cls.__dict__:
-            cls['WorkDir'] = os.path.abspath(__file__) + '/../../examples/'
-        return cls['WorkDir']
-
 
 class TrainDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):

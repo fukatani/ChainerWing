@@ -1077,7 +1077,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def load_graph(self, override=False):
         if not override:
-            init_path = TrainParamServer().get_work_dir()
+            init_path = TrainParamServer()['WorkDir']
             file_name = QtWidgets.QFileDialog.getOpenFileName(
                 self, 'Open File', init_path,
                 filter='Chainer Wing Files (*.json);; Any (*.*)')[0]
