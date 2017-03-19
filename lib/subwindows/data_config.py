@@ -13,6 +13,7 @@ class DataDialog(QtWidgets.QDialog):
         self.same_data_check.stateChanged.connect(self.state_changed)
         self.shuffle_check = DataCheckBox(settings, self, 'Shuffle')
         self.ratio_edit = DataLineEdit(settings, self, 'TestDataRatio')
+        self.use_minmax_scale = DataCheckBox(settings, self, 'MinMaxScale')
 
         self.dialogs = [('Train data Settings', None),
                         ('Set Train Data', self.train_edit),
@@ -23,6 +24,8 @@ class DataDialog(QtWidgets.QDialog):
                         ('Test data ratio', self.ratio_edit),
                         ('Set Test Data', self.test_edit),
                         ('', self.test_edit.label),
+                        ('Preprocess', None),
+                        ('Scale by Min Max', self.use_minmax_scale),
                         ]
         super(DataDialog, self).__init__(*args)
         self.setStyleSheet('''DataDialog {
