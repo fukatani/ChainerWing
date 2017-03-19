@@ -80,7 +80,7 @@ class TrainDialog(QtWidgets.QDialog):
                         ('Working Directory', work_edit),
                         ('', work_edit.label),
                         ('Train Settings', None),
-                        ('TrainModeEdit', TrainModeEdit(settings, self)),
+                        ('Task', TaskEdit(settings, self)),
                         ('Net Name', NetNameEdit(settings, self)),
                         ('Model Name', ModelNameEdit(settings, self)),
                         ('Batch Size', BatchSizeEdit(settings, self)),
@@ -339,20 +339,20 @@ class WorkDirLabel(QtWidgets.QLabel):
         super(WorkDirLabel, self).__init__(TrainParamServer()['WorkDir'])
 
 
-class TrainModeEdit(QtWidgets.QComboBox):
+class TaskEdit(QtWidgets.QComboBox):
     def __init__(self, settings, parent):
         menu = ('Simple Classification', 'Simple Regression')
         self.parent = parent
         self.settings = settings
-        super(TrainModeEdit, self).__init__()
+        super(TaskEdit, self).__init__()
         self.addItems(menu)
-        if 'TrainMode_idx' in TrainParamServer().__dict__:
-            self.setCurrentIndex(TrainParamServer()['TrainMode_idx'])
+        if 'Task_idx' in TrainParamServer().__dict__:
+            self.setCurrentIndex(TrainParamServer()['Task_idx'])
         else:
-            self.setCurrentIndex(settings.value('TrainMode', type=int))
-        TrainParamServer()['TrainMode'] = self.currentText()
+            self.setCurrentIndex(settings.value('Task', type=int))
+        TrainParamServer()['Task'] = self.currentText()
 
     def commit(self):
-        self.settings.setValue('TrainMode', self.currentIndex())
-        TrainParamServer()['TrainMode'] = self.currentText()
-        TrainParamServer()['TrainMode_idx'] = self.currentIndex()
+        self.settings.setValue('Task', self.currentIndex())
+        TrainParamServer()['Task'] = self.currentText()
+        TrainParamServer()['Task_idx'] = self.currentIndex()

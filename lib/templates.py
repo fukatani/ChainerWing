@@ -119,7 +119,7 @@ def training_main(train, test, pbar=None, plot_postprocess=None):
                                file_name='{0}/loss.png',
                                postprocess=plot_postprocess))
     '''.format(kwargs.get_result_dir())
-        if 'Class' in kwargs['TrainMode']:
+        if 'Class' in kwargs['Task']:
             call_train += '''
     trainer.extend(
         extensions.PlotReport(['main/accuracy', 'validation/main/accuracy'],

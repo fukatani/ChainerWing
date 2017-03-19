@@ -18,7 +18,7 @@ class Compiler(object):
         call_impl, pred_impl = self.compile_call(nodes)
         if not call_impl:
             return False
-        classification = 'Class' in TrainParamServer()['TrainMode']
+        classification = 'Class' in TrainParamServer()['Task']
         net_file = open(TrainParamServer().get_net_name(), 'w')
         net_file.write(TEMPLATES['NetTemplate']()(TrainParamServer()['NetName'],
                                                   init_impl,

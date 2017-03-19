@@ -54,7 +54,7 @@ class GraphWidget(QtWidgets.QWidget):
         self.image_file = image_file
 
     def paintEvent(self, event):
-        if 'Class' not in TrainParamServer()['TrainMode']:
+        if 'Class' not in TrainParamServer()['Task']:
             if 'accuracy' in self.image_file:
                 return
         self.pixmap = QtGui.QPixmap(self.image_file)
