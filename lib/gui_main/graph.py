@@ -137,20 +137,20 @@ class Graph(object):
                          'select': info.select,
                          'list': info.list,
                          'optional': info.optional})
-        nodeClass = self.createCustomNodeClass(name, inps, outs)
+        node_class = self.createCustomNodeClass(name, inps, outs)
         if spawnAt:
-            return self.spawnNode(nodeClass, position=spawnAt)
+            return self.spawnNode(node_class, position=spawnAt)
 
     def createCustomNodeClass(self, name, inputs, outputs, parents=(Node,)):
-        NodeClass = MetaNode(name, parents, {})
-        NodeClass.__inputs__ = OrderedDict()
-        NodeClass.__outputs__ = OrderedDict()
+        node_class = MetaNode(name, parents, {})
+        node_class.__inputs__ = OrderedDict()
+        node_class.__outputs__ = OrderedDict()
         for inp in inputs:
-            NodeClass._addInput(data=inp, cls=NodeClass)
+            node_class._addInput(data=inp, cls=node_class)
         for out in outputs:
-            NodeClass._addOutput(data=out, cls=NodeClass)
-        NODECLASSES[name] = NodeClass
-        return NodeClass
+            node_class._addOutput(data=out, cls=node_class)
+        NODECLASSES[name] = node_class
+        return node_class
 
     def _spawnConnections(self, connections, newNode):
         try:
