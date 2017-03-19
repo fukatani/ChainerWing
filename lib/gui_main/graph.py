@@ -262,7 +262,14 @@ class Graph(object):
         Compile the Graph as chainer code.
         :return: If compilation was succeeded, return True.
         """
-        return compiler.Compiler()(self.nodes)
+        try:
+            result = compiler.Compiler()(self.nodes)
+        except util.ExistsInvalidParameter as error:
+            util.disp_error('{0} is not set @{1}'.format(error.args[1][1:],
+                                                         error.args[0]))
+            self.nodes[error.args[0]].runtime_error_happened = True
+            return False
+        return result
 
     def run(self):
         """

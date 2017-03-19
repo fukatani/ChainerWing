@@ -21,9 +21,9 @@ class MyNet(chainer.Chain):
 
     def _predict(self, x):
         l0 = self.l0(x)
-        f1 = relu(l0)
-        f0 = dropout(ratio=0.5, x=f1)
-        l1 = self.l1(f0)
+        f0 = relu(l0)
+        f1 = dropout(ratio=0.5, x=f0)
+        l1 = self.l1(f1)
         return l1
 
     def predict(self, x):
@@ -35,9 +35,9 @@ class MyNet(chainer.Chain):
 
     def __call__(self, x, t):
         self.y = self._predict(x)
-        self.loss = mean_squared_error(self.y, t)
-        reporter.report({'loss': self.loss}, self)
-        return self.loss
+        self.loss0 = mean_squared_error(self.y, t)
+        reporter.report({'loss': self.loss0}, self)
+        return self.loss0
 
 def get_optimizer():
     return Adam(alpha=0.001, beta2=0.999, beta1=0.9, eps=1e-06)

@@ -11,6 +11,10 @@ def disp_error(message: str):
     error.exec_()
 
 
+class ExistsInvalidParameter(Exception):
+    pass
+
+
 class AbnormalDataCode(Exception):
     pass
 
@@ -46,6 +50,7 @@ def get_executed_last_node():
         for i, line in enumerate(net_file):
             if i == lineno-1:
                 last_node = line.strip().split(' ')[0]
+                last_node = last_node.replace('self.', '')
                 break
 
     return last_node

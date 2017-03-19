@@ -21,11 +21,11 @@ class MyNet(chainer.Chain):
 
     def _predict(self, x):
         l1 = self.l1(x)
-        f0 = relu(l1)
-        f1 = dropout(ratio=0.5, x=f0)
-        l0 = self.l0(f1)
-        f3 = relu(l0)
-        return f3
+        f2 = relu(l1)
+        f0 = dropout(ratio=0.5, x=f2)
+        l0 = self.l0(f0)
+        f1 = relu(l0)
+        return f1
 
     def predict(self, x):
         return self._predict(x).data
@@ -36,11 +36,11 @@ class MyNet(chainer.Chain):
 
     def __call__(self, x, t):
         self.y = self._predict(x)
-        self.loss = softmax_cross_entropy(self.y, t)
-        reporter.report({'loss': self.loss}, self)
+        self.loss0 = softmax_cross_entropy(self.y, t)
+        reporter.report({'loss': self.loss0}, self)
         self.accuracy = accuracy(self.y, t)
         reporter.report({'accuracy': self.accuracy}, self)
-        return self.loss
+        return self.loss0
 
 def get_optimizer():
     return AdaDelta(rho=0.95, eps=1e-06)
