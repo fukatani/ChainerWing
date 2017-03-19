@@ -4,7 +4,7 @@ from chainer.utils import type_check
 
 from lib import compiler
 from lib import runner
-from lib.node import ControlNode, Node, MetaNode
+from lib.node import Node, MetaNode
 from lib.node import NODECLASSES
 from lib import util
 from lib.subwindows.train_config import TrainParamServer
@@ -196,12 +196,11 @@ class Graph(object):
                     inp,
                     str(inpNode)))
         conn = Connection(outNode, out, inpNode, inp)
-        if not issubclass(type(inpNode), ControlNode) or not inp == 'Control':
-            for oldCon in self.reverseConnections[inpNode]:
-                if oldCon.input_name == inp:
-                    self.reverseConnections[inpNode].remove(oldCon)
-                    self.connections[oldCon.output_node].remove(oldCon)
-                    break
+        for oldCon in self.reverseConnections[inpNode]:
+            if oldCon.input_name == inp:
+                self.reverseConnections[inpNode].remove(oldCon)
+                self.connections[oldCon.output_node].remove(oldCon)
+                break
         inpInfo.setConnected(True)
         self.connections[outNode].add(conn)
         self.reverseConnections[inpNode].add(conn)
@@ -352,8 +351,6 @@ class Graph(object):
                     #     restoredNode.outputs[output[0]].setDefault(output[-1])
         for id, nodeData in graph_state:
             for input_name, outputID in nodeData['inputConnections'].items():
-                if input_name == 'Control':
-                    continue
                 output_node, output_name = outputID.split(':O')
                 try:
                     output_node = idMap[output_node]
@@ -362,19 +359,6 @@ class Graph(object):
                 except KeyError:
                     print('Warning: Could not create connection '
                           'due to missing node.')
-
-            for output_name, inputIDs in nodeData['outputConnections'].items():
-                for inputID in inputIDs:
-                    if 'Control' not in inputID:
-                        continue
-                    input_node, input_name = inputID.split(':I')
-                    try:
-                        input_node = idMap[input_node]
-                        self.connect(str(idMap[id]), output_name,
-                                     str(input_node), input_name)
-                    except KeyError:
-                        print('Warning: Could not create connection '
-                              'due to missing node.')
 
         self.update()
         return idMap
@@ -400,21 +384,10 @@ class Graph(object):
                 restoredNode.outputs[output[0]].setDefault(output[-1])
         for id, nodeData in saveState.items():
             for input_name, outputID in nodeData['inputConnections'].items():
-                if input_name == 'Control':
-                    continue
                 output_node, output_name = outputID.split(':O')
                 output_node = idMap[output_node]
                 self.connect(str(output_node), output_name, str(idMap[id]),
                              input_name)
-
-            for output_name, inputIDs in nodeData['outputConnections'].items():
-                for inputID in inputIDs:
-                    if 'Control' not in inputID:
-                        continue
-                    input_node, input_name = inputID.split(':I')
-                    input_node = idMap[input_node]
-                    self.connect(str(idMap[id]), output_name, str(input_node),
-                                 input_name)
 
         self.update()
         return idMap

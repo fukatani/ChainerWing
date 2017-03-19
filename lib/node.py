@@ -126,8 +126,7 @@ class InputInfo(Info):
                 'Input "{}" of node "{}" is already set.'.format(self.name,
                                                                  self.owner))
         self.value = value
-        if not self.name == 'Control':
-            self.loopLevel = loopLevel
+        self.loopLevel = loopLevel
 
     def setPure(self):
         self.pure = 1
@@ -593,118 +592,6 @@ class Pin(object):
         self.info = info
         info.ID = pinID
         self.node = node
-
-
-@abstractNode
-class ControlNode(Node):
-    """
-    Base class for nodes controlling the program flow e.g. If/Else constructs and loops.
-    Control nodes have an additional control input and a finalize output.
-
-    The control input is a special input that supports multiple input connections. For example a loop node gets
-    notified of a finished iteration over its body by setting the input of the control input. If all iterations are
-    completed, the last set input is passed to the finalize output.
-    An If/Else construct uses the control input to notify the node that the selected branch terminated. When that
-    happens, the value of the control input is set to the finalize output.
-
-    Restricting the option to have multiple connections to ControlNodes only makes sure that the node responsible for
-    branches in the execution tree is also the node responsible for putting the pieces back together.
-    """
-    Input('Start', object)
-    Input('Control', object)
-    Output('Final', object)
-
-    def __init__(self, *args, **kwargs):
-        super(ControlNode, self).__init__(*args, **kwargs)
-        self.waiting = False
-
-
-@abstractNode
-class ForLoop(ControlNode):
-    """
-    Generic loop node that iterates over all elements in a list.
-    """
-
-    # Input('Start', object, list=True)
-    # Output('ListElement', object)
-
-    def __init__(self, *args, **kwargs):
-        super(ForLoop, self).__init__(*args, **kwargs)
-        self.fresh = True
-        self.counter = 0
-        self.done = False
-        self.loopLevel = 0
-
-    def setInput(self, input_name, value, override=False, loopLevel=0):
-        if input_name == 'Control':
-            loopLevel = self.loopLevel
-        super(ForLoop, self).setInput(input_name, value, override, loopLevel)
-
-    def check(self):
-        if self.fresh:
-            for inp in self.inputs.values():
-                if inp.name == 'Control':
-                    continue
-                if inp.name == 'TRIGGER' and not inp.connected:
-                    continue
-                if not inp.isAvailable():
-                    # print('        {}: Prerequisites not met.'.format(str(self)))
-                    return False
-            return True
-        else:
-            if self.inputs['Control'].isAvailable():
-                return True
-
-    def run(self):
-        super(ForLoop, self).run()
-        self.fresh = False
-        try:
-            self._ListElement(self._Start[self.counter])
-        except IndexError:
-            self._Final(self._Start)
-            self.done = True
-        self.counter += 1
-
-    def notify(self):
-        if not self.done:
-            for oName in self.outputs.keys():
-                if oName == 'Final':
-                    continue
-                output = self.outputs[oName]
-                for con in self.graph.getConnectionsOfOutput(output):
-                    output_name = con.output_name
-                    nextNode = con.input_node
-                    nextInput = con.input_name
-                    # nextNode.prepare()
-                    nextNode.setInput(nextInput,
-                                      self.outputs[output_name].value,
-                                      override=True,
-                                      loopLevel=self.loopLevel + 1)
-            self.inputs['Control'].reset(force=True)
-
-        else:
-            output = self.outputs['Final']
-            for con in self.graph.getConnectionsOfOutput(output):
-                output_name = con.output_name
-                nextNode = con.input_node
-                nextInput = con.input_name
-                nextNode.setInput(nextInput, self.outputs[output_name].value,
-                                  loopLevel=self.loopLevel)
-            # self.prepare()
-            self.fresh = True
-            for inp in self.inputs.values():
-                if not inp.name == 'Iterations':
-                    inp.reset()
-            self.counter = 0
-            self.fresh = True
-            self.done = False
-
-    def report(self):
-        r = super(ForLoop, self).report()
-        ready = any((self.inputs['Control'].isAvailable(info=True),
-                     self.inputs['Start'].isAvailable(info=True)))
-        r['ready'] = 'Ready' if ready else 'Waiting'
-        return r
 
 
 @abstractNode

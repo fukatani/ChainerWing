@@ -11,7 +11,6 @@ from PyQt5.QtCore import Qt
 
 from lib import util
 from lib.gui_main.mainwindow import Ui_MainWindow
-from lib.node import ControlNode
 from lib.subwindows.data_config import DataDialog
 from lib.subwindows.settings import SettingsDialog
 from lib.subwindows.train_config import TrainDialog
@@ -484,23 +483,17 @@ class Painter2D(QtWidgets.QWidget):
                 if inputPin.ID == self.clickedPin:
                     pen.setColor(Qt.red)
                     painter.setPen(pen)
-                if inputPin.name == 'Control':
-                    painter.drawEllipse(x - halfPinSize + w / 2.,
-                                        y - halfPinSize, PINSIZE, PINSIZE)
-                    point = QtCore.QPoint(x + w / 2., y) * painter.transform()
-                    self.inputPinPositions.append((point, inputPin.ID))
-                    continue
-                else:
-                    if inputPin.info.list:
-                        painter.drawRect(x - halfPinSize,
-                                         y + drawOffset + PINSIZE, PINSIZE,
-                                         PINSIZE)
-                    elif inputPin.info.var_type is chainer.Variable:
-                        painter.drawEllipse(x - halfPinSize,
-                                            y + drawOffset + PINSIZE, PINSIZE,
-                                            PINSIZE)
-                    point = QtCore.QPoint(x, y + drawOffset + 4 + PINSIZE)
-                    point *= painter.transform()
+
+                if inputPin.info.list:
+                    painter.drawRect(x - halfPinSize,
+                                     y + drawOffset + PINSIZE, PINSIZE,
+                                     PINSIZE)
+                elif inputPin.info.var_type is chainer.Variable:
+                    painter.drawEllipse(x - halfPinSize,
+                                        y + drawOffset + PINSIZE, PINSIZE,
+                                        PINSIZE)
+                point = QtCore.QPoint(x, y + drawOffset + 4 + PINSIZE)
+                point *= painter.transform()
                 self.inputPinPositions.append((point, inputPin.ID))
                 drawOffset += (8 + PINSIZE)
                 drawItem.update(x, y + drawOffset + 8, w, h,
@@ -513,8 +506,6 @@ class Painter2D(QtWidgets.QWidget):
                     if item:
                         lastDraws.append(item)
 
-            # for k, outputPin in enumerate(node.outputPins.values()):
-            finalBuffer = None
             for k, drawItem in enumerate(self.drawItemsOfNode[node]['out']):
                 outputPin = drawItem.data
                 # pen.setColor(QColor(0, 115, 130))
@@ -527,9 +518,6 @@ class Painter2D(QtWidgets.QWidget):
                 if outputPin.ID == self.clickedPin:
                     pen.setColor(Qt.red)
                     painter.setPen(pen)
-                if outputPin.name == 'Final':
-                    finalBuffer = (k, drawItem)
-                    continue
                 else:
                     if outputPin.info.list:
                         painter.drawRect(x + w - halfPinSize,
@@ -546,21 +534,6 @@ class Painter2D(QtWidgets.QWidget):
                 drawItem.update(x, y + drawOffset + 8, w, h,
                                 painter.transform())
                 drawItem.draw(painter)
-            if finalBuffer:
-                k, drawItem = finalBuffer
-                outputPin = drawItem.data
-                pen.setColor(Painter2D.PINCOLORS[outputPin.info.var_type])
-                pen.setWidth(2)
-                painter.setPen(pen)
-                if outputPin.ID == self.clickedPin:
-                    pen.setColor(Qt.red)
-                    painter.setPen(pen)
-                painter.drawEllipse(x - halfPinSize + w / 2.,
-                                    y + 10 - int(PINSIZE / 10) + drawOffset,
-                                    PINSIZE, PINSIZE)
-                point = QtCore.QPoint(x + w / 2.,
-                               y + drawOffset + 14) * painter.transform()
-                self.outputPinPositions.append((point, outputPin.ID))
 
         self.pinPositions = {value[1]: value[0] for value in
                              self.inputPinPositions + self.outputPinPositions}
@@ -611,15 +584,6 @@ class Painter2D(QtWidgets.QWidget):
                 except KeyError:
                     color = QtGui.QColor(*var_type.color)
                 rotate = None
-                if issubclass(type(info.input_node),
-                              ControlNode) and info.input_name == 'Control':
-                    rotate = 'input'
-                    if issubclass(type(info.output_node),
-                                  ControlNode) and info.output_name == 'Final':
-                        rotate = 'both'
-                elif issubclass(type(info.output_node),
-                                ControlNode) and info.output_name == 'Final':
-                    rotate = 'output'
                 self.drawBezier(start, end, color, painter, rotate)
 
     def drawLooseConnection(self, position):
@@ -665,10 +629,7 @@ class Painter2D(QtWidgets.QWidget):
                     .format(type(node).__name__), 2000)
         node.__painter__ = {'position': position}
         node.__pos__ = position
-        if issubclass(type(node), ControlNode):
-            node.__size__ = (1, len(node.inputs) + len(node.outputs) - 2)
-        else:
-            node.__size__ = (1, len(node.inputs) + len(node.outputs))
+        node.__size__ = (1, len(node.inputs) + len(node.outputs))
         self.nodes.append(node)
         self.drawItemsOfNode[node] = {'inp': [], 'out': []}
         for out in node.outputPins.values():
@@ -684,8 +645,6 @@ class Painter2D(QtWidgets.QWidget):
             #      self.triggers.add(node)
             if inp.info.select:
                 s = Selector(node, inp, self)
-            elif inp.info.name == 'Control':
-                s = InputLabel(node, inp, self)
             else:
                 s = LineEdit(node, inp, self)
             self.drawItems.append(s)
