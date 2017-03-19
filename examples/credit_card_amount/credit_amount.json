@@ -1,7 +1,7 @@
 {
     "graph": [
         [
-            0,
+            "l0",
             {
                 "class": "Linear",
                 "inputConnections": {},
@@ -31,10 +31,9 @@
                         true
                     ]
                 ],
-                "node_id": "l0",
                 "outputConnections": {
                     "out_array": [
-                        "3:Iin_array"
+                        "f1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -53,11 +52,52 @@
             }
         ],
         [
-            1,
+            "f1",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "f0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -243,
+                    -178
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l1",
             {
                 "class": "Linear",
                 "inputConnections": {
-                    "in_array": "2:Oout_array"
+                    "in_array": "f0:Oout_array"
                 },
                 "inputs": [
                     [
@@ -85,10 +125,9 @@
                         true
                     ]
                 ],
-                "node_id": "l1",
                 "outputConnections": {
                     "out_array": [
-                        "4:Iin_array"
+                        "f2:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -107,11 +146,41 @@
             }
         ],
         [
-            2,
+            "f2",
+            {
+                "class": "MeanSquaredError",
+                "inputConnections": {
+                    "in_array": "l1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    221,
+                    -121
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f0",
             {
                 "class": "Dropout",
                 "inputConnections": {
-                    "in_array": "3:Oout_array"
+                    "in_array": "f1:Oout_array"
                 },
                 "inputs": [
                     [
@@ -133,10 +202,9 @@
                         0.5
                     ]
                 ],
-                "node_id": "f0",
                 "outputConnections": {
                     "out_array": [
-                        "1:Iin_array"
+                        "l1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -150,79 +218,6 @@
                 "position": [
                     -107,
                     -177
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            3,
-            {
-                "class": "Relu",
-                "inputConnections": {
-                    "in_array": "0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "node_id": "f1",
-                "outputConnections": {
-                    "out_array": [
-                        "2:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    -243,
-                    -178
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            4,
-            {
-                "class": "MeanSquaredError",
-                "inputConnections": {
-                    "in_array": "1:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "node_id": "f2",
-                "outputConnections": {},
-                "outputs": [],
-                "position": [
-                    221,
-                    -121
                 ],
                 "subgraph": "main"
             }
@@ -240,11 +235,11 @@
         "PredInputData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
         "PredModel": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/result/MyModel.npz",
         "Shuffle": false,
+        "Task": "Simple Regression",
+        "Task_idx": 1,
         "TestData": "./",
         "TestDataRatio": 0.5,
         "TrainData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
-        "Task": "Simple Regression",
-        "Task_idx": 1,
         "UseSameData": true,
         "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount",
         "opt_alpha": 0.001,

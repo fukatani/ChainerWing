@@ -40,7 +40,7 @@ class MyNet(chainer.Chain):
         return self.loss
 
 def get_optimizer():
-    return Adam(beta2=0.999, beta1=0.9, eps=1e-06, alpha=0.001)
+    return Adam(alpha=0.001, beta2=0.999, beta1=0.9, eps=1e-06)
 
 
 def training_main(train, test, pbar=None, plot_postprocess=None):

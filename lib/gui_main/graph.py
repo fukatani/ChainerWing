@@ -47,12 +47,7 @@ class Graph(object):
             self.painter = dummy
 
     def __getattr__(self, item):
-        if item == 'newID':
-            newID = self.nextFreeNodeID
-            self.nextFreeNodeID += 1
-            return newID
-        else:
-            return super(Graph, self).__getattr__(item)
+        return super(Graph, self).__getattr__(item)
 
     def requestUpdate(self):
         """
@@ -88,7 +83,7 @@ class Graph(object):
             return True
 
     def spawnNode(self, nodeClass, connections=None, position=(0, 0),
-                  silent=False, useID=False):
+                  silent=False):
         """
         Spawns a new node of a given class at a given position with optional connections to other nodes.
         :param nodeClass: subclass object of 'Node'.
@@ -99,9 +94,7 @@ class Graph(object):
         :return: newly created Node instance.
         """
         # nodeClass = self.decorator(nodeClass, position)
-        newNode = nodeClass(self.newID, self)
-        if useID:
-            newNode.ID = useID
+        newNode = nodeClass(self)
         self.reverseConnections[newNode] = set()
         self.connections[newNode] = set()
         if connections:
@@ -189,9 +182,9 @@ class Graph(object):
         :return:
         """
         if type(outNode) == str:
-            outNode = self.nodes[int(outNode)]
+            outNode = self.nodes[outNode]
         if type(inpNode) == str:
-            inpNode = self.nodes[int(inpNode)]
+            inpNode = self.nodes[inpNode]
         outInfo = outNode.getOutputInfo(out)
         inpInfo = inpNode.getInputInfo(inp)
         # if not outInfo.var_type == inpInfo.var_type:
@@ -239,7 +232,7 @@ class Graph(object):
         :return: Connection instance.
         """
         for con in self.getConnectionsTo(
-                self.nodes[int(inp.ID.partition(':')[0])]):
+                self.nodes[inp.ID.partition(':')[0]]):
             if con.input_name == inp.name:
                 return con
 
@@ -249,7 +242,7 @@ class Graph(object):
         :param output: OutputInfo instance.
         :return: list of Connection instances.
         """
-        node = self.nodes[int(output.ID.partition(':')[0])]
+        node = self.nodes[output.ID.partition(':')[0]]
         return [con for con in self.getConnectionsFrom(node) if
                 con.output_name == output.name]
 
@@ -321,7 +314,7 @@ class Graph(object):
         if self.runner is not None:
             self.runner.kill()
 
-    def load_from_dict(self, graph_state, reuseIDs=False):
+    def load_from_dict(self, graph_state):
         """
         Reconstruct a Graph instance from a JSON string representation
         created by the Graph.to_json() method.
@@ -331,11 +324,9 @@ class Graph(object):
         """
         idMap = {}
         for id, nodeData in graph_state:
-            useID = id if reuseIDs else False
             try:
                 restoredNode = self.spawnNode(NODECLASSES[nodeData['class']],
-                                              position=nodeData['position'],
-                                              silent=True, useID=useID)
+                                              position=nodeData['position'])
             except KeyError:
                 try:
                     dynamic = nodeData['dynamic']
@@ -352,7 +343,7 @@ class Graph(object):
                     restoredNode.subgraph = nodeData['subgraph']
                 except KeyError:
                     restoredNode.subgraph = 'main'
-            idMap[int(id)] = restoredNode.ID
+            idMap[id] = restoredNode.ID
             inputs = nodeData['inputs']
             for input in inputs:
                 if input[1] in ('bool', 'int', 'float'):
@@ -361,13 +352,12 @@ class Graph(object):
                     # for output in outputs:
                     #     restoredNode.outputs[output[0]].setDefault(output[-1])
         for id, nodeData in graph_state:
-            id = int(id)
             for input_name, outputID in nodeData['inputConnections'].items():
                 if input_name == 'Control':
                     continue
                 output_node, output_name = outputID.split(':O')
                 try:
-                    output_node = idMap[int(output_node)]
+                    output_node = idMap[output_node]
                     self.connect(str(output_node), output_name, str(idMap[id]),
                                  input_name)
                 except KeyError:
@@ -380,7 +370,7 @@ class Graph(object):
                         continue
                     input_node, input_name = inputID.split(':I')
                     try:
-                        input_node = idMap[int(input_node)]
+                        input_node = idMap[input_node]
                         self.connect(str(idMap[id]), output_name,
                                      str(input_node), input_name)
                     except KeyError:
@@ -402,7 +392,7 @@ class Graph(object):
             restoredNode = self.spawnNode(NODECLASSES[nodeData['class']],
                                           position=nodeData['position'],
                                           silent=True)
-            idMap[int(id)] = restoredNode.ID
+            idMap[id] = restoredNode.ID
             inputs = nodeData['inputs']
             outputs = nodeData['outputs']
             for input in inputs:
@@ -410,12 +400,11 @@ class Graph(object):
             for output in outputs:
                 restoredNode.outputs[output[0]].setDefault(output[-1])
         for id, nodeData in saveState.items():
-            id = int(id)
             for input_name, outputID in nodeData['inputConnections'].items():
                 if input_name == 'Control':
                     continue
                 output_node, output_name = outputID.split(':O')
-                output_node = idMap[int(output_node)]
+                output_node = idMap[output_node]
                 self.connect(str(output_node), output_name, str(idMap[id]),
                              input_name)
 
@@ -424,7 +413,7 @@ class Graph(object):
                     if 'Control' not in inputID:
                         continue
                     input_node, input_name = inputID.split(':I')
-                    input_node = idMap[int(input_node)]
+                    input_node = idMap[input_node]
                     self.connect(str(idMap[id]), output_name, str(input_node),
                                  input_name)
 
@@ -450,7 +439,7 @@ class Graph(object):
         :return: Node instance.
         """
         nodeID, pinName = pinID.split(':')
-        return pinName[1:], self.nodes[int(nodeID)]
+        return pinName[1:], self.nodes[nodeID]
 
     def getNewestNode(self):
         """

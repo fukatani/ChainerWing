@@ -259,19 +259,28 @@ class Node(object, metaclass=MetaNode):
     Tag('Node')
     registered_id = []
 
-    def __init__(self, nodeID, graph):
+    def __init__(self, graph):
         self.loopLevel = 0
         self.__pos__ = (0, 0)
         self.graph = graph
         self.locked = False
         self.subgraph = 'main'
-        self.ID = nodeID
         self.buffered = False
         self.inputs = OrderedDict()
         self.outputs = OrderedDict()
         self.outputBuffer = {}
         self.inputPins = OrderedDict()
         self.outputPins = OrderedDict()
+
+        cnt = 0
+        while True:
+            id_proposal = self.id_from_cnt(cnt)
+            if id_proposal not in Node.registered_id:
+                self.ID = id_proposal
+                Node.registered_id.append(id_proposal)
+                break
+            cnt += 1
+
         for i, inp in enumerate(self.__inputs__.values()):
             inp = copy(inp)
             inp.setOwner(self)
@@ -291,15 +300,6 @@ class Node(object, metaclass=MetaNode):
             raise AttributeError('Nodes without any input are not valid.')
         if len(self.inputs.keys()) == 2:
             self.inputs[list(self.inputs.keys())[1]].setPure()
-
-        cnt = 0
-        while True:
-            id_proposal = self.id_from_cnt(cnt)
-            if id_proposal not in Node.registered_id:
-                self.node_id = id_proposal
-                Node.registered_id.append(id_proposal)
-                break
-            cnt += 1
 
         self.setup()
 
@@ -457,7 +457,7 @@ class Node(object, metaclass=MetaNode):
 
     def __getattr__(self, item):
         """
-        Catch self._<Input/Ouptput> accesses and calls the appropriate methods.
+        Catch self._<Input/Output> accesses and calls the appropriate methods.
         :param item: str; Attribute name.
         :return: object; Attribute
         :rtype: object
@@ -525,7 +525,6 @@ class Node(object, metaclass=MetaNode):
                      outputConn in conns]
             outputConns[key] = conns
         return {'class': self.__class__.__name__,
-                'node_id': self.node_id,
                 'position': self.__pos__,
                 'inputs': [
                     (input_name, inp.var_type.__name__, inp(True), inp.default)
@@ -580,7 +579,7 @@ class Node(object, metaclass=MetaNode):
         raise NotImplementedError
 
     def clear(self):
-        Node.registered_id.remove(self.node_id)
+        Node.registered_id.remove(self.ID)
 
 
 class Pin(object):
@@ -589,7 +588,6 @@ class Pin(object):
     """
 
     def __init__(self, pinID, info, node):
-        self.ID = pinID
         self.ID = pinID
         self.name = info.name
         self.info = info
@@ -716,7 +714,7 @@ class Link(Node):
         return 'l' + str(cnt)
 
     def call(self):
-        return'{0} = self.{0}('.format(self.node_id)
+        return'{0} = self.{0}('.format(self.ID)
 
     def color(self):
         return QColor(45, 95, 45)

@@ -1,11 +1,11 @@
 {
     "graph": [
         [
-            5,
+            "l1",
             {
-                "class": "Relu",
+                "class": "Linear",
                 "inputConnections": {
-                    "in_array": "6:Oout_array"
+                    "in_array": "f3:Oout_array"
                 },
                 "inputs": [
                     [
@@ -19,12 +19,23 @@
                         "Variable",
                         null,
                         ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        10,
+                        10
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        true,
+                        true
                     ]
                 ],
-                "node_id": "f0",
                 "outputConnections": {
                     "out_array": [
-                        "10:Iin_array"
+                        "f1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -36,14 +47,14 @@
                     ]
                 ],
                 "position": [
-                    -353,
-                    -53
+                    -38,
+                    -106
                 ],
                 "subgraph": "main"
             }
         ],
         [
-            6,
+            "l0",
             {
                 "class": "Linear",
                 "inputConnections": {},
@@ -73,10 +84,9 @@
                         false
                     ]
                 ],
-                "node_id": "l0",
                 "outputConnections": {
                     "out_array": [
-                        "5:Iin_array"
+                        "f0:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -95,65 +105,11 @@
             }
         ],
         [
-            7,
-            {
-                "class": "Linear",
-                "inputConnections": {
-                    "in_array": "10:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ],
-                    [
-                        "out_size",
-                        "int",
-                        10,
-                        10
-                    ],
-                    [
-                        "nobias",
-                        "bool",
-                        true,
-                        true
-                    ]
-                ],
-                "node_id": "l1",
-                "outputConnections": {
-                    "out_array": [
-                        "8:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    -38,
-                    -106
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            8,
+            "f0",
             {
                 "class": "Relu",
                 "inputConnections": {
-                    "in_array": "7:Oout_array"
+                    "in_array": "l0:Oout_array"
                 },
                 "inputs": [
                     [
@@ -169,10 +125,9 @@
                         ""
                     ]
                 ],
-                "node_id": "f1",
                 "outputConnections": {
                     "out_array": [
-                        "9:Iin_array"
+                        "f3:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -184,49 +139,18 @@
                     ]
                 ],
                 "position": [
-                    116,
-                    -126
+                    -353,
+                    -53
                 ],
                 "subgraph": "main"
             }
         ],
         [
-            9,
-            {
-                "class": "SoftmaxCrossEntropy",
-                "inputConnections": {
-                    "in_array": "8:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "node_id": "f2",
-                "outputConnections": {},
-                "outputs": [],
-                "position": [
-                    420,
-                    -131
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            10,
+            "f3",
             {
                 "class": "Dropout",
                 "inputConnections": {
-                    "in_array": "5:Oout_array"
+                    "in_array": "f0:Oout_array"
                 },
                 "inputs": [
                     [
@@ -248,10 +172,9 @@
                         0.5
                     ]
                 ],
-                "node_id": "f3",
                 "outputConnections": {
                     "out_array": [
-                        "7:Iin_array"
+                        "l1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -268,6 +191,77 @@
                 ],
                 "subgraph": "main"
             }
+        ],
+        [
+            "f2",
+            {
+                "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "f1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    420,
+                    -131
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f1",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "f2:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    116,
+                    -126
+                ],
+                "subgraph": "main"
+            }
         ]
     ],
     "train": {
@@ -281,11 +275,11 @@
         "PredInputData": "/home/ryo/workspace/github/CW_gui/examples/mnist/get_mnist_prediction.py",
         "PredModel": "/home/ryo/workspace/github/CW_gui/examples/mnist/result/MyModel.npz",
         "Shuffle": "",
+        "Task": "Simple Classification",
+        "Task_idx": 0,
         "TestData": "./",
         "TestDataRatio": 0.5,
         "TrainData": "/home/ryo/workspace/github/CW_gui/examples/mnist/get_mnist_train.py",
-        "Task": "Simple Classification",
-        "Task_idx": 0,
         "UseSameData": "",
         "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/mnist",
         "opt_eps": 1e-06,
