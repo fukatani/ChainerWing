@@ -15,7 +15,6 @@ class TrainParamServer(object):
             cls.__instance = object.__new__(cls)
         return cls.__instance
 
-
     def __getitem__(cls, key):
         if key in cls.__dict__:
             return cls.__dict__[key]

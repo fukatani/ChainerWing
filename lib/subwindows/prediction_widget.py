@@ -1,5 +1,6 @@
 import os
 
+from chainer.utils import type_check
 import numpy
 
 from PyQt5 import QtCore
@@ -82,6 +83,9 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         except ValueError:
             util.disp_error('Irregal data was found @' +
                             TrainParamServer()['PredInputData'])
+        except type_check.InvalidType as error:
+            last_node = util.get_executed_last_node()
+            util.disp_error(str(error.args) + ' @node: ' + last_node)
 
 
 class DataConfig(object):

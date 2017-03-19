@@ -299,7 +299,8 @@ class Graph(object):
             util.disp_error('Unexpected file extension was found.'
                             'data should be ".csv", ".npz" or ".py"')
         except type_check.InvalidType as error:
-            util.disp_error(str(error.args))
+            last_node = util.get_executed_last_node()
+            util.disp_error(str(error.args) + ' @node: ' + last_node)
 
     def to_dict(self, subgraph=None):
         """
