@@ -16,7 +16,7 @@ class Compiler(object):
         if not init_impl:
             return False
         call_impl, pred_impl = self.compile_call(nodes)
-        if not call_impl:
+        if not (call_impl and pred_impl):
             return False
         classification = 'Class' in TrainParamServer()['Task']
         net_file = open(TrainParamServer().get_net_name(), 'w')
