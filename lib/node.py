@@ -619,5 +619,8 @@ class Function(Node):
 
 @abstractNode
 class Loss(Function):
+    def id_from_cnt(self, cnt):
+        return 'loss' + str(cnt)
+
     def color(self):
         return QColor(45, 45, 95)

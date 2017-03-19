@@ -33,7 +33,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "f1:Iin_array"
+                        "f0:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -52,7 +52,7 @@
             }
         ],
         [
-            "f1",
+            "f0",
             {
                 "class": "Relu",
                 "inputConnections": {
@@ -74,7 +74,7 @@
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "f0:Iin_array"
+                        "f1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -93,60 +93,7 @@
             }
         ],
         [
-            "l1",
-            {
-                "class": "Linear",
-                "inputConnections": {
-                    "in_array": "f0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ],
-                    [
-                        "out_size",
-                        "int",
-                        1,
-                        1
-                    ],
-                    [
-                        "nobias",
-                        "bool",
-                        true,
-                        true
-                    ]
-                ],
-                "outputConnections": {
-                    "out_array": [
-                        "f2:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    59,
-                    -171
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "f2",
+            "loss0",
             {
                 "class": "MeanSquaredError",
                 "inputConnections": {
@@ -176,11 +123,64 @@
             }
         ],
         [
-            "f0",
+            "l1",
+            {
+                "class": "Linear",
+                "inputConnections": {
+                    "in_array": "f1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        1,
+                        1
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        true,
+                        true
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "loss0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    59,
+                    -171
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f1",
             {
                 "class": "Dropout",
                 "inputConnections": {
-                    "in_array": "f1:Oout_array"
+                    "in_array": "f0:Oout_array"
                 },
                 "inputs": [
                     [
