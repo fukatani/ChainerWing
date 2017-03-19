@@ -29,7 +29,7 @@ class Template(object, metaclass=MetaTemplate):
 
 class NetTemplate(Template):
 
-    def __call__(self, net_name, init_impl, call_impl, pred_impl,
+    def __call__(self, net_name, init_impl, call_impl, pred_impl, lossID,
                  classification):
         rtn = '''import chainer
 from chainer.functions import *
@@ -63,13 +63,13 @@ class {0}(chainer.Chain):
 
     def __call__(self, x, t):
         self.y = self._predict(x)
-        self.loss = {2}
-'''.format(net_name, init_impl, call_impl, pred_impl)
-        rtn += "        reporter.report({'loss': self.loss}, self)\n"
+        self.{4} = {2}
+        reporter.report({{'loss': self.{4}}}, self)
+'''.format(net_name, init_impl, call_impl, pred_impl, lossID)
         if classification:
             rtn += "        self.accuracy = accuracy(self.y, t)\n"
             rtn += "        reporter.report({'accuracy': self.accuracy}, self)\n"
-        rtn += "        return self.loss"
+        rtn += "        return self.{}".format(lossID)
         return rtn
 
 

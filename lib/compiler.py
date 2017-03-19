@@ -15,7 +15,7 @@ class Compiler(object):
         init_impl = self.compile_init(nodes)
         if not init_impl:
             return False
-        call_impl, pred_impl = self.compile_call(nodes)
+        call_impl, pred_impl, lossID = self.compile_call(nodes)
         if not (call_impl and pred_impl):
             return False
         classification = 'Class' in TrainParamServer()['Task']
@@ -24,6 +24,7 @@ class Compiler(object):
                                                   init_impl,
                                                   call_impl,
                                                   pred_impl,
+                                                  lossID,
                                                   classification))
         net_file.write(TEMPLATES['OptimizerTemplate']()(TrainParamServer()))
         net_file.write(TEMPLATES['TrainerTemplate']()(TrainParamServer()))
@@ -71,7 +72,7 @@ class Compiler(object):
             call_all_pred.append(compiled_pred)
             call_all_loss.append(loss.call())
 
-        return ', '.join(call_all_loss), ', '.join(call_all_pred)
+        return ', '.join(call_all_loss), ', '.join(call_all_pred), loss.ID
 
     def compile_node(self, cursor, nodes, decode):
         decode.append(cursor)
