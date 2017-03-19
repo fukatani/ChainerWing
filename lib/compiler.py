@@ -11,7 +11,7 @@ class Compiler(object):
         if not nodes:
             util.disp_error('Please place nodes and connect them'
                             ' before compilation.')
-            return
+            return False
         init_impl = self.compile_init(nodes)
         if not init_impl:
             return False
