@@ -442,6 +442,8 @@ class Painter2D(QtWidgets.QWidget):
             x = node.__pos__[0]  # + self.globalOffset.x()
             y = node.__pos__[1]  # + self.globalOffset.y()
             w = node.__size__[0] * self.settings.value('NodeWidth')
+            if len(node.__class__.__name__) > 10:
+                w += len(node.__class__.__name__) * 4
             h = node.__size__[1] * (8 + PINSIZE) + 40
 
             path.addRoundedRect(x, y, w, h, 50, 5)
@@ -458,6 +460,8 @@ class Painter2D(QtWidgets.QWidget):
             painter.setPen(pen)
             painter.drawText(x, y + 3, w, h, Qt.AlignHCenter,
                              node.__class__.__name__)
+            painter.drawText(x, y + 20, w, h, Qt.AlignHCenter,
+                             node.ID)
             painter.setBrush(QtGui.QColor(40, 40, 40))
             drawOffset = 25
             # for i, inputPin in enumerate(node.inputPins.values()):
