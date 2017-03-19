@@ -82,19 +82,18 @@ class Graph(object):
             self._requestUpdate = False
             return True
 
-    def spawnNode(self, nodeClass, connections=None, position=(0, 0),
+    def spawnNode(self, node_class, connections=None, position=(0, 0),
                   silent=False):
         """
         Spawns a new node of a given class at a given position with optional connections to other nodes.
-        :param nodeClass: subclass object of 'Node'.
+        :param node_class: subclass object of 'Node'.
         :param connections: Dictionary
         :param position: Tuple of two integer representing the nodes position on the screen relative the the graph's
         origin.
         :param silent: Boolean. Suppresses all notifications that a node was spawned if True.
         :return: newly created Node instance.
         """
-        # nodeClass = self.decorator(nodeClass, position)
-        newNode = nodeClass(self)
+        newNode = node_class(self)
         self.reverseConnections[newNode] = set()
         self.connections[newNode] = set()
         if connections:
