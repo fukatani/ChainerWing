@@ -270,6 +270,7 @@ class Node(object, metaclass=MetaNode):
         self.outputBuffer = {}
         self.inputPins = OrderedDict()
         self.outputPins = OrderedDict()
+        self.runtime_error_happened = False
 
         cnt = 0
         while True:
@@ -613,7 +614,7 @@ class Function(Node):
         return 'f' + str(cnt)
 
     def color(self):
-        return QColor(95, 45, 45)
+        return QColor(85, 85, 35)
 
 
 @abstractNode

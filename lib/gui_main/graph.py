@@ -269,6 +269,7 @@ class Graph(object):
         Run compiled chainer code.
         :return:
         """
+        self.clear_error()
         try:
             self.runner = runner.TrainRunner()
         except SyntaxError:
@@ -290,8 +291,13 @@ class Graph(object):
             util.disp_error('Unexpected file extension was found.'
                             'data should be ".csv", ".npz" or ".py"')
         except type_check.InvalidType as error:
-            last_node = util.get_executed_last_node()
-            util.disp_error(str(error.args) + ' @node: ' + last_node)
+            last_nodeID = util.get_executed_last_node()
+            util.disp_error(str(error.args) + ' @node: ' + last_nodeID)
+            self.nodes[last_nodeID].runtime_error_happened = True
+
+    def clear_error(self):
+        for node in self.nodes.values():
+            node.runtime_error_happened = False
 
     def to_dict(self, subgraph=None):
         """

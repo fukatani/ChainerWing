@@ -429,7 +429,9 @@ class Painter2D(QtWidgets.QWidget):
                 continue
             pen = QtGui.QPen()
             pen.setWidth(2)
-            if hasattr(node, 'color'):
+            if node.runtime_error_happened:
+                painter.setBrush(QtGui.QColor(125, 45, 45))
+            elif hasattr(node, 'color'):
                 painter.setBrush(node.color())
             else:
                 painter.setBrush(QtGui.QColor(55, 55, 55))
