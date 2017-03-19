@@ -2,7 +2,7 @@ import csv
 from importlib import machinery
 
 from chainer.datasets import tuple_dataset
-import numpy as np
+import numpy
 
 from lib.subwindows.train_config import TrainParamServer
 from lib import util
@@ -16,9 +16,9 @@ class DataManager(object):
         if file_name.endswith('.csv'):
             return self.csv_to_ndarray(file_name, is_supervised, shuffle)
         elif file_name.endswith('.npz'):
-            data = np.load(file_name)
+            data = numpy.load(file_name)
             if shuffle:
-                np.random.shuffle(data)
+                numpy.random.shuffle(data)
             if is_supervised:
                 return data['x'], data['y']
             else:
@@ -34,12 +34,12 @@ class DataManager(object):
                 if isinstance(line[0], str):
                     exists_header = 1
                 break
-        array = np.loadtxt(csv_file, dtype=np.float32,
-                           delimiter=',', skiprows=exists_header)
+        array = numpy.loadtxt(csv_file, dtype=numpy.float32,
+                              delimiter=',', skiprows=exists_header)
         if shuffle:
-            np.random.shuffle(array)
+            numpy.random.shuffle(array)
         if is_supervised:
-            return array[:, :-1], np.atleast_2d(array[:, -1]).T
+            return array[:, :-1], numpy.atleast_2d(array[:, -1]).T
         return array, None
 
     def pack_data(self, data, label):
@@ -60,7 +60,7 @@ class DataManager(object):
             data, label = self.get_data_from_file(data_file, True,
                                                   train_server['Shuffle'])
             if train_server['Shuffle']:
-                np.random.shuffle(data)
+                numpy.random.shuffle(data)
             split_idx = int(data.shape[0] * train_server['TestDataRatio'])
             train_data = data[:split_idx]
             train_label = label[:split_idx]
@@ -94,6 +94,12 @@ class DataManager(object):
             data_file = train_server['PredInputData']
             data, label = self.get_data_from_file(data_file, including_label)
             return data, label
+
+    def minmax_scale(self, x, lower_limit=0., upper_limit=1.):
+        data_min = numpy.min(x, axis=0)
+        x = x - data_min + lower_limit
+        data_max = numpy.max(x, axis=0)
+        return x / data_max * upper_limit
 
 
 if __name__ == '__main__':
