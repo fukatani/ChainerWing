@@ -568,6 +568,9 @@ class Painter2D(QtWidgets.QWidget):
         for item in lastDraws:
             item.draw(painter, last=True)
 
+        self.draw_selection(painter)
+
+    def draw_selection(self, painter):
         if self.selectFrame and self.selectFrame_End:
             painter.setBrush(QtGui.QColor(255, 255, 255, 25))
             painter.setPen(Qt.white)
