@@ -1,10 +1,12 @@
 {
     "graph": [
         [
-            "l0",
+            "loss0",
             {
-                "class": "Linear",
-                "inputConnections": {},
+                "class": "MeanSquaredError",
+                "inputConnections": {
+                    "in_array": "l1:Oout_array"
+                },
                 "inputs": [
                     [
                         "TRIGGER",
@@ -15,25 +17,49 @@
                     [
                         "in_array",
                         "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    221,
+                    -121
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f1",
+            {
+                "class": "Dropout",
+                "inputConnections": {
+                    "in_array": "f0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
                         "",
                         ""
                     ],
                     [
-                        "out_size",
-                        "int",
-                        40,
-                        40
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
                     ],
                     [
-                        "nobias",
-                        "bool",
-                        true,
-                        true
+                        "ratio",
+                        "float",
+                        0.5,
+                        0.5
                     ]
                 ],
                 "outputConnections": {
                     "out_array": [
-                        "f0:Iin_array"
+                        "l1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -45,8 +71,8 @@
                     ]
                 ],
                 "position": [
-                    -392,
-                    -161
+                    -107,
+                    -177
                 ],
                 "subgraph": "main"
             }
@@ -93,12 +119,10 @@
             }
         ],
         [
-            "loss0",
+            "l0",
             {
-                "class": "MeanSquaredError",
-                "inputConnections": {
-                    "in_array": "l1:Oout_array"
-                },
+                "class": "Linear",
+                "inputConnections": {},
                 "inputs": [
                     [
                         "TRIGGER",
@@ -109,15 +133,38 @@
                     [
                         "in_array",
                         "Variable",
+                        "",
+                        ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        40,
+                        40
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        true,
+                        true
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "f0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
                         null,
                         ""
                     ]
                 ],
-                "outputConnections": {},
-                "outputs": [],
                 "position": [
-                    221,
-                    -121
+                    -392,
+                    -161
                 ],
                 "subgraph": "main"
             }
@@ -174,53 +221,6 @@
                 ],
                 "subgraph": "main"
             }
-        ],
-        [
-            "f1",
-            {
-                "class": "Dropout",
-                "inputConnections": {
-                    "in_array": "f0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ],
-                    [
-                        "ratio",
-                        "float",
-                        0.5,
-                        0.5
-                    ]
-                ],
-                "outputConnections": {
-                    "out_array": [
-                        "l1:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    -107,
-                    -177
-                ],
-                "subgraph": "main"
-            }
         ]
     ],
     "train": {
@@ -228,6 +228,7 @@
         "Epoch": 20,
         "GPU": 0,
         "IncludingLabel": 2,
+        "MinMaxScale": false,
         "ModelName": "MyModel",
         "NetName": "MyNet",
         "Optimizer": "Adam",
