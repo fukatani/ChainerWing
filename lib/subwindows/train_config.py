@@ -25,8 +25,10 @@ class TrainParamServer(object):
                 return False
             elif key == 'WorkDir':
                 return os.path.abspath(__file__) + '/../../examples/'
+            elif key == 'UseMinMaxScale':
+                return True
             else:
-                raise Exception('Default option for {} is unset.')
+                raise KeyError(key)
 
     def __setitem__(cls, key, value):
         cls.__dict__[key] = value

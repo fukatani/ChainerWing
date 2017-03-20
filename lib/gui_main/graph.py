@@ -301,6 +301,8 @@ class Graph(object):
             last_nodeID = util.get_executed_last_node()
             util.disp_error(str(error.args) + ' @node: ' + last_nodeID)
             self.nodes[last_nodeID].runtime_error_happened = True
+        except FileNotFoundError as error:
+            util.disp_error(error.filename + ': ' + str(error.args[1]))
 
     def clear_error(self):
         for node in self.nodes.values():

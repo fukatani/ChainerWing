@@ -169,9 +169,9 @@
     <item row="0" column="1">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QToolButton" name="exe_button">
+       <widget class="QCommandLinkButton" name="exe_button">
         <property name="text">
-         <string>...</string>
+         <string>Execute prediction</string>
         </property>
        </widget>
       </item>

@@ -105,7 +105,7 @@ class Ui_PredictionWindow(object):
         self.verticalLayout.setContentsMargins(11, 11, 11, 11)
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.exe_button = QtWidgets.QToolButton(self.prediction_widget)
+        self.exe_button = QtWidgets.QCommandLinkButton(self.prediction_widget)
         self.exe_button.setObjectName("exe_button")
         self.verticalLayout.addWidget(self.exe_button)
         self.pred_progress = QtWidgets.QLabel(self.prediction_widget)
@@ -140,6 +140,6 @@ class Ui_PredictionWindow(object):
         self.output_sel_button.setText(_translate("PredictionWindow", "Browse"))
         self.output_name.setText(_translate("PredictionWindow", "Output Data File is not selected."))
         self.classification.setText(_translate("PredictionWindow", "Predict class"))
-        self.exe_button.setText(_translate("PredictionWindow", "..."))
+        self.exe_button.setText(_translate("PredictionWindow", "Execute prediction"))
         self.toolBar.setWindowTitle(_translate("PredictionWindow", "toolBar"))
 

@@ -86,6 +86,8 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         except type_check.InvalidType as error:
             last_node = util.get_executed_last_node()
             util.disp_error(str(error.args) + ' @node: ' + last_node)
+        except FileNotFoundError as error:
+            util.disp_error(error.filename + ': ' + str(error.args[1]))
 
 
 class DataConfig(object):
