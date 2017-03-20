@@ -154,6 +154,10 @@ class DataCheckBox(QtWidgets.QCheckBox):
         super(DataCheckBox, self).__init__()
         self.key = key
         v = settings.value(key, type=bool)
+        if key in TrainParamServer().__dict__:
+            v = TrainParamServer()[key]
+        else:
+            TrainParamServer()[key] = v
         self.setChecked(v)
         TrainParamServer()[key] = self.isChecked()
 
@@ -170,6 +174,10 @@ class DataLineEdit(QtWidgets.QLineEdit):
         self.key = key
         v = settings.value(key, type=float)
         v = v if v else 0.5
+        if key in TrainParamServer().__dict__:
+            v = TrainParamServer()[key]
+        else:
+            TrainParamServer()[key] = v
         self.setText(str(v))
 
     def commit(self):
