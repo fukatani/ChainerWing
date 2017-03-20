@@ -53,6 +53,8 @@ class DataManager(object):
             try:
                 module = module.load_module()
                 train_data, test_data = module.main()
+                train_data, train_label = train_data._datasets
+                test_data, test_label = test_data._datasets
             except Exception as e:
                 raise util.AbnormalDataCode(e.args)
         elif train_server['UseSameData']:
@@ -66,9 +68,6 @@ class DataManager(object):
             train_label = label[:split_idx]
             test_data = data[split_idx:]
             test_label = label[:split_idx]
-
-            test_data = self.pack_data(test_data, test_label)
-            train_data = self.pack_data(train_data, train_label)
         else:
             train_file = train_server['TrainData']
             train_data, train_label = self.get_data_from_file(train_file, True,
@@ -76,12 +75,9 @@ class DataManager(object):
             test_file = train_server['TestData']
             test_data, test_label = self.get_data_from_file(test_file, True)
 
-            test_data = self.pack_data(test_data, test_label)
-            train_data = self.pack_data(train_data, train_label)
-
-        if TrainParamServer()['UseMinMaxScale']:
-            train_data._datasets[0] = self.minmax_scale(train_data._datasets[0])
-            test_data._datasets[0] = self.minmax_scale(test_data._datasets[0])
+        # minmax
+        test_data = self.pack_data(test_data, test_label)
+        train_data = self.pack_data(train_data, train_label)
         return train_data, test_data
 
     def get_data_pred(self, including_label):
@@ -101,8 +97,8 @@ class DataManager(object):
             data_file = train_server['PredInputData']
             data, label = self.get_data_from_file(data_file, including_label)
 
-        if TrainParamServer()['UseMinMaxScale']:
-            data = self.minmax_scale(data)
+        # if TrainParamServer()['UseMinMaxScale']:
+        #     data = self.minmax_scale(data)
         return data, label
 
     def minmax_scale(self, x, lower_limit=0., upper_limit=1.):
