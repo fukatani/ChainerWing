@@ -3,13 +3,7 @@ GUI deep learning IDE based on chainer.
 
 !!This project has not been released.!!
 
-Test is not sufficient, there is no manual.
-
-Although the net saving function is implemented, 
-
-the current format is not necessarily effective in the future.
-
-The interface may change greatly.
+The interface may be changed.
 
 
 It is scheduled to be released in April 2017.
@@ -39,6 +33,9 @@ python setup.py install
 ```
 python bin/ChainerWing.py
 ```
+I'm preparing user manual.
+
+https://github.com/fukatani/ChainerWing/blob/master/doc/step_by_step.md
 
 ## Licence
 
@@ -46,7 +43,7 @@ Many of GUI design is referenced by Floppy.
 (https://github.com/JLuebben/Floppy)
 Floppy is licenced by BSD 3 Clause.
 
-Part of chainer extension is referenced by chainer.
+Parts of chainer extension is referenced by chainer.
 (https://github.com/pfnet/chainer)
 chainer is licenced by MIT License.
 
