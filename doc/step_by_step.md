@@ -4,7 +4,11 @@
 
 0.Define your task and Prepare data.
 
-chainer, but currect version ChainerWing support only simple regression and simple 
+chainer can handle various problem, but currect version ChainerWing support only simple regression and simple classification.
+For example, image classification will be suported in future version.
+
+====Simple regression====
+====Simple calssification====
 
 1.Set up data to ChainerWing
 If you don't have any data for deep learning, you can play by example.
@@ -31,7 +35,7 @@ So you can prediction by them.
 ##MNIST Example
 
 MNIST is popular classification problem.
-In this example you have to distingish hand written digit (0~9).
+In this example, you have to distingish hand written digit (0~9).
 
 1.Load Project
 Push button here, and select example/mnist/mnist.json.
@@ -46,8 +50,9 @@ Accuracy means
 4.Change net configuration
 For example, you can add dropout layer for preventing "overfit".
 Or you can increase layer.
-In general more layer, More comlicated.
-But deep architecture need many learning epoch.
+In general more layer, more comlicated problem can be solved.
+But deep architecture need many learning epoch. 
+i.e. You have to consumpt many computation time.
 
 5.Change training configuration
 Training configuration is key factor of deep learning.
@@ -56,10 +61,14 @@ Defines size of mini-batch.
 
 "Epoch":
 Epoch means how many times model repeat about each sample in data.
-Too less epoch, model .Too many epoch introduce over fitting.
+If epoch is too less, performance does not rise sufficiently.
+Too many epoch introduce over fitting.
 You have to find adequate epoch.
+
 "GPU":
-If you installed CUDA in your PC, you can acceralate deep learning computation.
+If you installed CUDA in your PC, you can acceralate deep learning computation (~10X or more).
+To install CUDA for chainer, please see https://github.com/pfnet/chainer#installation-with-cuda .
+
 
 "Optimizer":
 Optimizer defines how much model weight can be moved.
