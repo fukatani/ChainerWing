@@ -1,8 +1,8 @@
 *.pyc
 *.npz
 *.log
-*.png
 bin/MyNet1.py
-examples/data/result/*
+examples/mnist/result/*
+examples/credit_card_amount/result/*
 floppy/test/ExampleNet.py
 
