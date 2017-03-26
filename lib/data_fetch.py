@@ -76,6 +76,9 @@ class DataManager(object):
             test_data, test_label = self.get_data_from_file(test_file, True)
 
         # minmax
+        if TrainParamServer().use_minmax():
+            test_data = self.minmax_scale(test_data)
+            train_data = self.minmax_scale(train_data)
         test_data = self.pack_data(test_data, test_label)
         train_data = self.pack_data(train_data, train_label)
         return train_data, test_data
@@ -97,8 +100,8 @@ class DataManager(object):
             data_file = train_server['PredInputData']
             data, label = self.get_data_from_file(data_file, including_label)
 
-        # if TrainParamServer()['UseMinMaxScale']:
-        #     data = self.minmax_scale(data)
+        if TrainParamServer().use_minmax():
+            data = self.minmax_scale(data)
         return data, label
 
     def minmax_scale(self, x, lower_limit=0., upper_limit=1.):

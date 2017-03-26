@@ -25,8 +25,8 @@ class TrainParamServer(object):
                 return False
             elif key == 'WorkDir':
                 return os.path.abspath(__file__) + '/../../examples/'
-            elif key == 'UseMinMaxScale':
-                return True
+            elif key == 'PreProcessor':
+                return 'Do Nothing'
             else:
                 raise KeyError(key)
 
@@ -69,6 +69,9 @@ class TrainParamServer(object):
             return cls['TrainData'][final_slash_pos+1:]
         else:
             return ''
+
+    def use_minmax(cls):
+        cls['PreProcessor'] == 'MinMax Scale'
 
 
 class TrainDialog(QtWidgets.QDialog):

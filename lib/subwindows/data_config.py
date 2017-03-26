@@ -13,7 +13,7 @@ class DataDialog(QtWidgets.QDialog):
         self.same_data_check.stateChanged.connect(self.state_changed)
         self.shuffle_check = DataCheckBox(settings, self, 'Shuffle')
         self.ratio_edit = DataLineEdit(settings, self, 'TestDataRatio')
-        self.use_minmax_scale = DataCheckBox(settings, self, 'MinMaxScale')
+        self.preprocessor = PreProcessorEdit(settings, self)
 
         self.dialogs = [('Train data Settings', None),
                         ('Set Train Data', self.train_edit),
@@ -25,7 +25,7 @@ class DataDialog(QtWidgets.QDialog):
                         ('Set Test Data', self.test_edit),
                         ('', self.test_edit.label),
                         ('Preprocess', None),
-                        ('Scale by Min Max', self.use_minmax_scale),
+                        ('Preprocessor', self.preprocessor),
                         ]
         super(DataDialog, self).__init__(*args)
         self.setStyleSheet('''DataDialog {
@@ -187,3 +187,22 @@ class DataLineEdit(QtWidgets.QLineEdit):
             TrainParamServer()[self.key] = value
         except ValueError:
             return
+
+
+class PreProcessorEdit(QtWidgets.QComboBox):
+    def __init__(self, settings, parent):
+        menu = ('Do Nothing', 'MinMax Scale')
+        self.parent = parent
+        self.settings = settings
+        super(PreProcessorEdit, self).__init__()
+        self.addItems(menu)
+        if 'PreProcessor_idx' in TrainParamServer().__dict__:
+            self.setCurrentIndex(TrainParamServer()['PreProcessor_idx'])
+        else:
+            self.setCurrentIndex(settings.value('PreProcessor', type=int))
+        TrainParamServer()['PreProcessor'] = self.currentText()
+
+    def commit(self):
+        self.settings.setValue('PreProcessor', self.currentIndex())
+        TrainParamServer()['PreProcessor'] = self.currentText()
+        TrainParamServer()['PreProcessor_idx'] = self.currentIndex()
