@@ -1,180 +1,11 @@
 {
     "graph": [
         [
-            "loss0",
-            {
-                "class": "MeanSquaredError",
-                "inputConnections": {
-                    "in_array": "l1:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "outputConnections": {},
-                "outputs": [],
-                "position": [
-                    221,
-                    -121
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "f1",
-            {
-                "class": "Dropout",
-                "inputConnections": {
-                    "in_array": "f0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ],
-                    [
-                        "ratio",
-                        "float",
-                        0.5,
-                        0.5
-                    ]
-                ],
-                "outputConnections": {
-                    "out_array": [
-                        "l1:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    -107,
-                    -177
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "f0",
-            {
-                "class": "Relu",
-                "inputConnections": {
-                    "in_array": "l0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "outputConnections": {
-                    "out_array": [
-                        "f1:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    -243,
-                    -178
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "l0",
-            {
-                "class": "Linear",
-                "inputConnections": {},
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        "",
-                        ""
-                    ],
-                    [
-                        "out_size",
-                        "int",
-                        40,
-                        40
-                    ],
-                    [
-                        "nobias",
-                        "bool",
-                        true,
-                        true
-                    ]
-                ],
-                "outputConnections": {
-                    "out_array": [
-                        "f0:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    -392,
-                    -161
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
             "l1",
             {
                 "class": "Linear",
                 "inputConnections": {
-                    "in_array": "f1:Oout_array"
+                    "in_array": "f0:Oout_array"
                 },
                 "inputs": [
                     [
@@ -221,6 +52,175 @@
                 ],
                 "subgraph": "main"
             }
+        ],
+        [
+            "f0",
+            {
+                "class": "Dropout",
+                "inputConnections": {
+                    "in_array": "f1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ],
+                    [
+                        "ratio",
+                        "float",
+                        0.5,
+                        0.5
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "l1:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -107,
+                    -177
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f1",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "f0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -243,
+                    -178
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "loss0",
+            {
+                "class": "MeanSquaredError",
+                "inputConnections": {
+                    "in_array": "l1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    221,
+                    -121
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l0",
+            {
+                "class": "Linear",
+                "inputConnections": {},
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        "",
+                        ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        40,
+                        40
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        true,
+                        true
+                    ]
+                ],
+                "outputConnections": {
+                    "out_array": [
+                        "f1:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -392,
+                    -161
+                ],
+                "subgraph": "main"
+            }
         ]
     ],
     "train": {
@@ -233,13 +233,15 @@
         "NetName": "MyNet",
         "Optimizer": "Adam",
         "Optimizer_idx": 0,
+        "PreProcessor": "MinMax Scale",
+        "PreProcessor_idx": 1,
         "PredInputData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
         "PredModel": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/result/MyModel.npz",
         "Shuffle": false,
         "Task": "Simple Regression",
         "Task_idx": 1,
         "TestData": "./",
-        "TestDataRatio": 0.5,
+        "TestDataRatio": 0.2,
         "TrainData": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/amount.csv",
         "UseSameData": true,
         "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/credit_card_amount",

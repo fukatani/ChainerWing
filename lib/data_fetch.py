@@ -67,7 +67,7 @@ class DataManager(object):
             train_data = data[:split_idx]
             train_label = label[:split_idx]
             test_data = data[split_idx:]
-            test_label = label[:split_idx]
+            test_label = label[split_idx:]
         else:
             train_file = train_server['TrainData']
             train_data, train_label = self.get_data_from_file(train_file, True,
