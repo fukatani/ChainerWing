@@ -25,11 +25,10 @@ class MeanSquaredError(Loss):
         return 'mean_squared_error(self.y, t)'
 
 
-class HuberLoss(Loss):
-    Input('in_array', chainer.Variable)
-    Input('delta', float)
-
-    def call(self):
-        if hasattr(self, '_delta'):
-            raise ExistsInvalidParameter(self.ID, '_delta')
-        return 'huber_loss(self.y, t, delta={0})'.format(self._delta)
+# class HuberLoss(Loss):
+#     Input('in_array', chainer.Variable)
+#     Input('delta', float)
+#
+#     def call(self):
+#         self.check_member(('_delta',))
+#         return 'huber_loss(self.y, t, delta={0})'.format(self._delta)

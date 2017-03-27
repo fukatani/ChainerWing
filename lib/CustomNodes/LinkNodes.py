@@ -1,6 +1,7 @@
 import chainer
 
 from lib.node import Input, Output, Link
+from lib.util import ExistsInvalidParameter
 
 
 # TODO(fukatani): implement systematically.
@@ -11,6 +12,7 @@ class Linear(Link):
     Output('out_array', chainer.Variable)
 
     def call_init(self):
+        self.check_member(('_out_size', '_nobias'))
         return 'Linear(None, {out_size}, nobias={nobias}),' \
             .format(out_size=self._out_size,
                     nobias=self._nobias)
@@ -21,23 +23,24 @@ class Maxout(Link):
     Input('out_size', int)
     Input('pool_size', int)
     def call_init(self):
+        self.check_member(('_out_size', '_pool_size'))
         return 'Maxout(None, {out_size}, {pool_size})' \
             .format(out_size=self._out_size, pool_size=self._pool_size)
 
 
-class Convolution2D(Link):
-    Input('in_array', chainer.Variable)
-    Input('in_channels', int)
-    Input('out_channels', int)
-    Input('ksize', int)
-    Input('stride', int)
-    Input('pad', int)
-    Input('nobias', bool, select=[True, False])
-    Output('out_array', chainer.Variable)
-
-    def call_init(self):
-        return 'Convolution2D({in_channels}, {out_channels}, {ksize}, {nobias}),' \
-            .format(in_channels=self._in_channels,
-                    out_channels=self._out_channels,
-                    ksize=self._ksize,
-                    nobias=self._nobias)
+# class Convolution2D(Link):
+#     Input('in_array', chainer.Variable)
+#     Input('in_channels', int)
+#     Input('out_channels', int)
+#     Input('ksize', int)
+#     Input('stride', int)
+#     Input('pad', int)
+#     Input('nobias', bool, select=[True, False])
+#     Output('out_array', chainer.Variable)
+#
+#     def call_init(self):
+#         return 'Convolution2D({in_channels}, {out_channels}, {ksize}, {nobias}),' \
+#             .format(in_channels=self._in_channels,
+#                     out_channels=self._out_channels,
+#                     ksize=self._ksize,
+#                     nobias=self._nobias)

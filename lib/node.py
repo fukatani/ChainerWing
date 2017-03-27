@@ -3,6 +3,8 @@ from copy import copy
 
 from PyQt5.QtGui import QColor
 
+from lib.util import ExistsInvalidParameter
+
 NODECLASSES = {}
 
 
@@ -578,6 +580,11 @@ class Node(object, metaclass=MetaNode):
 
     def clear(self):
         Node.registered_id.remove(self.ID)
+
+    def check_member(self, members):
+        for member in members:
+            if not hasattr(self, member):
+                raise ExistsInvalidParameter(self.ID, member)
 
 
 class Pin(object):

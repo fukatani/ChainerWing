@@ -1,6 +1,7 @@
 import chainer
 
 from lib.node import Input, Output, Function
+from lib.util import ExistsInvalidParameter
 
 
 class Relu(Function):
@@ -33,4 +34,5 @@ class Dropout(Function):
     Output('out_array', chainer.Variable)
 
     def call(self):
+        self.check_member(('_ratio',))
         return self.ID + ' = dropout(ratio={0}, x='.format(self._ratio)
