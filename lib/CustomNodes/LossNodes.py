@@ -1,7 +1,6 @@
 import chainer
 
 from lib.node import Input, Loss
-from lib.util import ExistsInvalidParameter
 
 
 class SoftmaxCrossEntropy(Loss):

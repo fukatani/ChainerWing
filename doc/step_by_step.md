@@ -15,11 +15,16 @@ If you don't have any data for deep learning, you can play by example.
 
 2.Construct Net
 
+About link:
 
-About Loss function:
-Basically, for classification, cross entropy functions are adequate.
-On the other hand, 
 
+About activate functions:
+Non-linear activation function such as 
+
+About loss function:
+
+Basically, for classification task, cross entropy functions are adequate.
+On the other hand, for regression task, mean squared error is adequate.
 
 3.Start training
 
@@ -31,64 +36,3 @@ Constructed net and training configuration can be saved as .json file.
 After training, you have already got trained deep learning model.
 So you can prediction by them.
 
-
-##MNIST Example
-
-MNIST is popular classification problem.
-In this example, you have to distingish hand written digit (0~9).
-
-1.Load Project
-Push button here, and select example/mnist/mnist.json.
-
-2.Start training
-Push button here.
-
-3.Confirm result
-Plot on rightbottom shows training result.
-Accuracy means 
-
-4.Change net configuration
-For example, you can add dropout layer for preventing "overfit".
-Or you can increase layer.
-In general more layer, more comlicated problem can be solved.
-But deep architecture need many learning epoch. 
-i.e. You have to consumpt many computation time.
-
-5.Change training configuration
-Training configuration is key factor of deep learning.
-"Batch size":
-Defines size of mini-batch. 
-
-"Epoch":
-Epoch means how many times model repeat about each sample in data.
-If epoch is too less, performance does not rise sufficiently.
-Too many epoch introduce over fitting.
-You have to find adequate epoch.
-
-"GPU":
-If you installed CUDA in your PC, you can acceralate deep learning computation (~10X or more).
-To install CUDA for chainer, please see https://github.com/pfnet/chainer#installation-with-cuda .
-
-
-"Optimizer":
-Optimizer defines how much model weight can be moved.
-All of optimizer have tuning parameters.
-For example one of standard optimizer, SGD have lr.
-*lr* stands for learning rate, so if *lr* is large value, model weight can be changed largely.
-Normally, to prevent overfitting, *lr* is set to small value (ex.lr = 0.01). 
-
-You can get detailed information about each optimizer in chainer official documentation.
-http://docs.chainer.org/en/latest/reference/optimizers.html
-
-
-##Kaggle credit card analysis
-
-1.Load Project
-
-2.Start training
-
-3.Confirm result
-
-4.Change net configuration
-
-5.Change training configuration

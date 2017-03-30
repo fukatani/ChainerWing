@@ -1,7 +1,6 @@
 import chainer
 
 from lib.node import Input, Output, Function
-from lib.util import ExistsInvalidParameter
 
 
 class Relu(Function):

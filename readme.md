@@ -29,6 +29,10 @@ git clone https://github.com/fukatani/ChainerWing.git
 python setup.py install
 ```
 
+##Example
+
+https://github.com/fukatani/ChainerWing/blob/master/examples/mnist/readme.md
+
 ## Usage
 ```
 python bin/ChainerWing.py

@@ -1,7 +1,6 @@
 import chainer
 
 from lib.node import Input, Output, Link
-from lib.util import ExistsInvalidParameter
 
 
 # TODO(fukatani): implement systematically.
