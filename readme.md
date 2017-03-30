@@ -29,7 +29,7 @@ git clone https://github.com/fukatani/ChainerWing.git
 python setup.py install
 ```
 
-##Example
+## Example
 
 https://github.com/fukatani/ChainerWing/blob/master/examples/mnist/readme.md
 
