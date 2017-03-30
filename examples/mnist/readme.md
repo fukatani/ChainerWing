@@ -17,7 +17,7 @@ Push button here.
 Plot on rightbottom shows training result.
 
 Here, accuracy shows how how many classifications succeeded (in %).
-Loss is also an index showing the goodness of the performance of the model, the smaller the loss, the better model
+Loss is also an index showing the goodness of the performance of the model, the smaller the loss, the better model.
 
 ![report](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/report.png "report")
 
@@ -29,9 +29,19 @@ To add layer, please drag and drop from function list at right side to net field
 
 ![add_layer](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/add_layer.png "add_layer")
 
-In general more layer, more comlicated problem can be solved.
+You can connect between layers by drag and drop.
+
+![connect](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/connect.png "connect")
+
+If you use dropout, you should set *dropout ratio*.
+Ratio should be larger than zero and smaller than one.
+
+![set_value](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/set_value.png "set_value")
+
+In general more layer, more complicated problem can be solved.
 But deep architecture need many learning epoch. 
 i.e. You have to consumpt many computation time.
+
 
 #### 5.Change training configuration
 Training configuration is key factor of deep learning.
@@ -52,7 +62,7 @@ You have to find adequate epoch.
 
 **GPU:**
 If you installed CUDA in your PC, you can acceralate deep learning computation (~10X or more).
-To install CUDA for chainer, please see https://github.com/pfnet/chainer#installation-with-cuda .
+To install CUDA for chainer, please see https://github.com/pfnet/chainer#installation-with-cuda.
 
 
 **Optimizer:**
