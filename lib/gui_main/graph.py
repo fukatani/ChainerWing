@@ -83,7 +83,7 @@ class Graph(object):
             return True
 
     def spawnNode(self, node_class, connections=None, position=(0, 0),
-                  silent=False):
+                  silent=False, id=None, name=None):
         """
         Spawns a new node of a given class at a given position with optional connections to other nodes.
         :param node_class: subclass object of 'Node'.
@@ -93,7 +93,8 @@ class Graph(object):
         :param silent: Boolean. Suppresses all notifications that a node was spawned if True.
         :return: newly created Node instance.
         """
-        newNode = node_class(self)
+        newNode = node_class(self, id)
+        newNode.name = name
         self.reverseConnections[newNode] = set()
         self.connections[newNode] = set()
         if connections:
@@ -339,7 +340,9 @@ class Graph(object):
         for id, nodeData in graph_state:
             try:
                 restoredNode = self.spawnNode(NODECLASSES[nodeData['class']],
-                                              position=nodeData['position'])
+                                              position=nodeData['position'],
+                                              id=id,
+                                              name=nodeData['name'])
             except KeyError:
                 try:
                     dynamic = nodeData['dynamic']
@@ -374,35 +377,6 @@ class Graph(object):
                 except KeyError:
                     print('Warning: Could not create connection '
                           'due to missing node.')
-
-        self.update()
-        return idMap
-
-    def loadDict(self, saveState):
-        """
-        Reconstruct a Graph instance from a JSON string representation
-        created by the Graph.to_json() method.
-        :param saveState:
-        :return: Dictionary mapping the saved nodeIDs to the newly created nodes's IDs.
-        """
-        idMap = {}
-        for id, nodeData in saveState.items():
-            restoredNode = self.spawnNode(NODECLASSES[nodeData['class']],
-                                          position=nodeData['position'],
-                                          silent=True)
-            idMap[id] = restoredNode.ID
-            inputs = nodeData['inputs']
-            outputs = nodeData['outputs']
-            for input in inputs:
-                restoredNode.inputs[input[0]].setDefault(input[-1])
-            for output in outputs:
-                restoredNode.outputs[output[0]].setDefault(output[-1])
-        for id, nodeData in saveState.items():
-            for input_name, outputID in nodeData['inputConnections'].items():
-                output_node, output_name = outputID.split(':O')
-                output_node = idMap[output_node]
-                self.connect(str(output_node), output_name, str(idMap[id]),
-                             input_name)
 
         self.update()
         return idMap

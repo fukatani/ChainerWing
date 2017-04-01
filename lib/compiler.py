@@ -36,7 +36,7 @@ class Compiler(object):
             if issubclass(type(node), Link):
                 try:
                     links.append('            {0}={1}'.
-                                 format(node.ID, node.call_init()))
+                                 format(node.get_name(), node.call_init()))
                 except:
                     util.disp_error(
                         'Unset parameter was found in {0}'.format(node))
@@ -62,7 +62,7 @@ class Compiler(object):
                     else:
                         pred_call = ''.join((' '*8, func.call(), 'x)'))
                     compiled_pred.append(pred_call)
-                    previous_ID = func.ID
+                    previous_ID = func.get_name()
             except InputNotAvailable:
                 util.disp_error('Unset parameter was found in {0}'.format(node))
                 return ''
@@ -72,7 +72,7 @@ class Compiler(object):
             call_all_pred.append(compiled_pred)
             call_all_loss.append(loss.call())
 
-        return ', '.join(call_all_loss), ', '.join(call_all_pred), loss.ID
+        return ', '.join(call_all_loss), ', '.join(call_all_pred), loss.get_name()
 
     def compile_node(self, cursor, nodes, decode):
         decode.append(cursor)

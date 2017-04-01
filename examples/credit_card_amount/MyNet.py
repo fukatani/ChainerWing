@@ -15,16 +15,16 @@ class MyNet(chainer.Chain):
 
     def __init__(self):
         super(MyNet, self).__init__(
-            l0=Linear(None, 40, nobias=True),
-            l1=Linear(None, 1, nobias=True),
+            l0=Linear(None, 1, nobias=True),
+            l1=Linear(None, , nobias=),
         )
 
     def _predict(self, x):
-        l0 = self.l0(x)
-        f0 = relu(l0)
-        f1 = dropout(ratio=0.5, x=f0)
-        l1 = self.l1(f1)
-        return l1
+        l1 = self.l1(x)
+        f1 = relu(l1)
+        f0 = dropout(ratio=0.5, x=f1)
+        l0 = self.l0(f0)
+        return l0
 
     def predict(self, x):
         return self._predict(x).data
@@ -40,7 +40,7 @@ class MyNet(chainer.Chain):
         return self.loss0
 
 def get_optimizer():
-    return Adam(alpha=0.001, beta2=0.999, beta1=0.9, eps=1e-06)
+    return Adam(beta2=0.999, alpha=0.001, beta1=0.9, eps=1e-06)
 
 
 def training_main(train, test, pbar=None, plot_postprocess=None):

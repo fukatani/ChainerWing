@@ -260,7 +260,7 @@ class Node(object, metaclass=MetaNode):
     Tag('Node')
     registered_id = []
 
-    def __init__(self, graph):
+    def __init__(self, graph, id_proposal=None):
         self.loopLevel = 0
         self.__pos__ = (0, 0)
         self.graph = graph
@@ -273,15 +273,19 @@ class Node(object, metaclass=MetaNode):
         self.inputPins = OrderedDict()
         self.outputPins = OrderedDict()
         self.runtime_error_happened = False
+        self.name = ''
 
         cnt = 0
-        while True:
-            id_proposal = self.id_from_cnt(cnt)
-            if id_proposal not in Node.registered_id:
-                self.ID = id_proposal
-                Node.registered_id.append(id_proposal)
-                break
-            cnt += 1
+        if id_proposal is None or id_proposal in Node.registered_id:
+            while True:
+                id_proposal = self.id_from_cnt(cnt)
+                if id_proposal not in Node.registered_id:
+                    self.ID = id_proposal
+                    break
+                cnt += 1
+        else:
+            self.ID = id_proposal
+        Node.registered_id.append(self.ID)
 
         for i, inp in enumerate(self.__inputs__.values()):
             inp = copy(inp)
@@ -525,6 +529,7 @@ class Node(object, metaclass=MetaNode):
                      outputConn in conns]
             outputConns[key] = conns
         return {'class': self.__class__.__name__,
+                'name': self.name,
                 'position': self.__pos__,
                 'inputs': [
                     (input_name, inp.var_type.__name__, inp(True), inp.default)
@@ -586,6 +591,11 @@ class Node(object, metaclass=MetaNode):
             if not hasattr(self, member):
                 raise ExistsInvalidParameter(self.ID, member)
 
+    def get_name(self):
+        if self.name:
+            return self.name
+        return self.ID
+
 
 class Pin(object):
     """
@@ -607,7 +617,7 @@ class Link(Node):
         return 'l' + str(cnt)
 
     def call(self):
-        return'{0} = self.{0}('.format(self.ID)
+        return'{0} = self.{0}('.format(self.get_name())
 
     def color(self):
         return QColor(45, 95, 45)

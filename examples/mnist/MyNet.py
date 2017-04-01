@@ -15,16 +15,15 @@ class MyNet(chainer.Chain):
 
     def __init__(self):
         super(MyNet, self).__init__(
-            l0=Linear(None, 10, nobias=True),
-            l1=Linear(None, 200, nobias=False),
+            l0=Linear(None, 200, nobias=False),
+            linear1=Linear(None, 10, nobias=True),
         )
 
     def _predict(self, x):
-        l1 = self.l1(x)
-        f2 = relu(l1)
-        f1 = dropout(ratio=0.5, x=f2)
-        l0 = self.l0(f1)
-        f0 = relu(l0)
+        l0 = self.l0(x)
+        f1 = relu(l0)
+        linear1 = self.linear1(f1)
+        f0 = relu(linear1)
         return f0
 
     def predict(self, x):
@@ -43,7 +42,7 @@ class MyNet(chainer.Chain):
         return self.loss0
 
 def get_optimizer():
-    return AdaDelta(eps=1e-06, rho=0.95)
+    return AdaDelta(rho=0.95, eps=1e-06)
 
 
 def training_main(train, test, pbar=None, plot_postprocess=None):

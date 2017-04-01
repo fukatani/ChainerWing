@@ -387,9 +387,12 @@ class Painter2D(QtWidgets.QWidget):
 
         menu = QtWidgets.QMenu(self)
         delete_action = menu.addAction('Delete node')
+        rename_action = menu.addAction('Rename node')
         action = menu.exec_(self.mapToGlobal(event.pos()))
         if action == delete_action:
             self.delete_node(node)
+        elif action == rename_action:
+            self.rename_node(node)
         return None
 
     def delete_node(self, node):
@@ -397,6 +400,16 @@ class Painter2D(QtWidgets.QWidget):
         self.unregisterNode(node)
         node.clear()
         self.repaint()
+
+    def get_all_name(self):
+        return [node.get_name() for node in self.nodes]
+
+    def rename_node(self, node):
+        text, ok = QtWidgets.QInputDialog.getText(self, 'Rename node',
+                                                  'Enter new name:')
+        if ok and text and text not in self.get_all_name():
+            node.name = text
+            self.repaint()
 
     def paintEvent(self, event):
         # before = time.time()
@@ -463,7 +476,7 @@ class Painter2D(QtWidgets.QWidget):
             painter.drawText(x, y + 3, w, h, Qt.AlignHCenter,
                              node.__class__.__name__)
             painter.drawText(x, y + 20, w, h, Qt.AlignHCenter,
-                             node.ID)
+                             node.get_name())
             painter.setBrush(QtGui.QColor(40, 40, 40))
             drawOffset = 25
             # for i, inputPin in enumerate(node.inputPins.values()):
