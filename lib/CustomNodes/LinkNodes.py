@@ -25,9 +25,10 @@ class Maxout(Link):
     Input('in_array', chainer.Variable)
     Input('out_size', int)
     Input('pool_size', int)
+    Output('out_array', chainer.Variable)
     def call_init(self):
         self.check_member(('_out_size', '_pool_size'))
-        return 'Maxout(None, {out_size}, {pool_size})' \
+        return 'Maxout(None, {out_size}, {pool_size}),' \
             .format(out_size=self._out_size, pool_size=self._pool_size)
 
     @classmethod
