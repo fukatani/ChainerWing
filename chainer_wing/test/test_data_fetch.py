@@ -1,4 +1,4 @@
-from lib.data_fetch import DataManager
+from chainer_wing.data_fetch import DataManager
 import numpy as np
 
 if __name__ == '__main__':
