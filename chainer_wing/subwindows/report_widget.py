@@ -3,7 +3,7 @@ from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
-from lib.subwindows.train_config import TrainParamServer
+from chainer_wing.subwindows.train_config import TrainParamServer
 
 
 class ReportWidget(QtWidgets.QTabWidget):

@@ -2,12 +2,12 @@ from collections import OrderedDict
 
 from chainer.utils import type_check
 
-from lib import compiler
-from lib import runner
-from lib.node import Node, MetaNode
-from lib.node import NODECLASSES
-from lib import util
-from lib.subwindows.train_config import TrainParamServer
+from chainer_wing import compiler
+from chainer_wing import runner
+from chainer_wing.node import Node, MetaNode
+from chainer_wing.node import NODECLASSES
+from chainer_wing import util
+from chainer_wing.subwindows.train_config import TrainParamServer
 
 
 def dummy(node_class):

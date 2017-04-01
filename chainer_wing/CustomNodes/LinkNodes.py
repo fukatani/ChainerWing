@@ -1,6 +1,6 @@
 import chainer
 
-from lib.node import Input, Output, Link
+from chainer_wing.node import Input, Output, Link
 
 
 # TODO(fukatani): implement systematically.

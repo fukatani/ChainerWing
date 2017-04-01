@@ -1,12 +1,7 @@
 # ChainerWing
 GUI deep learning IDE based on chainer.
 
-!!This project has not been released.!!
-
 The interface may be changed.
-
-
-It is scheduled to be released in April 2017.
 
 ![Screenshots](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot.png "Screenshots")
 

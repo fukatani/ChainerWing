@@ -1,9 +1,9 @@
-from lib import util
-from lib.node import InputNotAvailable
-from lib.node import Link
-from lib.node import Loss
-from lib.subwindows.train_config import TrainParamServer
-from lib.templates import TEMPLATES
+from chainer_wing import util
+from chainer_wing.node import InputNotAvailable
+from chainer_wing.node import Link
+from chainer_wing.node import Loss
+from chainer_wing.subwindows.train_config import TrainParamServer
+from chainer_wing.templates import TEMPLATES
 
 
 class Compiler(object):

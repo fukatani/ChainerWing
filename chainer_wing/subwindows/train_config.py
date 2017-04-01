@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
-from lib import inspector
-from lib import util
+from chainer_wing import inspector
+from chainer_wing import util
 
 import os
 

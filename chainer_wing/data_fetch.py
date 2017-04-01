@@ -4,8 +4,8 @@ from importlib import machinery
 from chainer.datasets import tuple_dataset
 import numpy
 
-from lib.subwindows.train_config import TrainParamServer
-from lib import util
+from chainer_wing.subwindows.train_config import TrainParamServer
+from chainer_wing import util
 
 
 class DataManager(object):

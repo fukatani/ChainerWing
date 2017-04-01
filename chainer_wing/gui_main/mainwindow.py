@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'lib/resources/mainwindow.ui'
+# Form implementation generated from reading ui file 'chainer_wing/resources/mainwindow.ui'
 #
 # Created by: PyQt5 UI code generator 5.4
 #
@@ -8,8 +8,8 @@
 
 from PyQt5 import QtCore, QtWidgets
 
-from lib.node_lib import NodeList, NodeFilter
-from lib.subwindows.report_widget import ReportWidget
+from chainer_wing.node_lib import NodeList, NodeFilter
+from chainer_wing.subwindows.report_widget import ReportWidget
 
 
 class Ui_MainWindow(object):

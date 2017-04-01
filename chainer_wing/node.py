@@ -3,7 +3,7 @@ from copy import copy
 
 from PyQt5.QtGui import QColor
 
-from lib.util import ExistsInvalidParameter
+from chainer_wing.util import ExistsInvalidParameter
 
 NODECLASSES = {}
 
@@ -133,7 +133,8 @@ class InputInfo(Info):
     def setPure(self):
         self.pure = 1
 
-    def setConnected(self, value: bool):
+    def setConnected(self, value):
+        assert isinstance(value, bool)
         self.connected = value
 
     def isAvailable(self, info=False):
@@ -185,8 +186,8 @@ class MetaNode(type):
         for arg in args:
             MetaNode.tags.append(arg)
 
-    def addInput(name: str,
-                 var_type: object,
+    def addInput(name,
+                 var_type,
                  hints=None,
                  default='',
                  select=None,
@@ -200,8 +201,8 @@ class MetaNode(type):
                                 'list': list,
                                 'optional': optional})
 
-    def addOutput(name: str,
-                  var_type: object,
+    def addOutput(name,
+                  var_type,
                   hints=None,
                   default='',
                   select=None,
@@ -562,16 +563,19 @@ class Node(object, metaclass=MetaNode):
         return input_connect_dict
 
     @classmethod
-    def matchHint(cls, text: str):
+    def matchHint(cls, text):
+        assert isinstance(text, str)
         return cls.matchInputHint(text) or cls.matchOutputHint(
             text) or cls.matchClassTag(text)
 
     @classmethod
-    def matchClassTag(cls, text: str):
+    def matchClassTag(cls, text):
+        assert isinstance(text, str)
         return any([tag.lower().startswith(text) for tag in cls.__tags__])
 
     @classmethod
-    def matchInputHint(cls, text: str):
+    def matchInputHint(cls, text):
+        assert isinstance(text, str)
         if text == 'object':
             return True
         if any([any([hint.startswith(text) for hint in inp.hints]) for inp in
@@ -579,7 +583,8 @@ class Node(object, metaclass=MetaNode):
             return True
 
     @classmethod
-    def matchOutputHint(cls, text: str):
+    def matchOutputHint(cls, text):
+        assert isinstance(text, str)
         if text == 'object':
             return True
         if any([any([hint.startswith(text) for hint in out.hints]) for out in

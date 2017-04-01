@@ -2,7 +2,7 @@ import sys
 
 from PyQt5 import QtWidgets
 
-from lib.subwindows.train_config import TrainParamServer
+from chainer_wing.subwindows.train_config import TrainParamServer
 
 
 def disp_error(message: str):

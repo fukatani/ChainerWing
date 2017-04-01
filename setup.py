@@ -6,13 +6,13 @@ install_requires = [
     'matplotlib',
 ]
 
-setup(name='chainer_wind',
+setup(name='chainer_wing',
       version=version,
-      description='Flowchart Python -- A multipurpose Python node editor.',
-      keywords='Flowchart',
+      description='ChainerWing -- GUI Deep Learning IDE.',
+      keywords='Deep Learning',
       author='fukatani',
       license="BSD 3-Clause",
       packages=find_packages(),
-      package_data={'lib': ['resources/*', ], },
+      package_data={'chainer_wing': ['resources/*', ], },
       install_requires=install_requires,
       )

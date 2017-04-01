@@ -5,10 +5,10 @@ import numpy
 
 from PyQt5 import QtCore
 from PyQt5 import QtWidgets
-from lib.subwindows.prediction import Ui_PredictionWindow
-from lib.subwindows.train_config import TrainParamServer
-from lib.runner import PredictionRunner
-from lib import util
+from chainer_wing.subwindows.prediction import Ui_PredictionWindow
+from chainer_wing.subwindows.train_config import TrainParamServer
+from chainer_wing.runner import PredictionRunner
+from chainer_wing import util
 
 
 class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):

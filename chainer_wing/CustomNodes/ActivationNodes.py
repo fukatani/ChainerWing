@@ -1,6 +1,6 @@
 import chainer
 
-from lib.node import Input, Output, Function
+from chainer_wing.node import Input, Output, Function
 
 
 class Relu(Function):

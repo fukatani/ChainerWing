@@ -1,9 +1,9 @@
 from importlib import machinery
 
-from lib.data_fetch import DataManager
-from lib.extension.cw_progress_bar import CWProgressBar
-from lib.extension.plot_extension import cw_postprocess
-from lib.subwindows.train_config import TrainParamServer
+from chainer_wing.data_fetch import DataManager
+from chainer_wing.extension.cw_progress_bar import CWProgressBar
+from chainer_wing.extension.plot_extension import cw_postprocess
+from chainer_wing.subwindows.train_config import TrainParamServer
 
 
 class TrainRunner(object):

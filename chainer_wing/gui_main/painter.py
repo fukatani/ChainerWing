@@ -9,13 +9,13 @@ from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
 
-from lib import util
-from lib.gui_main.mainwindow import Ui_MainWindow
-from lib.subwindows.data_config import DataDialog
-from lib.subwindows.settings import SettingsDialog
-from lib.subwindows.train_config import TrainDialog
-from lib.subwindows.train_config import TrainParamServer
-from lib.subwindows.prediction_widget import PredictionWindow
+from chainer_wing import util
+from chainer_wing.gui_main.mainwindow import Ui_MainWindow
+from chainer_wing.subwindows.data_config import DataDialog
+from chainer_wing.subwindows.settings import SettingsDialog
+from chainer_wing.subwindows.train_config import TrainDialog
+from chainer_wing.subwindows.train_config import TrainParamServer
+from chainer_wing.subwindows.prediction_widget import PredictionWindow
 
 logger = logging.getLogger('ChainerWing')
 

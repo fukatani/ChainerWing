@@ -1,6 +1,6 @@
 import chainer
 
-from lib.node import Input, Loss
+from chainer_wing.node import Input, Loss
 
 
 class SoftmaxCrossEntropy(Loss):

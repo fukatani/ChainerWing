@@ -5,8 +5,8 @@ import sys
 
 from PyQt5 import QtWidgets
 
-from lib.gui_main.graph import Graph
-from lib.gui_main.painter import Painter2D, MainWindow
+from chainer_wing.gui_main.graph import Graph
+from chainer_wing.gui_main.painter import Painter2D, MainWindow
 
 logger = logging.getLogger('Chainer-Wing')
 logger.setLevel(logging.DEBUG)

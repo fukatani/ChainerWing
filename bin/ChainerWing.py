@@ -1,4 +1,4 @@
 #!python3
 if __name__ == '__main__':
-    import lib.gui_main.main
-    lib.gui_main.main.run()
+    import chainer_wing.gui_main.main
+    chainer_wing.gui_main.main.run()
