@@ -16,6 +16,10 @@ class Linear(Link):
             .format(out_size=self._out_size,
                     nobias=self._nobias)
 
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.links.linear
+
 
 class Maxout(Link):
     Input('in_array', chainer.Variable)
@@ -25,6 +29,10 @@ class Maxout(Link):
         self.check_member(('_out_size', '_pool_size'))
         return 'Maxout(None, {out_size}, {pool_size})' \
             .format(out_size=self._out_size, pool_size=self._pool_size)
+
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.links.maxout
 
 
 # class Convolution2D(Link):

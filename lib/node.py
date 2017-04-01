@@ -324,6 +324,12 @@ class Node(object, metaclass=MetaNode):
     def __hash__(self):
         return hash(str(self))
 
+    @classmethod
+    def doc(cls):
+        if hasattr(cls, 'register_chainer_impl'):
+            return cls.register_chainer_impl().__doc__
+        return 'No detail for this function.'
+
     def lock(self):
         self.locked = True
 

@@ -57,6 +57,7 @@ class NodeFilter(QLineEdit):
         for node in sorted(nodes):
             item = QStandardItem()
             item.setText(node)
+            item.setToolTip(NODECLASSES[node].doc())
             model.appendRow(item)
         self.listView.setModel(model)
 

@@ -10,6 +10,10 @@ class Relu(Function):
     def call(self):
         return self.ID + ' = relu('
 
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.functions.relu
+
 
 class Sigmoid(Function):
     Input('in_array', chainer.Variable)
@@ -18,6 +22,10 @@ class Sigmoid(Function):
     def call(self):
         return self.ID + ' = sigmoid('
 
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.functions.sigmoid
+
 
 class Tanh(Function):
     Input('in_array', chainer.Variable)
@@ -25,6 +33,10 @@ class Tanh(Function):
 
     def call(self):
         return self.ID + ' = tanh('
+
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.functions.tanh
 
 
 class Dropout(Function):
@@ -35,3 +47,7 @@ class Dropout(Function):
     def call(self):
         self.check_member(('_ratio',))
         return self.ID + ' = dropout(ratio={0}, x='.format(self._ratio)
+
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.functions.dropout
