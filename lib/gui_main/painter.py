@@ -714,6 +714,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.select_data_button = QtWidgets.QPushButton('')
         self.select_data_button.clicked.connect(self.open_data_config)
+        self.select_data_button.setToolTip('Select training data')
 
         self.setupUi(self)
 
@@ -847,13 +848,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.deleteNodeAction.setIconVisibleInMenu(True)
         self.addAction(self.deleteNodeAction)
 
-        self.connectAction = QtWidgets.QAction(
-            QtGui.QIcon(os.path.join(self.iconRoot, 'connect.png')),
-            'Connect', self)
-        self.connectAction.setShortcut('Ctrl+C')
-        self.connectAction.triggered.connect(self.connect)
-        self.connectAction.setIconVisibleInMenu(True)
-        self.addAction(self.connectAction)
+        # self.connectAction = QtWidgets.QAction(
+        #     QtGui.QIcon(os.path.join(self.iconRoot, 'connect.png')),
+        #     'Connect', self)
+        # self.connectAction.setShortcut('Ctrl+C')
+        # self.connectAction.triggered.connect(self.connect)
+        # self.connectAction.setIconVisibleInMenu(True)
+        # self.addAction(self.connectAction)
 
         self.statusAction = QtWidgets.QAction('Status', self)
         # self.statusAction.setShortcut('Ctrl+R')
@@ -863,14 +864,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.train_configure_action = QtWidgets.QAction(
             QtGui.QIcon(os.path.join(self.iconRoot, 'drop.png')),
-            'Train configure', self)
+            'Train configuration', self)
         self.train_configure_action.setShortcut('Ctrl+I')
         self.train_configure_action.triggered.connect(self.open_train_config)
         self.train_configure_action.setIconVisibleInMenu(True)
         self.addAction(self.train_configure_action)
 
         self.prediction_action = QtWidgets.QAction(
-            QtGui.QIcon(os.path.join(self.iconRoot, 'push.png')), 'Push', self)
+            QtGui.QIcon(os.path.join(self.iconRoot, 'push.png')),
+            'Predict by trained model', self)
         self.prediction_action.setShortcut('Ctrl+P')
         self.prediction_action.triggered.connect(self.open_prediction)
         self.prediction_action.setIconVisibleInMenu(True)
@@ -939,10 +941,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.mainToolBar.addAction(self.clear_all_action)
         self.mainToolBar.addSeparator()
         # self.mainToolBar.addAction(self.deleteNodeAction)
-        self.mainToolBar.addAction(self.connectAction)
+        # self.mainToolBar.addAction(self.connectAction)
         # self.mainToolBar.addAction(self.statusAction)
         self.mainToolBar.addAction(self.train_configure_action)
-        self.mainToolBar.addSeparator()
         self.mainToolBar.addAction(self.settings_action)
 
         # self.mainToolBar.addSeparator()
