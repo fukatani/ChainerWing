@@ -15,12 +15,16 @@ class MyNet(chainer.Chain):
 
     def __init__(self):
         super(MyNet, self).__init__(
-            l0=Linear(None, 1, nobias=True),
-            l1=Linear(None, , nobias=),
+            l1=Linear(None, 40, nobias=False),
+            l2=Linear(None, 40, nobias=False),
+            l0=Linear(None, 1, nobias=False),
         )
 
     def _predict(self, x):
-        l1 = self.l1(x)
+        l2 = self.l2(x)
+        f2 = relu(l2)
+        f3 = dropout(ratio=0.5, x=f2)
+        l1 = self.l1(f3)
         f1 = relu(l1)
         f0 = dropout(ratio=0.5, x=f1)
         l0 = self.l0(f0)
@@ -40,7 +44,7 @@ class MyNet(chainer.Chain):
         return self.loss0
 
 def get_optimizer():
-    return Adam(beta2=0.999, alpha=0.001, beta1=0.9, eps=1e-06)
+    return AdaDelta(eps=1e-06, rho=0.95)
 
 
 def training_main(train, test, pbar=None, plot_postprocess=None):
@@ -56,14 +60,14 @@ def training_main(train, test, pbar=None, plot_postprocess=None):
 
     # Set up a trainer
     updater = training.StandardUpdater(train_iter, optimizer,
-                                       device=-1)
+                                       device=0)
     
     if pbar is None:
         trainer = training.Trainer(updater, (20, 'epoch'))
     else:
         trainer = training.Trainer(updater, pbar.get_stop_trigger)
     
-    trainer.extend(extensions.Evaluator(test_iter, model, device=-1))
+    trainer.extend(extensions.Evaluator(test_iter, model, device=0))
     
     trainer.extend(extensions.LogReport(log_name='/home/ryo/workspace/github/CW_gui/examples/credit_card_amount/result/chainer.log'))
     trainer.extend(

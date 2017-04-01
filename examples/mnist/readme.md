@@ -44,7 +44,8 @@ i.e. You have to consumpt many computation time.
 
 
 #### 5.Change training configuration
-Training configuration is key factor of deep learning.
+Training configuration is one of the key factor of deep learning.
+You can edit them by push button here.
 
 ![OpenTrainConfig](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/open_trainconfig.png "OpenTrainConfig")
 
