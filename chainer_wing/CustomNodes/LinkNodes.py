@@ -18,7 +18,7 @@ class Linear(Link):
 
     @classmethod
     def register_chainer_impl(cls):
-        return chainer.links.linear
+        return chainer.links.Linear
 
 
 class Maxout(Link):
@@ -33,7 +33,7 @@ class Maxout(Link):
 
     @classmethod
     def register_chainer_impl(cls):
-        return chainer.links.maxout
+        return chainer.links.Maxout
 
 
 # class Convolution2D(Link):
