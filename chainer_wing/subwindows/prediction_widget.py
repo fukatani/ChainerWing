@@ -47,6 +47,9 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
         TrainParamServer()['PredClass'] = value
 
     def exe_prediction(self):
+        if TrainParamServer()['GPU'] and not util.check_cuda_available():
+            return
+
         self.pred_progress.setText('Processing...')
         try:
             runner = PredictionRunner()

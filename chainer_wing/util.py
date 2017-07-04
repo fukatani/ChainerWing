@@ -1,5 +1,6 @@
 import sys
 
+from chainer import cuda
 from PyQt5 import QtWidgets
 
 from chainer_wing.subwindows.train_config import TrainParamServer
@@ -9,6 +10,17 @@ def disp_error(message: str):
     error = QtWidgets.QErrorMessage()
     error.showMessage(message)
     error.exec_()
+
+
+def check_cuda_available():
+    try:
+        cuda.check_cuda_available()
+    except RuntimeError:
+        disp_error("CUDA environment is not correctly set up. Confirm your "
+                   "envirionment or change Train con figuration and set 'GPU'"
+                   " 0.")
+        return False
+    return True
 
 
 class ExistsInvalidParameter(Exception):

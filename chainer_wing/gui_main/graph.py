@@ -278,6 +278,9 @@ class Graph(object):
         :return:
         """
         self.clear_error()
+        if TrainParamServer()['GPU'] and not util.check_cuda_available():
+            return
+
         try:
             self.runner = runner.TrainRunner()
         except SyntaxError:
