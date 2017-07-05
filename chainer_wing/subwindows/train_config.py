@@ -24,7 +24,7 @@ class TrainParamServer(object):
             elif key == 'PredClass':
                 return False
             elif key == 'WorkDir':
-                return os.path.abspath(__file__) + '/../../examples/'
+                return os.path.dirname(__file__) + '../../examples/'
             elif key == 'PreProcessor':
                 return 'Do Nothing'
             else:
@@ -52,11 +52,16 @@ class TrainParamServer(object):
     def load_from_dict(cls, dict):
         cls.__dict__ = dict
 
+    def get_work_dir(cls):
+        if not os.path.isdir(cls['WorkDir']):
+            cls['WorkDir'] = os.path.dirname(__file__) + '../../examples/'
+        return cls['WorkDir']
+
     def get_net_name(cls):
-        return cls['WorkDir'] + '/' + cls['NetName'] + '.py'
+        return cls.get_work_dir() + '/' + cls['NetName'] + '.py'
 
     def get_result_dir(cls):
-        return cls['WorkDir'] + '/result'
+        return cls.get_work_dir() + '/result'
 
     def get_model_name(cls):
         return cls.get_result_dir() + '/' + cls['ModelName']
@@ -315,7 +320,7 @@ class WorkDirEdit(QtWidgets.QPushButton):
         v = settings.value('WorkDir', type=str)
         v = v if v else './'
         if 'WorkDir' in TrainParamServer().__dict__:
-            self.value = TrainParamServer()['WorkDir']
+            self.value = TrainParamServer().get_work_dir()
         else:
             self.value = v
             TrainParamServer()['WorkDir'] = self.value
@@ -340,7 +345,7 @@ class WorkDirLabel(QtWidgets.QLabel):
     def __init__(self, settings, parent):
         self.parent = parent
         self.settings = settings
-        super(WorkDirLabel, self).__init__(TrainParamServer()['WorkDir'])
+        super(WorkDirLabel, self).__init__(TrainParamServer().get_work_dir())
 
 
 class TaskEdit(QtWidgets.QComboBox):
