@@ -8,12 +8,17 @@ Push button here, and select example/mnist/mnist.json.
 
 ![LoadButton](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/load.png "LoadButton")
 
-#### 2.Start training
+#### 2.Load Project
+Push button here, and select example/mnist/get_mnist_train.py.
+
+![LoadButton](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/selectdata.png "SelectData")
+
+#### 3.Start training
 Push button here.
 
 ![StartTrain](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/start_train.png "StartTrain")
 
-#### 3.Confirm result
+#### 4.Confirm result
 Plot on rightbottom shows training result.
 
 Here, accuracy shows how how many classifications succeeded (in %).
@@ -21,7 +26,7 @@ Loss is also an index showing the goodness of the performance of the model, the 
 
 ![report](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/report.png "report")
 
-#### 4.Change net configuration to improve model performance
+#### 5.Change net configuration to improve model performance
 For example, you can add dropout layer between linear units for preventing "overfitting".
 Or you can increase layer.
 
@@ -43,7 +48,7 @@ But deep architecture need many learning epoch.
 i.e. You have to consumpt many computation time.
 
 
-#### 5.Change training configuration
+#### 6.Change training configuration
 Training configuration is one of the key factor of deep learning.
 You can edit them by push button here.
 
