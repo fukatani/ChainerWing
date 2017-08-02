@@ -34,21 +34,3 @@ class Maxout(Link):
     @classmethod
     def register_chainer_impl(cls):
         return chainer.links.Maxout
-
-
-# class Convolution2D(Link):
-#     Input('in_array', chainer.Variable)
-#     Input('in_channels', int)
-#     Input('out_channels', int)
-#     Input('ksize', int)
-#     Input('stride', int)
-#     Input('pad', int)
-#     Input('nobias', bool, select=[True, False])
-#     Output('out_array', chainer.Variable)
-#
-#     def call_init(self):
-#         return 'Convolution2D({in_channels}, {out_channels}, {ksize}, {nobias}),' \
-#             .format(in_channels=self._in_channels,
-#                     out_channels=self._out_channels,
-#                     ksize=self._ksize,
-#                     nobias=self._nobias)

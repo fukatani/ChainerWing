@@ -6,6 +6,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 from chainer_wing.node import NODECLASSES
+from chainer_wing.subwindows.train_config import TrainParamServer
 
 customNodesPath = os.path.join(os.path.dirname(__file__), 'CustomNodes')
 
@@ -48,11 +49,13 @@ class NodeFilter(QLineEdit):
         """
         text = text.lower()
         # nodes = [str(node) for node in nodeList if text in str(node).lower()]
-        if not text.startswith('$'):
-            nodes = [node for node in NODECLASSES.keys() if text in node.lower()]
+        text = text[1:]
+        if 'Image' not in TrainParamServer()['Task']:
+            nodes = [nodeName for nodeName, node in NODECLASSES.items()
+                     if node.matchHint(text) and not node.is_image_node]
         else:
-            text = text[1:]
-            nodes = set([nodeName for nodeName, node in NODECLASSES.items() if node.matchHint(text)])
+            nodes = [nodeName for nodeName, node in NODECLASSES.items()
+                     if node.matchHint(text)]
         model = QStandardItemModel()
         for node in sorted(nodes):
             item = QStandardItem()

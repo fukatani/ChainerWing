@@ -260,6 +260,7 @@ class Node(object, metaclass=MetaNode):
     Input('TRIGGER', object, optional=True)
     Tag('Node')
     registered_id = []
+    is_image_node = False
 
     def __init__(self, graph, id_proposal=None):
         self.loopLevel = 0

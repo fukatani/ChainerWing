@@ -1,0 +1,60 @@
+import chainer
+
+from chainer_wing.node import Input, Output, Link
+
+
+class Convolution2D(Link):
+    Input('in_array', chainer.Variable)
+    Input('in_channels', int)
+    Input('out_channels', int)
+    Input('ksize', int)
+    Input('stride', int)
+    Input('pad', int)
+    Input('nobias', bool, select=[True, False])
+    Output('out_array', chainer.Variable)
+    is_image_node = True
+
+    def call_init(self):
+        return 'Convolution2D({in_channels}, {out_channels}, {ksize}, {nobias}),' \
+            .format(in_channels=self._in_channels,
+                    out_channels=self._out_channels,
+                    ksize=self._ksize,
+                    nobias=self._nobias)
+
+
+class DepthwiseConvolution2D(Link):
+    Input('in_array', chainer.Variable)
+    Input('in_channels', int)
+    Input('channel_multiplier', int)
+    Input('ksize', int)
+    Input('stride', int)
+    Input('pad', int)
+    Input('nobias', bool, select=[True, False])
+    Output('out_array', chainer.Variable)
+    is_image_node = True
+
+    def call_init(self):
+        return 'DepthwiseConvolution2D({in_channels}, {channel_multiplier}, {ksize}, {nobias}),' \
+            .format(in_channels=self._in_channels,
+                    channel_multiplier=self._channel_multiplier,
+                    ksize=self._ksize,
+                    nobias=self._nobias)
+
+
+class BatchNormalization(Link):
+    Input('in_array', chainer.Variable)
+    Input('size', int)
+    Input('decay', float)
+    Input('eps', float)
+    Input('use_gamma', bool, select=[True, False])
+    Input('use_beta', bool, select=[True, False])
+    Output('out_array', chainer.Variable)
+    is_image_node = True
+
+    def call_init(self):
+        return 'BatchNormalization({size}, {decay}, {eps}, numpy.float32, {use_gamma}, {use_beta}),' \
+            .format(size=self._size,
+                    decay=self._decay,
+                    eps=self._eps,
+                    use_gamma=self._use_gamma,
+                    use_beta=self._use_beta)
