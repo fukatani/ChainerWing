@@ -1,6 +1,8 @@
 import glob
 
 from PyQt5 import QtWidgets
+from PyQt5 import QtCore
+from PyQt5 import QtGui
 
 from chainer_wing.subwindows.train_config import TrainParamServer
 from chainer_wing.subwindows.data_config import AbstractDataDialog
@@ -9,7 +11,7 @@ from chainer_wing.subwindows.data_config import DataFileEdit
 from chainer_wing.subwindows.data_config import DataFileLabel
 from chainer_wing.subwindows.data_config import DataLineEdit
 
-import chainer_cv.util
+import chainercv.utils
 
 
 class ImageDataDialog(AbstractDataDialog):
@@ -64,7 +66,7 @@ class CropEdit(QtWidgets.QComboBox):
         menu = ('Do Nothing', 'Center Crop', 'Random Crop')
         self.parent = parent
         self.settings = settings
-        super(PreProcessorEdit, self).__init__()
+        super(CropEdit, self).__init__()
         self.addItems(menu)
         if 'Crop_idx' in TrainParamServer().__dict__:
             self.setCurrentIndex(TrainParamServer()['Crop_idx'])
@@ -81,7 +83,7 @@ class CropEdit(QtWidgets.QComboBox):
 class PreviewWidget(QtWidgets.QWidget):
 
     def __init__(self, image_file, *args, **kwargs):
-        super(GraphWidget, self).__init__()
+        super(PreviewWidget, self).__init__()
         self.setStyleSheet('''ReportWidget{background: rgb(55,55,55)}
         ''')
         self.pixmap = None

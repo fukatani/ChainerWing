@@ -744,7 +744,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.DrawArea.setLayout(l)
         self.drawer = painter
 
-        self.setupNodeLib()
         # self.drawer.graph.spawnAndConnect()
 
         # to reflect initial configuration
@@ -753,6 +752,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         ImageDataDialog(self, settings=self.settings).close()
         DataDialog(self, settings=self.settings).close()
         self.update_data_label()
+
+        self.setupNodeLib()
 
     def setArgs(self, args):
         if args.test:
@@ -972,7 +973,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.knownSubgraphs = self.knownSubgraphs.union(new)
 
     def open_data_config(self):
-        if 'image' in TrainParamServer()['task']:
+        if 'Image' in TrainParamServer()['Task']:
             try:
                 import chainercv
                 data_dialog = ImageDataDialog(self, settings=self.settings)

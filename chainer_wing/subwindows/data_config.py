@@ -8,7 +8,7 @@ class AbstractDataDialog(QtWidgets.QDialog):
         self.settings = settings
         self.configure_window()
 
-        super(DataDialog, self).__init__(*args)
+        super(AbstractDataDialog, self).__init__(*args)
         self.setStyleSheet('''DataDialog {
                                 background: rgb(75,75,75);
                             }
@@ -66,7 +66,7 @@ class AbstractDataDialog(QtWidgets.QDialog):
                 pass
         self.settings.sync()
         self.parent().update_data_label()
-        super(DataDialog, self).close()
+        super(AbstractDataDialog, self).close()
 
     def redraw(self):
         self.parent().drawer.repaint()
@@ -89,7 +89,7 @@ class AbstractDataDialog(QtWidgets.QDialog):
             self.shuffle_check.setDisabled(True)
 
 
-class DataDialog(QtWidgets.QDialog):
+class DataDialog(AbstractDataDialog):
     def configure_window(self):
         settings = self.settings
         self.train_edit = DataFileEdit(settings, self, 'TrainData')
@@ -177,9 +177,11 @@ class DataCheckBox(QtWidgets.QCheckBox):
 
 class DataLineEdit(QtWidgets.QLineEdit):
     def __init__(self, settings, parent, key, data_type=float):
+        super(DataLineEdit, self).__init__()
+
         self.parent = parent
         self.settings = settings
-        super(DataLineEdit, self).__init__()
+        self.data_type = data_type
         self.key = key
         v = settings.value(key, type=data_type)
         v = v if v else 0.5
@@ -191,7 +193,7 @@ class DataLineEdit(QtWidgets.QLineEdit):
 
     def commit(self):
         try:
-            value = data_type(self.text())
+            value = self.data_type(self.text())
             self.settings.setValue(self.key, value)
             TrainParamServer()[self.key] = value
         except ValueError:
