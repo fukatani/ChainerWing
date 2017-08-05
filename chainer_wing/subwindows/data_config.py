@@ -3,30 +3,11 @@ from PyQt5 import QtWidgets
 from chainer_wing.subwindows.train_config import TrainParamServer
 
 
-class DataDialog(QtWidgets.QDialog):
+class AbstractDataDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
+        self.configure_window()
 
-        self.train_edit = DataFileEdit(settings, self, 'TrainData')
-        self.test_edit = DataFileEdit(settings, self, 'TestData')
-        self.same_data_check = DataCheckBox(settings, self, 'UseSameData')
-        self.same_data_check.stateChanged.connect(self.state_changed)
-        self.shuffle_check = DataCheckBox(settings, self, 'Shuffle')
-        self.ratio_edit = DataLineEdit(settings, self, 'TestDataRatio')
-        self.preprocessor = PreProcessorEdit(settings, self)
-
-        self.dialogs = [('Train data Settings', None),
-                        ('Set Train Data', self.train_edit),
-                        ('', self.train_edit.label),
-                        ('Test data Settings', None),
-                        ('Same data with training', self.same_data_check),
-                        ('Shuffle', self.shuffle_check),
-                        ('Test data ratio', self.ratio_edit),
-                        ('Set Test Data', self.test_edit),
-                        ('', self.test_edit.label),
-                        ('Preprocess', None),
-                        ('Preprocessor', self.preprocessor),
-                        ]
         super(DataDialog, self).__init__(*args)
         self.setStyleSheet('''DataDialog {
                                 background: rgb(75,75,75);
@@ -74,6 +55,9 @@ class DataDialog(QtWidgets.QDialog):
         self.resize(300, 300)
         self.state_changed(0)
 
+    def configure_window(self):
+        raise NotImplementedError()
+
     def close(self):
         for name, widget in self.dialogs:
             try:
@@ -103,6 +87,31 @@ class DataDialog(QtWidgets.QDialog):
             self.ratio_edit.setDisabled(True)
             self.test_edit.setDisabled(False)
             self.shuffle_check.setDisabled(True)
+
+
+class DataDialog(QtWidgets.QDialog):
+    def configure_window(self):
+        settings = self.settings
+        self.train_edit = DataFileEdit(settings, self, 'TrainData')
+        self.test_edit = DataFileEdit(settings, self, 'TestData')
+        self.same_data_check = DataCheckBox(settings, self, 'UseSameData')
+        self.same_data_check.stateChanged.connect(self.state_changed)
+        self.shuffle_check = DataCheckBox(settings, self, 'Shuffle')
+        self.ratio_edit = DataLineEdit(settings, self, 'TestDataRatio')
+        self.preprocessor = PreProcessorEdit(settings, self)
+
+        self.dialogs = [('Train data Settings', None),
+                        ('Set Train Data', self.train_edit),
+                        ('', self.train_edit.label),
+                        ('Test data Settings', None),
+                        ('Same data with training', self.same_data_check),
+                        ('Shuffle', self.shuffle_check),
+                        ('Test data ratio', self.ratio_edit),
+                        ('Set Test Data', self.test_edit),
+                        ('', self.test_edit.label),
+                        ('Preprocess', None),
+                        ('Preprocessor', self.preprocessor),
+                        ]
 
 
 class DataFileEdit(QtWidgets.QPushButton):
@@ -167,12 +176,12 @@ class DataCheckBox(QtWidgets.QCheckBox):
 
 
 class DataLineEdit(QtWidgets.QLineEdit):
-    def __init__(self, settings, parent, key):
+    def __init__(self, settings, parent, key, data_type=float):
         self.parent = parent
         self.settings = settings
         super(DataLineEdit, self).__init__()
         self.key = key
-        v = settings.value(key, type=float)
+        v = settings.value(key, type=data_type)
         v = v if v else 0.5
         if key in TrainParamServer().__dict__:
             v = TrainParamServer()[key]
@@ -182,7 +191,7 @@ class DataLineEdit(QtWidgets.QLineEdit):
 
     def commit(self):
         try:
-            value = float(self.text())
+            value = data_type(self.text())
             self.settings.setValue(self.key, value)
             TrainParamServer()[self.key] = value
         except ValueError:
