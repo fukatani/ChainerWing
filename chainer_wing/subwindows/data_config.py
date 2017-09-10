@@ -9,21 +9,6 @@ class AbstractDataDialog(QtWidgets.QDialog):
         self.configure_window()
 
         super(AbstractDataDialog, self).__init__(*args)
-        self.setStyleSheet('''DataDialog {
-                                background: rgb(75,75,75);
-                            }
-                            QSpinBox {
-                                background-color: rgb(95,95,95);
-                                color: white;
-                                border: 1px solid gray;
-                            }
-                            QPushButton {
-                                background-color: rgb(155,95,95);
-                            }
-                            QLabel {
-                                color: white;
-                            }
-        ''')
         main_layout = QtWidgets.QVBoxLayout()
         for name, widget in self.dialogs:
             if not widget:
@@ -90,6 +75,25 @@ class AbstractDataDialog(QtWidgets.QDialog):
 
 
 class DataDialog(AbstractDataDialog):
+
+    def __init__(self, *args, settings=None):
+        super(DataDialog, self).__init__(*args, settings=settings)
+        self.setStyleSheet('''DataDialog {
+                                        background: rgb(75,75,75);
+                                    }
+                                    QSpinBox {
+                                        background-color: rgb(95,95,95);
+                                        color: white;
+                                        border: 1px solid gray;
+                                    }
+                                    QPushButton {
+                                        background-color: rgb(155,95,95);
+                                    }
+                                    QLabel {
+                                        color: white;
+                                    }
+                ''')
+
     def configure_window(self):
         settings = self.settings
         self.train_edit = DataFileEdit(settings, self, 'TrainData')

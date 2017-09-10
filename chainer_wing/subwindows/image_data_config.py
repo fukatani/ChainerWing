@@ -1,5 +1,7 @@
 import glob
 
+import chainercv.utils
+import PIL.Image
 from PyQt5 import QtWidgets
 from PyQt5 import QtCore
 from PyQt5 import QtGui
@@ -10,11 +12,29 @@ from chainer_wing.subwindows.data_config import DataCheckBox
 from chainer_wing.subwindows.data_config import DataFileEdit
 from chainer_wing.subwindows.data_config import DataFileLabel
 from chainer_wing.subwindows.data_config import DataLineEdit
-
-import chainercv.utils
+from chainer_wing.extension.image_dataset import augment_data
 
 
 class ImageDataDialog(AbstractDataDialog):
+
+    def __init__(self, *args, settings=None):
+        super(ImageDataDialog, self).__init__(*args, settings=settings)
+        self.setStyleSheet('''ImageDataDialog {
+                                        background: rgb(75,75,75);
+                                    }
+                                    QSpinBox {
+                                        background-color: rgb(95,95,95);
+                                        color: white;
+                                        border: 1px solid gray;
+                                    }
+                                    QPushButton {
+                                        background-color: rgb(155,95,95);
+                                    }
+                                    QLabel {
+                                        color: white;
+                                    }
+                ''')
+
     def configure_window(self):
         settings = self.settings
         self.train_edit = DataFileEdit(settings, self, 'TrainData')
@@ -84,7 +104,7 @@ class PreviewWidget(QtWidgets.QWidget):
 
     def __init__(self, image_file, *args, **kwargs):
         super(PreviewWidget, self).__init__()
-        self.setStyleSheet('''ReportWidget{background: rgb(55,55,55)}
+        self.setStyleSheet('''PreviewWidget{background: rgb(55,55,55)}
         ''')
         self.pixmap = None
         self.image_idx = 0
@@ -92,8 +112,8 @@ class PreviewWidget(QtWidgets.QWidget):
 
     def paintEvent(self, event):
         # TODO augmentation
-        self.pixmap = QtGui.QPixmap(self.image_file)
-        size = self.size()
+        self.pixmap = QtGui.QPixmap('preview_temp.jpg')
+        # size = self.size()
         painter = QtGui.QPainter(self)
         point = QtCore.QPoint(0, 0)
 
@@ -104,6 +124,28 @@ class PreviewWidget(QtWidgets.QWidget):
 
     def update(self):
         self.image_file = glob.glob(TrainParamServer()['TrainData'] + '.jpg')[self.image_idx]
+        image_array = chainercv.utils.read_image_as_array(self.image_file)
+
+        use_resize = TrainParamServer()['UseResize']
+        resize_width = TrainParamServer()['ResizeWidth']
+        resize_height = TrainParamServer()['ResizeHeight']
+
+        crop_edit = TrainParamServer()['Crop']
+        crop_width = TrainParamServer()['CropWidth']
+        crop_height = TrainParamServer()['CropHeight']
+
+        use_random_x_flip = TrainParamServer()['UseRandomXFlip']
+        use_random_y_flip = TrainParamServer()['UseRandomYFlip']
+        use_random_rotate = TrainParamServer()['UseRandomRotation']
+        pca_lighting = TrainParamServer()['PCAlighting']
+
+        augment_data(image_array, use_resize, resize_width,
+        resize_height, pca_lighting, use_random_x_flip, use_random_y_flip,
+        use_random_rotate, crop_edit, crop_width, crop_height)
+
+        im = PIL.Image.fromarray(image_array)
+        im.save('preview_temp.jpg')
+
         self.image_idx += 1
 
 
