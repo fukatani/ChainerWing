@@ -9,7 +9,6 @@ from PyQt5 import QtGui
 from chainer_wing.subwindows.train_config import TrainParamServer
 from chainer_wing.subwindows.data_config import AbstractDataDialog
 from chainer_wing.subwindows.data_config import DataCheckBox
-from chainer_wing.subwindows.data_config import DataFileEdit
 from chainer_wing.subwindows.data_config import DataFileLabel
 from chainer_wing.subwindows.data_config import DataLineEdit
 from chainer_wing.extension.image_dataset import augment_data
@@ -19,6 +18,7 @@ class ImageDataDialog(AbstractDataDialog):
 
     def __init__(self, *args, settings=None):
         super(ImageDataDialog, self).__init__(*args, settings=settings)
+        self.image_idx = 0
         self.setStyleSheet('''ImageDataDialog {
                                         background: rgb(75,75,75);
                                     }
@@ -37,8 +37,11 @@ class ImageDataDialog(AbstractDataDialog):
 
     def configure_window(self):
         settings = self.settings
-        self.train_edit = DataFileEdit(settings, self, 'TrainData')
-        self.test_edit = DataFileEdit(settings, self, 'TestData')
+        self.train_edit = DataDirEdit(settings, self, 'TrainData')
+        self.test_edit = DataDirEdit(settings, self, 'TestData')
+        self.preview_button = QtWidgets.QPushButton('Update')
+        self.preview_button.clicked.connect(self.update_preview)
+
         self.same_data_check = DataCheckBox(settings, self, 'UseSameData')
         self.same_data_check.stateChanged.connect(self.state_changed)
         self.shuffle_check = DataCheckBox(settings, self, 'Shuffle')
@@ -57,6 +60,8 @@ class ImageDataDialog(AbstractDataDialog):
         self.use_random_y_flip = DataCheckBox(settings, self, 'UseRandomYFlip')
         self.use_random_rotate = DataCheckBox(settings, self, 'UseRandomRotation')
         self.pca_lighting = DataLineEdit(settings, self, 'PCAlighting')
+
+        self.preview = QtWidgets.QLabel()
 
         self.dialogs = [('Train data Settings', None),
                         ('Set Train Data', self.train_edit),
@@ -78,7 +83,46 @@ class ImageDataDialog(AbstractDataDialog):
                         ('Use Random Y Flip', self.use_random_y_flip),
                         ('Use Random Rotation', self.use_random_rotate),
                         ('Use PCA Lighting', self.pca_lighting),
+                        ('Open Preview', self.preview_button),
+                        ('', self.preview)
                         ]
+
+    def update_preview(self):
+        image_files = glob.glob(TrainParamServer()['TrainData'] + '/*.jpg')
+        if not image_files:
+            self.image_file = None
+            return
+        self.image_idx = self.image_idx % len(image_files)
+        self.image_file = image_files[self.image_idx]
+        image_array = chainercv.utils.read_image_as_array(self.image_file)
+
+        use_resize = TrainParamServer()['UseResize']
+        resize_width = TrainParamServer()['ResizeWidth']
+        resize_height = TrainParamServer()['ResizeHeight']
+
+        crop_edit = TrainParamServer()['Crop']
+        crop_width = TrainParamServer()['CropWidth']
+        crop_height = TrainParamServer()['CropHeight']
+
+        use_random_x_flip = TrainParamServer()['UseRandomXFlip']
+        use_random_y_flip = TrainParamServer()['UseRandomYFlip']
+        use_random_rotate = TrainParamServer()['UseRandomRotation']
+        pca_lighting = TrainParamServer()['PCAlighting']
+
+        image_array = augment_data(image_array, use_resize, resize_width,
+                                   resize_height, pca_lighting,
+                                   use_random_x_flip, use_random_y_flip,
+                                   use_random_rotate, crop_edit, crop_width,
+                                   crop_height)
+
+        im = PIL.Image.fromarray(image_array)
+        im = im.resize((300, int(200 * image_array.shape[1] / image_array.shape[0])))
+        im.save('preview_temp.jpg')
+
+        pixmap = QtGui.QPixmap('preview_temp.jpg')
+        self.preview.setPixmap(pixmap)
+
+        self.image_idx += 1
 
 
 class CropEdit(QtWidgets.QComboBox):
@@ -100,60 +144,11 @@ class CropEdit(QtWidgets.QComboBox):
         TrainParamServer()['Crop_idx'] = self.currentIndex()
 
 
-class PreviewWidget(QtWidgets.QWidget):
-
-    def __init__(self, image_file, *args, **kwargs):
-        super(PreviewWidget, self).__init__()
-        self.setStyleSheet('''PreviewWidget{background: rgb(55,55,55)}
-        ''')
-        self.pixmap = None
-        self.image_idx = 0
-        self.update()
-
-    def paintEvent(self, event):
-        # TODO augmentation
-        self.pixmap = QtGui.QPixmap('preview_temp.jpg')
-        # size = self.size()
-        painter = QtGui.QPainter(self)
-        point = QtCore.QPoint(0, 0)
-
-        # start painting the label from left upper corner
-        # point.setX((size.width() - scaled_pix.width()) / 2)
-        # point.setY((size.height() - scaled_pix.height()) / 2)
-        painter.drawPixmap(point, self.pixmap)
-
-    def update(self):
-        self.image_file = glob.glob(TrainParamServer()['TrainData'] + '.jpg')[self.image_idx]
-        image_array = chainercv.utils.read_image_as_array(self.image_file)
-
-        use_resize = TrainParamServer()['UseResize']
-        resize_width = TrainParamServer()['ResizeWidth']
-        resize_height = TrainParamServer()['ResizeHeight']
-
-        crop_edit = TrainParamServer()['Crop']
-        crop_width = TrainParamServer()['CropWidth']
-        crop_height = TrainParamServer()['CropHeight']
-
-        use_random_x_flip = TrainParamServer()['UseRandomXFlip']
-        use_random_y_flip = TrainParamServer()['UseRandomYFlip']
-        use_random_rotate = TrainParamServer()['UseRandomRotation']
-        pca_lighting = TrainParamServer()['PCAlighting']
-
-        augment_data(image_array, use_resize, resize_width,
-        resize_height, pca_lighting, use_random_x_flip, use_random_y_flip,
-        use_random_rotate, crop_edit, crop_width, crop_height)
-
-        im = PIL.Image.fromarray(image_array)
-        im.save('preview_temp.jpg')
-
-        self.image_idx += 1
-
-
 class DataDirEdit(QtWidgets.QPushButton):
     def __init__(self, settings, parent, key):
         self.parent = parent
         self.settings = settings
-        super(DataFileEdit, self).__init__('Browse')
+        super(DataDirEdit, self).__init__('Browse')
         v = settings.value(key, type=str)
         v = v if v else './'
         if key in TrainParamServer().__dict__:
@@ -178,3 +173,6 @@ class DataDirEdit(QtWidgets.QPushButton):
             self.value = data_dir
             self.label.setText(self.value)
             self.parent.state_changed(0)
+
+    def python_selected(self):
+        return False

@@ -27,6 +27,7 @@ def augment_data(image, use_resize, resize_width, resize_height,
         image = transforms.center_crop(image, (crop_width, crop_height))
     elif crop_edit == 'Random Crop':
         image = transforms.random_crop(image, (crop_width, crop_height))
+    return image
 
 
 class PreprocessedDataset(chainer.dataset.DatasetMixin):
