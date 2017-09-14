@@ -43,12 +43,15 @@ class AbstractDataDialog(QtWidgets.QDialog):
     def configure_window(self):
         raise NotImplementedError()
 
-    def close(self):
+    def commit_all(self):
         for name, widget in self.dialogs:
             try:
                 widget.commit()
             except AttributeError:
                 pass
+
+    def close(self):
+        self.commit_all()
         self.settings.sync()
         self.parent().update_data_label()
         super(AbstractDataDialog, self).close()

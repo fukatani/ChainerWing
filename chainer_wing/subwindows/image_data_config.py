@@ -88,6 +88,7 @@ class ImageDataDialog(AbstractDataDialog):
                         ]
 
     def update_preview(self):
+        self.commit_all()
         image_files = glob.glob(TrainParamServer()['TrainData'] + '/*.jpg')
         if not image_files:
             self.image_file = None
@@ -110,9 +111,9 @@ class ImageDataDialog(AbstractDataDialog):
         pca_lighting = TrainParamServer()['PCAlighting']
 
         image_array = augment_data(image_array, use_resize, resize_width,
-                                   resize_height, pca_lighting,
-                                   use_random_x_flip, use_random_y_flip,
-                                   use_random_rotate, crop_edit, crop_width,
+                                   resize_height, use_random_x_flip,
+                                   use_random_y_flip, use_random_rotate,
+                                   pca_lighting, crop_edit, crop_width,
                                    crop_height)
 
         im = PIL.Image.fromarray(image_array)
