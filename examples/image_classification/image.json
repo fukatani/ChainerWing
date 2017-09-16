@@ -1,91 +1,6 @@
 {
     "graph": [
         [
-            "f0",
-            {
-                "class": "AveragePooling2d",
-                "inputConnections": {
-                    "in_array": "l1:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ],
-                    [
-                        "ksize",
-                        "int",
-                        null,
-                        null
-                    ],
-                    [
-                        "pad",
-                        "int",
-                        null,
-                        null
-                    ]
-                ],
-                "name": null,
-                "outputConnections": {
-                    "out_array": [
-                        "loss0:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    106,
-                    -163
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "loss0",
-            {
-                "class": "SoftmaxCrossEntropy",
-                "inputConnections": {
-                    "in_array": "f0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "name": null,
-                "outputConnections": {},
-                "outputs": [],
-                "position": [
-                    344,
-                    -178
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
             "l1",
             {
                 "class": "Convolution2D",
@@ -108,8 +23,8 @@
                     [
                         "in_channels",
                         "int",
-                        null,
-                        null
+                        0,
+                        0
                     ],
                     [
                         "out_channels",
@@ -120,20 +35,20 @@
                     [
                         "ksize",
                         "int",
-                        null,
-                        null
+                        0,
+                        0
                     ],
                     [
                         "stride",
                         "int",
-                        null,
-                        null
+                        0,
+                        0
                     ],
                     [
                         "pad",
                         "int",
-                        null,
-                        null
+                        0,
+                        0
                     ],
                     [
                         "nobias",
@@ -184,8 +99,8 @@
                     [
                         "in_channels",
                         "int",
-                        null,
-                        null
+                        0,
+                        0
                     ],
                     [
                         "out_channels",
@@ -196,20 +111,20 @@
                     [
                         "ksize",
                         "int",
-                        null,
-                        null
+                        0,
+                        0
                     ],
                     [
                         "stride",
                         "int",
-                        null,
-                        null
+                        0,
+                        0
                     ],
                     [
                         "pad",
                         "int",
-                        null,
-                        null
+                        0,
+                        0
                     ],
                     [
                         "nobias",
@@ -235,6 +150,91 @@
                 "position": [
                     -353,
                     -169
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "loss0",
+            {
+                "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "f0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    344,
+                    -178
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f0",
+            {
+                "class": "AveragePooling2d",
+                "inputConnections": {
+                    "in_array": "l1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        0,
+                        0
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        0,
+                        0
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "loss0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    106,
+                    -163
                 ],
                 "subgraph": "main"
             }
@@ -267,7 +267,7 @@
         "UseRandomYFlip": false,
         "UseResize": false,
         "UseSameData": true,
-        "WorkDir": "/home/ryo/workspace/github/CW_gui/chainer_wing/subwindows../../examples/",
+        "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/image_classification",
         "opt_eps": 1e-06,
         "opt_rho": 0.95
     }
