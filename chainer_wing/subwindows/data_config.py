@@ -3,46 +3,12 @@ from PyQt5 import QtWidgets
 from chainer_wing.subwindows.train_config import TrainParamServer
 
 
-class DataDialog(QtWidgets.QDialog):
+class AbstractDataDialog(QtWidgets.QDialog):
     def __init__(self, *args, settings=None):
         self.settings = settings
+        self.configure_window()
 
-        self.train_edit = DataFileEdit(settings, self, 'TrainData')
-        self.test_edit = DataFileEdit(settings, self, 'TestData')
-        self.same_data_check = DataCheckBox(settings, self, 'UseSameData')
-        self.same_data_check.stateChanged.connect(self.state_changed)
-        self.shuffle_check = DataCheckBox(settings, self, 'Shuffle')
-        self.ratio_edit = DataLineEdit(settings, self, 'TestDataRatio')
-        self.preprocessor = PreProcessorEdit(settings, self)
-
-        self.dialogs = [('Train data Settings', None),
-                        ('Set Train Data', self.train_edit),
-                        ('', self.train_edit.label),
-                        ('Test data Settings', None),
-                        ('Same data with training', self.same_data_check),
-                        ('Shuffle', self.shuffle_check),
-                        ('Test data ratio', self.ratio_edit),
-                        ('Set Test Data', self.test_edit),
-                        ('', self.test_edit.label),
-                        ('Preprocess', None),
-                        ('Preprocessor', self.preprocessor),
-                        ]
-        super(DataDialog, self).__init__(*args)
-        self.setStyleSheet('''DataDialog {
-                                background: rgb(75,75,75);
-                            }
-                            QSpinBox {
-                                background-color: rgb(95,95,95);
-                                color: white;
-                                border: 1px solid gray;
-                            }
-                            QPushButton {
-                                background-color: rgb(155,95,95);
-                            }
-                            QLabel {
-                                color: white;
-                            }
-        ''')
+        super(AbstractDataDialog, self).__init__(*args)
         main_layout = QtWidgets.QVBoxLayout()
         for name, widget in self.dialogs:
             if not widget:
@@ -74,15 +40,21 @@ class DataDialog(QtWidgets.QDialog):
         self.resize(300, 300)
         self.state_changed(0)
 
-    def close(self):
+    def configure_window(self):
+        raise NotImplementedError()
+
+    def commit_all(self):
         for name, widget in self.dialogs:
             try:
                 widget.commit()
             except AttributeError:
                 pass
+
+    def close(self):
+        self.commit_all()
         self.settings.sync()
         self.parent().update_data_label()
-        super(DataDialog, self).close()
+        super(AbstractDataDialog, self).close()
 
     def redraw(self):
         self.parent().drawer.repaint()
@@ -103,6 +75,50 @@ class DataDialog(QtWidgets.QDialog):
             self.ratio_edit.setDisabled(True)
             self.test_edit.setDisabled(False)
             self.shuffle_check.setDisabled(True)
+
+
+class DataDialog(AbstractDataDialog):
+
+    def __init__(self, *args, settings=None):
+        super(DataDialog, self).__init__(*args, settings=settings)
+        self.setStyleSheet('''DataDialog {
+                                        background: rgb(75,75,75);
+                                    }
+                                    QSpinBox {
+                                        background-color: rgb(95,95,95);
+                                        color: white;
+                                        border: 1px solid gray;
+                                    }
+                                    QPushButton {
+                                        background-color: rgb(155,95,95);
+                                    }
+                                    QLabel {
+                                        color: white;
+                                    }
+                ''')
+
+    def configure_window(self):
+        settings = self.settings
+        self.train_edit = DataFileEdit(settings, self, 'TrainData')
+        self.test_edit = DataFileEdit(settings, self, 'TestData')
+        self.same_data_check = DataCheckBox(settings, self, 'UseSameData')
+        self.same_data_check.stateChanged.connect(self.state_changed)
+        self.shuffle_check = DataCheckBox(settings, self, 'Shuffle')
+        self.ratio_edit = DataLineEdit(settings, self, 'TestDataRatio')
+        self.preprocessor = PreProcessorEdit(settings, self)
+
+        self.dialogs = [('Train data Settings', None),
+                        ('Set Train Data', self.train_edit),
+                        ('', self.train_edit.label),
+                        ('Test data Settings', None),
+                        ('Same data with training', self.same_data_check),
+                        ('Shuffle', self.shuffle_check),
+                        ('Test data ratio', self.ratio_edit),
+                        ('Set Test Data', self.test_edit),
+                        ('', self.test_edit.label),
+                        ('Preprocess', None),
+                        ('Preprocessor', self.preprocessor),
+                        ]
 
 
 class DataFileEdit(QtWidgets.QPushButton):
@@ -167,12 +183,14 @@ class DataCheckBox(QtWidgets.QCheckBox):
 
 
 class DataLineEdit(QtWidgets.QLineEdit):
-    def __init__(self, settings, parent, key):
+    def __init__(self, settings, parent, key, data_type=float):
+        super(DataLineEdit, self).__init__()
+
         self.parent = parent
         self.settings = settings
-        super(DataLineEdit, self).__init__()
+        self.data_type = data_type
         self.key = key
-        v = settings.value(key, type=float)
+        v = settings.value(key, type=data_type)
         v = v if v else 0.5
         if key in TrainParamServer().__dict__:
             v = TrainParamServer()[key]
@@ -182,7 +200,7 @@ class DataLineEdit(QtWidgets.QLineEdit):
 
     def commit(self):
         try:
-            value = float(self.text())
+            value = self.data_type(self.text())
             self.settings.setValue(self.key, value)
             TrainParamServer()[self.key] = value
         except ValueError:

@@ -17,7 +17,7 @@ class AveragePooling2d(Function):
 
     @classmethod
     def register_chainer_impl(cls):
-        return chainer.functions.average_pooling_2d()
+        return chainer.functions.average_pooling_2d
 
 
 class MaxPooling2d(Function):
@@ -34,4 +34,4 @@ class MaxPooling2d(Function):
 
     @classmethod
     def register_chainer_impl(cls):
-        return chainer.functions.max_pooling_2d()
+        return chainer.functions.max_pooling_2d

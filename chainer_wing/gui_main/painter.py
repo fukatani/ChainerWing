@@ -12,6 +12,7 @@ from PyQt5.QtCore import Qt
 from chainer_wing import util
 from chainer_wing.gui_main.mainwindow import Ui_MainWindow
 from chainer_wing.subwindows.data_config import DataDialog
+from chainer_wing.subwindows.image_data_config import ImageDataDialog
 from chainer_wing.subwindows.settings import SettingsDialog
 from chainer_wing.subwindows.train_config import TrainDialog
 from chainer_wing.subwindows.train_config import TrainParamServer
@@ -743,14 +744,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.DrawArea.setLayout(l)
         self.drawer = painter
 
-        self.setupNodeLib()
         # self.drawer.graph.spawnAndConnect()
 
         # to reflect initial configuration
         SettingsDialog(self, settings=self.settings).close()
         TrainDialog(self, settings=self.settings).close()
+        ImageDataDialog(self, settings=self.settings).close()
         DataDialog(self, settings=self.settings).close()
         self.update_data_label()
+
+        self.setupNodeLib()
 
     def setArgs(self, args):
         if args.test:
@@ -970,7 +973,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.knownSubgraphs = self.knownSubgraphs.union(new)
 
     def open_data_config(self):
-        data_dialog = DataDialog(self, settings=self.settings)
+        if 'Image' in TrainParamServer()['Task']:
+            try:
+                import chainercv
+                data_dialog = ImageDataDialog(self, settings=self.settings)
+            except ImportError:
+                util.disp_error('Failed to import chainercv.'
+                                'See https://github.com/chainer/chainercv#installation')
+                return
+        else:
+            data_dialog = DataDialog(self, settings=self.settings)
         data_dialog.show()
         self.update_data_label()
 
