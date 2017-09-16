@@ -1,9 +1,9 @@
 import glob
 
 import chainercv.utils
+import numpy
 import PIL.Image
 from PyQt5 import QtWidgets
-from PyQt5 import QtCore
 from PyQt5 import QtGui
 
 from chainer_wing.subwindows.train_config import TrainParamServer
@@ -117,7 +117,7 @@ class ImageDataDialog(AbstractDataDialog):
                                    crop_height)
 
         im = PIL.Image.fromarray(image_array)
-        im = im.resize((300, int(200 * image_array.shape[1] / image_array.shape[0])))
+        im = im.resize((300, int(300 * image_array.shape[1] / image_array.shape[0])))
         im.save('preview_temp.jpg')
 
         pixmap = QtGui.QPixmap('preview_temp.jpg')
