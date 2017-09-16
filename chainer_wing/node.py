@@ -71,6 +71,15 @@ class Info(object):
         if not self.var_type == object:
             try:
                 self.default = self.var_type(value)
+            except TypeError:
+                if self.var_type == int:
+                    self.default = 0
+                elif self.var_type == float:
+                    self.default = 0.0
+                elif self.var_type == bool:
+                    self.default = False
+                elif self.var_type == str:
+                    self.default = ''
             except ValueError:
                 self.default = None
             if self.var_type == bool:
