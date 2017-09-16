@@ -21,6 +21,10 @@ class Convolution2D(Link):
                     ksize=self._ksize,
                     nobias=self._nobias)
 
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.links.Convolution2D
+
 
 class DepthwiseConvolution2D(Link):
     Input('in_array', chainer.Variable)
@@ -40,6 +44,10 @@ class DepthwiseConvolution2D(Link):
                     ksize=self._ksize,
                     nobias=self._nobias)
 
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.links.DepthwiseConvolution2D
+
 
 class BatchNormalization(Link):
     Input('in_array', chainer.Variable)
@@ -58,3 +66,7 @@ class BatchNormalization(Link):
                     eps=self._eps,
                     use_gamma=self._use_gamma,
                     use_beta=self._use_beta)
+
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.links.BatchNormalization
