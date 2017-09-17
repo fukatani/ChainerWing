@@ -82,7 +82,6 @@ class Graph(object):
         except AttributeError:
             pass
         self.nodes[newNode.ID] = newNode
-        self.newestNode = newNode
 
         return newNode
 
@@ -380,13 +379,6 @@ class Graph(object):
         """
         nodeID, pinName = pinID.split(':')
         return pinName[1:], self.nodes[nodeID]
-
-    def getNewestNode(self):
-        """
-        Get a reference to the node instance that was created last.
-        :return:
-        """
-        return self.newestNode
 
     def removeConnection(self, pinID, from_self):
         """
