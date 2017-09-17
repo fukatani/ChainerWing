@@ -26,7 +26,6 @@ class Graph(object):
 
     def __init__(self, painter=None):
         self.slave = False
-        self.currentReport = ''
         self.statusLock = None
         self.connected = False
         self.nextFreeNodeID = 0
@@ -46,19 +45,6 @@ class Graph(object):
 
     def __getattr__(self, item):
         return super(Graph, self).__getattr__(item)
-
-    def needsUpdate(self):
-        """
-        Called by the painter instance periodically to check whether a repaint was requested by another thread.
-        :return:
-        """
-        if self.connected:
-            status = self.status
-            if status:
-                IDs = status['STATUS']['ran']
-                self.currentReport = status['REPORT']
-                if IDs:
-                    return True
 
     def spawnNode(self, node_class, connections=None, position=(0, 0),
                   silent=False, id=None, name=None):

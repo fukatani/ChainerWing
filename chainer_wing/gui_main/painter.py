@@ -46,7 +46,6 @@ class Painter2D(QtWidgets.QWidget):
         super(Painter2D, self).__init__(parent)
         self.setMouseTracking(True)
         self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.checkGraph)
         self.timer.start(500)
         self.setFocusPolicy(Qt.ClickFocus)
         self.graph = None
@@ -156,10 +155,6 @@ class Painter2D(QtWidgets.QWidget):
         outputs = {node.outputs.values() for node in self.nodes if
                    node.subgraph == subgraph}
         return [j for i in outputs for j in i]
-
-    def checkGraph(self):
-        if self.graph.needsUpdate():
-            self.update()
 
     def relayInputEventsTo(self, drawItem):
         self.relayTo = drawItem
