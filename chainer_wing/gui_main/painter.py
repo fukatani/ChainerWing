@@ -771,7 +771,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.data_action = QtWidgets.QAction(
             QtGui.QIcon(os.path.join(self.iconRoot, 'new.png')), 'Data', self)
         self.data_action.setShortcut('Ctrl+D')
-        self.data_action.setStatusTip('Manageing Data')
+        self.data_action.setStatusTip('Managing Data')
         self.data_action.triggered.connect(self.open_data_config)
 
         self.compile_and_exe_action = QtWidgets.QAction(
@@ -1031,13 +1031,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         except AttributeError:
             self.statusBar.showMessage(
                 'Cannot Update Graph. No Interpreter Available..', 2000)
-
-    def dropGraph(self):
-        try:
-            self.drawer.graph.dropGraph()
-        except AttributeError:
-            self.statusBar.showMessage(
-                'Cannot Drop Graph. No Interpreter Available..', 2000)
 
     def killRunner(self):
         try:

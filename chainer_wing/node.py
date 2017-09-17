@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from copy import copy
+import inspect
 
 from PyQt5.QtGui import QColor
 
@@ -318,7 +319,20 @@ class Node(object, metaclass=MetaNode):
         if len(self.inputs.keys()) == 2:
             self.inputs[list(self.inputs.keys())[1]].setPure()
 
+        # self.set_inputs_to_initial()
         self.setup()
+
+    def set_inputs_to_initial(self):
+        if not hasattr(self, 'register_chainer_impl'):
+            return
+        impl = self.register_chainer_impl()
+        print(inspect.signature(impl))
+        default_dict = {key: value.default for key, value in
+                        inspect.signature(impl).parameters.items()
+                        if repr(value.default) !="<class 'inspect._empty'>"}
+        for key in self.inputs.keys():
+            if key in default_dict:
+                self.inputs[key].value = default_dict[key]
 
     def setup(self):
         """
@@ -355,34 +369,6 @@ class Node(object, metaclass=MetaNode):
         """
         raise NotImplementedError('This method should be override')
 
-    def notify(self):
-        """
-        Manage the node's state after execution and set input values of subsequent nodes.
-        :return: None
-        :rtype: None
-        """
-        for con in self.graph.getConnectionsFrom(self):
-            self.buffered = False
-            output_name = con.output_name
-            next_node = con.input_node
-            next_input = con.input_name
-            # next_node.prepare()
-            if self.outputs[output_name].valueSet:
-                next_node.setInput(next_input,
-                                   self.outputs[output_name].value,
-                                   override=True,
-                                   loopLevel=self.loopLevel)
-            else:
-                next_node.setInput(next_input,
-                                   self.outputs[output_name].default,
-                                   override=True,
-                                   loopLevel=self.loopLevel)
-        if not self.graph.getConnectionsFrom(self):
-            self.buffered = True
-            for out in self.outputs.values():
-                self.outputBuffer[out.name] = out.value
-        [Info.reset(inp, self.loopLevel) for inp in self.inputs.values()]
-
     def setInput(self, input_name, value, override=False, loopLevel=0):
         """
         Set the value of an input.
@@ -395,27 +381,6 @@ class Node(object, metaclass=MetaNode):
         self.loopLevel = max([self.loopLevel, loopLevel])
         self.inputs[input_name].set(value, override=override,
                                     loopLevel=loopLevel)
-
-    def check(self):
-        """
-        Checks whether all prerequisites for executing the node instance are met.
-        Override this to implement custom behavior.
-        By default the methods returns True if all inputs have been set. False otherwise.
-        :return: Boolean; True if ready, False if not ready.
-        :rtype: bool
-        """
-        if self.locked:
-            return False
-        if self.buffered and self.outputs.keys():
-            print('Node {} has buffered output. '
-                  'Trying to notify outgoing connections.'.format(self))
-            return self.notify()
-        for inp in self.inputs.values():
-            if not inp.isAvailable():
-                if inp.optional and not inp.connected:
-                    continue
-                return False
-        return True
 
     def report(self):
         """
