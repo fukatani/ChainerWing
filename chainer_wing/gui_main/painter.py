@@ -259,7 +259,6 @@ class Painter2D(QtWidgets.QWidget):
                 xx = xx.x()
                 if x1 < xx < x2 and y1 < yy < y2:
                     self.clickedNode = nodePoints[-1]
-                    self.graph.requestReport(self.clickedNode.ID)
                     # print(self.clickedNode)
                     self.update()
                     self.downOverNode = event.pos()

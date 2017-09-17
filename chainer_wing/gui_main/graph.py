@@ -26,8 +26,6 @@ class Graph(object):
 
     def __init__(self, painter=None):
         self.slave = False
-        self._requestUpdate = False
-        self._requestReport = ''
         self.currentReport = ''
         self.statusLock = None
         self.connected = False
@@ -49,23 +47,6 @@ class Graph(object):
     def __getattr__(self, item):
         return super(Graph, self).__getattr__(item)
 
-    def requestUpdate(self):
-        """
-        Tells the graph painter that changes to the graph were made that require a redraw.
-        Use this method instead of a direct call of the painter update method if the request is not made by the main
-        thread.
-        :return:
-        """
-        self._requestUpdate = True
-
-    def requestReport(self, nodeID):
-        self._requestReport = nodeID
-
-    def getReport(self):
-        r = self.currentReport
-        self.currentReport = {}
-        return r
-
     def needsUpdate(self):
         """
         Called by the painter instance periodically to check whether a repaint was requested by another thread.
@@ -78,9 +59,6 @@ class Graph(object):
                 self.currentReport = status['REPORT']
                 if IDs:
                     return True
-        if self._requestUpdate:
-            self._requestUpdate = False
-            return True
 
     def spawnNode(self, node_class, connections=None, position=(0, 0),
                   silent=False, id=None, name=None):
