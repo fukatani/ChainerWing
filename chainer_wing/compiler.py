@@ -6,6 +6,10 @@ from chainer_wing.subwindows.train_config import TrainParamServer
 from chainer_wing.templates import TEMPLATES
 
 
+class NoLossError(Exception):
+    pass
+
+
 class Compiler(object):
     def __call__(self, nodes, **kwargs):
         if not nodes:
@@ -46,6 +50,7 @@ class Compiler(object):
     def compile_call(self, nodes):
         call_all_loss = []
         call_all_pred = []
+        loss = None
         for node in nodes.values():
             if not issubclass(type(node), Loss):
                 continue
@@ -72,6 +77,8 @@ class Compiler(object):
             call_all_pred.append(compiled_pred)
             call_all_loss.append(loss.call())
 
+        if loss is None:
+            raise NoLossError('Please plase loss function.')
         return ', '.join(call_all_loss), ', '.join(call_all_pred), loss.get_name()
 
     def compile_node(self, cursor, nodes, decode):

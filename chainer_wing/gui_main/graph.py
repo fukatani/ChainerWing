@@ -233,6 +233,9 @@ class Graph(object):
                                                          error.args[0]))
             self.nodes[error.args[0]].runtime_error_happened = True
             return False
+        except compiler.NoLossError:
+            util.disp_error('Please place loss function.')
+            return False
         return result
 
     def run(self):
