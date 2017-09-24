@@ -1,7 +1,6 @@
 import glob
 
 import chainercv.utils
-import numpy
 import PIL.Image
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
@@ -12,6 +11,7 @@ from chainer_wing.subwindows.data_config import DataCheckBox
 from chainer_wing.subwindows.data_config import DataFileLabel
 from chainer_wing.subwindows.data_config import DataLineEdit
 from chainer_wing.extension.image_dataset import augment_data
+from chainer_wing import util
 
 
 class ImageDataDialog(AbstractDataDialog):
@@ -89,9 +89,10 @@ class ImageDataDialog(AbstractDataDialog):
 
     def update_preview(self):
         self.commit_all()
-        image_files = glob.glob(TrainParamServer()['TrainData'] + '/*.jpg')
+        image_files = glob.glob(TrainParamServer()['TrainData'] + '/*/*.jpg')
         if not image_files:
             self.image_file = None
+            util.disp_error('No image was found in {}.'.format(TrainParamServer()['TrainData']))
             return
         self.image_idx = self.image_idx % len(image_files)
         self.image_file = image_files[self.image_idx]
