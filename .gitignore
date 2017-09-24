@@ -1,6 +1,9 @@
 *.pyc
 *.npz
 *.log
+*.jpg
+*.jpg'
+*.gif'
 bin/MyNet1.py
 examples/mnist/result/*
 examples/credit_card_amount/result/*
