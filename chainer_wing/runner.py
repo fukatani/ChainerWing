@@ -1,6 +1,7 @@
 from importlib import machinery
 
 from chainer_wing.data_fetch import DataManager
+from chainer_wing.data_fetch import ImageDataManager
 from chainer_wing.extension.cw_progress_bar import CWProgressBar
 from chainer_wing.extension.plot_extension import cw_postprocess
 from chainer_wing.subwindows.train_config import TrainParamServer
@@ -18,9 +19,12 @@ class TrainRunner(object):
         self.pbar = CWProgressBar(train_server['Epoch'])
 
     def run(self):
-        train_data, test_data = DataManager().get_data_train()
-        self.module.training_main(train_data, test_data, self.pbar,
-                                  cw_postprocess)
+        if 'Image' in TrainParamServer()['Task']:
+            ImageDataManager().get_data_train()
+        else:
+            train_data, test_data = DataManager().get_data_train()
+            self.module.training_main(train_data, test_data, self.pbar,
+                                      cw_postprocess)
 
     def kill(self):
         self.pbar.finalize()

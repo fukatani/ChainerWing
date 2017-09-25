@@ -1,5 +1,7 @@
 import csv
 from importlib import machinery
+import glob
+import os
 
 from chainer.datasets import tuple_dataset
 import numpy
@@ -109,6 +111,54 @@ class DataManager(object):
         x = x - data_min + lower_limit
         data_max = numpy.max(x, axis=0)
         return x / data_max * upper_limit
+
+
+class ImageDataManager(object):
+    def get_label(self, label):
+        return label.split('/')[-2]
+
+    def get_all_images(self, dir_name):
+        if not os.path.isdir(dir_name):
+            raise Exception('Directory {} was not found.'.format(dir_name))
+        image_files = glob.glob(dir_name + '/*/*.jpg')
+        if not image_files:
+            raise Exception('No jpg file in {}'.format(dir_name))
+
+        labels = []
+        for image_file in image_files:
+            label = self.get_label(image_file)
+            labels.append(label)
+        return numpy.array(image_files), numpy.array(labels)
+
+    def make_image_list(self, image_files, labels, list_file_name):
+        assert len(image_files) == len(labels)
+        with open(list_file_name, 'w') as fw:
+            for image, label in zip(image_files, labels):
+                fw.write(image + ' '+ label)
+
+    def get_data_train(self):
+        train_server = TrainParamServer()
+        train_images, train_labels = self.get_all_images(train_server['TrainData'])
+
+        if train_server['UseSameData']:
+            split_idx = int(len(train_images) * train_server['TestDataRatio'])
+
+            indices = numpy.arange(len(train_images))
+            if train_server['Shuffle']:
+                numpy.random.shuffle(indices)
+
+            train_idx = indices[:split_idx]
+            test_idx = indices[:split_idx]
+
+            test_images = train_images[test_idx]
+            test_labels = train_labels[test_idx]
+            train_images = train_images[train_idx]
+            train_labels = train_labels[train_idx]
+        else:
+            test_images, test_labels = self.get_all_images(train_server['TrainData'])
+
+        self.make_image_list(train_images, train_labels, 'a.txt')
+        self.make_image_list(test_images, test_labels, 'b.txt')
 
 
 if __name__ == '__main__':
