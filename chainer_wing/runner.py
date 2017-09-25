@@ -1,10 +1,39 @@
 from importlib import machinery
+import os
+
+import chainer
+import numpy
 
 from chainer_wing.data_fetch import DataManager
 from chainer_wing.data_fetch import ImageDataManager
 from chainer_wing.extension.cw_progress_bar import CWProgressBar
 from chainer_wing.extension.plot_extension import cw_postprocess
 from chainer_wing.subwindows.train_config import TrainParamServer
+
+
+class PreprocessedDataset(chainer.dataset.DatasetMixin):
+
+    def __init__(self, path, root, mean, dtype=numpy.float32):
+        self.base = chainer.datasets.LabeledImageDataset(path, root)
+        self.mean = mean.astype('f')
+        self.dtype = dtype
+
+    def __len__(self):
+        return len(self.base)
+
+    def get_example(self, i):
+        if isinstance(self.base[i], tuple):
+            image, label = self.base[i]
+        else:
+            image = self.base[i]
+            label = None
+
+        image -= self.mean
+        image *= (1.0 / 255.0)  # Scale to [0, 1]
+        if label is not None:
+            return image.astype(self.dtype, copy=False), label
+        else:
+            return image.astype(self.dtype, copy=False)
 
 
 class TrainRunner(object):
@@ -19,12 +48,19 @@ class TrainRunner(object):
         self.pbar = CWProgressBar(train_server['Epoch'])
 
     def run(self):
+        train_server = TrainParamServer()
         if 'Image' in TrainParamServer()['Task']:
+            train_label_file = os.path.join(train_server.get_work_dir(),
+                                            'train_label.txt')
+            train_data = PreprocessedDataset(train_label_file)
+            test_label_file = os.path.join(train_server.get_work_dir(),
+                                           'test_label.txt')
+            test_data = PreprocessedDataset(test_label_file)
             ImageDataManager().get_data_train()
         else:
             train_data, test_data = DataManager().get_data_train()
-            self.module.training_main(train_data, test_data, self.pbar,
-                                      cw_postprocess)
+        self.module.training_main(train_data, test_data, self.pbar,
+                                  cw_postprocess)
 
     def kill(self):
         self.pbar.finalize()

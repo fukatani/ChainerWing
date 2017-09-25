@@ -157,8 +157,12 @@ class ImageDataManager(object):
         else:
             test_images, test_labels = self.get_all_images(train_server['TrainData'])
 
-        self.make_image_list(train_images, train_labels, 'a.txt')
-        self.make_image_list(test_images, test_labels, 'b.txt')
+        train_label_file = os.path.join(train_server.get_work_dir(),
+                                        'train_label.txt')
+        self.make_image_list(train_images, train_labels, train_label_file)
+        test_label_file = os.path.join(train_server.get_work_dir(),
+                                        'test_label.txt')
+        self.make_image_list(test_images, test_labels, test_label_file)
 
 
 if __name__ == '__main__':
