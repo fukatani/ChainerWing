@@ -4,6 +4,7 @@ import glob
 import os
 
 from chainer.datasets import tuple_dataset
+from chainer.datasets.image_dataset import _read_image_as_array
 import numpy
 
 from chainer_wing.subwindows.train_config import TrainParamServer
@@ -163,6 +164,20 @@ class ImageDataManager(object):
         test_label_file = os.path.join(train_server.get_work_dir(),
                                         'test_label.txt')
         self.make_image_list(test_images, test_labels, test_label_file)
+
+        self.compute_mean(train_images)
+
+    def compute_mean(self, images):
+        print('compute mean image')
+        sum_image = 0
+        N = len(images)
+        for i, image in enumerate(images):
+            sum_image += _read_image_as_array(image, numpy.float32)
+
+        mean_file = os.path.join(TrainParamServer().get_work_dir(),
+                                 'mean.npy')
+        mean = sum_image / N
+        numpy.save(mean_file, mean)
 
 
 if __name__ == '__main__':

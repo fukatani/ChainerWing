@@ -13,7 +13,8 @@ from chainer_wing.subwindows.train_config import TrainParamServer
 
 class PreprocessedDataset(chainer.dataset.DatasetMixin):
 
-    def __init__(self, path, root, mean, dtype=numpy.float32):
+    def __init__(self, path, mean, dtype=numpy.float32):
+        root = TrainParamServer().get_work_dir()
         self.base = chainer.datasets.LabeledImageDataset(path, root)
         self.mean = mean.astype('f')
         self.dtype = dtype
@@ -50,13 +51,17 @@ class TrainRunner(object):
     def run(self):
         train_server = TrainParamServer()
         if 'Image' in TrainParamServer()['Task']:
+            ImageDataManager().get_data_train()
             train_label_file = os.path.join(train_server.get_work_dir(),
                                             'train_label.txt')
-            train_data = PreprocessedDataset(train_label_file)
             test_label_file = os.path.join(train_server.get_work_dir(),
                                            'test_label.txt')
-            test_data = PreprocessedDataset(test_label_file)
-            ImageDataManager().get_data_train()
+            mean_file = os.path.join(TrainParamServer().get_work_dir(),
+                                     'mean.npy')
+            mean = numpy.load(mean_file)
+            train_data = PreprocessedDataset(train_label_file, mean)
+            test_data = PreprocessedDataset(test_label_file, mean)
+
         else:
             train_data, test_data = DataManager().get_data_train()
         self.module.training_main(train_data, test_data, self.pbar,
