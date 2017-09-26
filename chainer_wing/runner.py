@@ -7,34 +7,9 @@ import numpy
 from chainer_wing.data_fetch import DataManager
 from chainer_wing.data_fetch import ImageDataManager
 from chainer_wing.extension.cw_progress_bar import CWProgressBar
+from chainer_wing.extension.image_dataset import PreprocessedDataset
 from chainer_wing.extension.plot_extension import cw_postprocess
 from chainer_wing.subwindows.train_config import TrainParamServer
-
-
-class PreprocessedDataset(chainer.dataset.DatasetMixin):
-
-    def __init__(self, path, mean, dtype=numpy.float32):
-        root = TrainParamServer().get_work_dir()
-        self.base = chainer.datasets.LabeledImageDataset(path, root)
-        self.mean = mean.astype('f')
-        self.dtype = dtype
-
-    def __len__(self):
-        return len(self.base)
-
-    def get_example(self, i):
-        if isinstance(self.base[i], tuple):
-            image, label = self.base[i]
-        else:
-            image = self.base[i]
-            label = None
-
-        image -= self.mean
-        image *= (1.0 / 255.0)  # Scale to [0, 1]
-        if label is not None:
-            return image.astype(self.dtype, copy=False), label
-        else:
-            return image.astype(self.dtype, copy=False)
 
 
 class TrainRunner(object):
