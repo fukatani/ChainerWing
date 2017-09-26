@@ -191,7 +191,7 @@ class DataLineEdit(QtWidgets.QLineEdit):
         self.data_type = data_type
         self.key = key
         v = settings.value(key, type=data_type)
-        v = v if v else 0.5
+        v = v if v else 100
         if key in TrainParamServer().__dict__:
             v = TrainParamServer()[key]
         else:

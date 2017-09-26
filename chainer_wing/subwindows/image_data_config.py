@@ -71,7 +71,6 @@ class ImageDataDialog(AbstractDataDialog):
                         ('Shuffle', self.shuffle_check),
                         ('Test data ratio', self.ratio_edit),
                         ('Set Test Data', self.test_edit),
-                        ('Use Resize', self.use_resize),
                         ('Resize Width', self.resize_width),
                         ('Resize Height', self.resize_height),
                         ('', self.test_edit.label),
@@ -98,7 +97,6 @@ class ImageDataDialog(AbstractDataDialog):
         self.image_file = image_files[self.image_idx]
         image_array = chainercv.utils.read_image_as_array(self.image_file)
 
-        use_resize = TrainParamServer()['UseResize']
         resize_width = TrainParamServer()['ResizeWidth']
         resize_height = TrainParamServer()['ResizeHeight']
 
@@ -111,7 +109,7 @@ class ImageDataDialog(AbstractDataDialog):
         use_random_rotate = TrainParamServer()['UseRandomRotation']
         pca_lighting = TrainParamServer()['PCAlighting']
 
-        image_array = augment_data(image_array, use_resize, resize_width,
+        image_array = augment_data(image_array, resize_width,
                                    resize_height, use_random_x_flip,
                                    use_random_y_flip, use_random_rotate,
                                    pca_lighting, crop_edit, crop_width,

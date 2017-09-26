@@ -11,12 +11,10 @@ from chainercv import transforms
 from chainer_wing.subwindows.train_config import TrainParamServer
 
 
-def augment_data(image, use_resize, resize_width, resize_height,
+def augment_data(image, resize_width, resize_height,
                  use_random_x_flip, use_random_y_flip, use_random_rotate,
                  use_pca_lighting, crop_edit, crop_width, crop_height):
     image = image.transpose(2, 0, 1).astype(numpy.float32)
-    if use_resize:
-        image = transforms.resize(image, (resize_width, resize_height))
     image = transforms.random_flip(image, use_random_x_flip,
                                    use_random_y_flip)
     if use_random_rotate:
@@ -28,6 +26,7 @@ def augment_data(image, use_resize, resize_width, resize_height,
         image = transforms.center_crop(image, (crop_width, crop_height))
     elif crop_edit == 'Random Crop':
         image = transforms.random_crop(image, (crop_width, crop_height))
+    image = transforms.resize(image, (resize_width, resize_height))
     return image.transpose(1, 2, 0).astype(numpy.uint8)
 
 
@@ -39,7 +38,6 @@ class PreprocessedDataset(chainer.dataset.DatasetMixin):
         self.mean = mean.astype('f')
         self.dtype = dtype
 
-        self.use_resize = TrainParamServer()['UseResize']
         self.resize_width = TrainParamServer()['ResizeWidth']
         self.resize_height = TrainParamServer()['ResizeHeight']
 
@@ -62,7 +60,7 @@ class PreprocessedDataset(chainer.dataset.DatasetMixin):
             image = self.base[i]
             label = None
 
-        augment_data(image, self.use_resize, self.resize_width,
+        augment_data(image, self.resize_width,
                      self.resize_height, self.use_random_x_flip,
                      self.use_random_y_flip, self.use_random_rotate,
                      self.pca_lighting, self.crop_edit, self.crop_width,

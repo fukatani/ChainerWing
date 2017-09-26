@@ -1,84 +1,6 @@
 {
     "graph": [
         [
-            "l1",
-            {
-                "class": "Convolution2D",
-                "inputConnections": {
-                    "in_array": "l0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ],
-                    [
-                        "in_channels",
-                        "int",
-                        0,
-                        0
-                    ],
-                    [
-                        "out_channels",
-                        "int",
-                        3,
-                        3
-                    ],
-                    [
-                        "ksize",
-                        "int",
-                        0,
-                        0
-                    ],
-                    [
-                        "stride",
-                        "int",
-                        0,
-                        0
-                    ],
-                    [
-                        "pad",
-                        "int",
-                        0,
-                        0
-                    ],
-                    [
-                        "nobias",
-                        "bool",
-                        false,
-                        false
-                    ]
-                ],
-                "name": null,
-                "outputConnections": {
-                    "out_array": [
-                        "f0:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    -139,
-                    -172
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
             "l0",
             {
                 "class": "Convolution2D",
@@ -186,6 +108,84 @@
             }
         ],
         [
+            "l1",
+            {
+                "class": "Convolution2D",
+                "inputConnections": {
+                    "in_array": "l0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "TRIGGER",
+                        "object",
+                        "",
+                        ""
+                    ],
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ],
+                    [
+                        "in_channels",
+                        "int",
+                        0,
+                        0
+                    ],
+                    [
+                        "out_channels",
+                        "int",
+                        3,
+                        3
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        0,
+                        0
+                    ],
+                    [
+                        "stride",
+                        "int",
+                        0,
+                        0
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        0,
+                        0
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false,
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "position": [
+                    -139,
+                    -172
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
             "f0",
             {
                 "class": "AveragePooling2d",
@@ -243,8 +243,8 @@
     "train": {
         "BatchSize": 20,
         "Crop": "Do Nothing",
-        "CropHeight": 0.5,
-        "CropWidth": 0.5,
+        "CropHeight": 1,
+        "CropWidth": 1,
         "Crop_idx": 0,
         "Epoch": 10,
         "GPU": 1,
@@ -254,8 +254,8 @@
         "PCAlighting": 0.5,
         "PreProcessor": "Do Nothing",
         "PreProcessor_idx": 0,
-        "ResizeHeight": 0.5,
-        "ResizeWidth": 0.5,
+        "ResizeHeight": 100,
+        "ResizeWidth": 100,
         "Shuffle": false,
         "Task": "Image Classification",
         "Task_idx": 2,
