@@ -36,7 +36,6 @@ class TrainRunner(object):
             mean = numpy.load(mean_file)
             train_data = PreprocessedDataset(train_label_file, mean)
             test_data = PreprocessedDataset(test_label_file, mean)
-
         else:
             train_data, test_data = DataManager().get_data_train()
         self.module.training_main(train_data, test_data, self.pbar,

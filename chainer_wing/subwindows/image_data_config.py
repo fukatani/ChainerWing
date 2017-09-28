@@ -1,6 +1,7 @@
 import glob
 
 import chainercv.utils
+import numpy
 import PIL.Image
 from PyQt5 import QtWidgets
 from PyQt5 import QtGui
@@ -109,11 +110,13 @@ class ImageDataDialog(AbstractDataDialog):
         use_random_rotate = TrainParamServer()['UseRandomRotation']
         pca_lighting = TrainParamServer()['PCAlighting']
 
+        image_array = image_array.transpose(2, 0, 1).astype(numpy.float32)
         image_array = augment_data(image_array, resize_width,
                                    resize_height, use_random_x_flip,
                                    use_random_y_flip, use_random_rotate,
                                    pca_lighting, crop_edit, crop_width,
                                    crop_height)
+        image_array = image_array.transpose(1, 2, 0).astype(numpy.uint8)
 
         im = PIL.Image.fromarray(image_array)
         im = im.resize((300, int(300 * image_array.shape[1] / image_array.shape[0])))
