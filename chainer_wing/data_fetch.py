@@ -7,6 +7,7 @@ from chainer.datasets import tuple_dataset
 from chainer.datasets.image_dataset import _read_image_as_array
 import numpy
 
+from chainer_wing.extension.image_dataset import augment_data
 from chainer_wing.subwindows.train_config import TrainParamServer
 from chainer_wing import util
 
@@ -171,8 +172,27 @@ class ImageDataManager(object):
         print('compute mean image')
         sum_image = 0
         N = len(images)
+
+        resize_width = TrainParamServer()['ResizeWidth']
+        resize_height = TrainParamServer()['ResizeHeight']
+
+        crop_edit = TrainParamServer()['Crop']
+        crop_width = TrainParamServer()['CropWidth']
+        crop_height = TrainParamServer()['CropHeight']
+
+        use_random_x_flip = TrainParamServer()['UseRandomXFlip']
+        use_random_y_flip = TrainParamServer()['UseRandomYFlip']
+        use_random_rotate = TrainParamServer()['UseRandomRotation']
+        pca_lighting = TrainParamServer()['PCAlighting']
+
         for i, image in enumerate(images):
-            sum_image += _read_image_as_array(image, numpy.float32)
+            image = _read_image_as_array(image, numpy.float32)
+            image = image.transpose(2, 0, 1).astype(numpy.float32)
+            image = augment_data(image, resize_width, resize_height,
+                                 use_random_x_flip, use_random_y_flip,
+                                 use_random_rotate, pca_lighting, crop_edit,
+                                 crop_width, crop_height)
+            sum_image += image
 
         mean_file = os.path.join(TrainParamServer().get_work_dir(),
                                  'mean.npy')

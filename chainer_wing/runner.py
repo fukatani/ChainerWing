@@ -1,7 +1,6 @@
 from importlib import machinery
 import os
 
-import chainer
 import numpy
 
 from chainer_wing.data_fetch import DataManager
