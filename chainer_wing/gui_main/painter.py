@@ -477,17 +477,6 @@ class Painter2D(QtWidgets.QWidget):
             # for i, inputPin in enumerate(node.inputPins.values()):
             for i, drawItem in enumerate(self.drawItemsOfNode[node]['inp']):
                 inputPin = drawItem.data
-                if inputPin.name == 'TRIGGER':
-                    if node not in self.triggers and not inputPin.info.connected:
-                        drawItem.update(x, y + drawOffset + 8, w, h,
-                                        painter.transform())
-                        drawItem.deactivate()
-                        drawOffset += (8 + PINSIZE)
-                        continue
-                    else:
-                        self.triggers.add(node)
-                        drawItem.activate()
-                # pen.setColor(QColor(255, 190, 0))
                 try:
                     pen.setColor(Painter2D.PINCOLORS[inputPin.info.var_type])
                 except KeyError:
@@ -798,14 +787,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.clear_all_action.setIconVisibleInMenu(True)
         self.addAction(self.clear_all_action)
 
-        # self.pauseRunnerAction = QtWidgets.QAction(
-        #     QtGui.QIcon(os.path.join(self.iconRoot, 'pause.png')),
-        #     'Pause', self)
-        # self.pauseRunnerAction.setShortcut('Ctrl+P')
-        # self.pauseRunnerAction.triggered.connect(self.pauseRunner)
-        # self.pauseRunnerAction.setIconVisibleInMenu(True)
-        # self.addAction(self.pauseRunnerAction)
-
         self.compile_action = QtWidgets.QAction(
             QtGui.QIcon(os.path.join(self.iconRoot, 'unpause.png')),
             'Compile', self)
@@ -821,37 +802,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.exe_action.setIconVisibleInMenu(True)
         self.addAction(self.exe_action)
 
-        # self.gotoRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'goto.png')), 'GoTo', self)
-        # self.gotoRunnerAction.setShortcut('Ctrl+F')
-        # self.gotoRunnerAction.triggered.connect(self.gotoRunner)
-        # self.gotoRunnerAction.setIconVisibleInMenu(True)
-        # self.addAction(self.gotoRunnerAction)
-
-        # self.updateRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'update.png')), 'Update', self)
-        # self.updateRunnerAction.setShortcut('Ctrl+U')
-        # self.updateRunnerAction.triggered.connect(self.updateRunner)
-        # self.updateRunnerAction.setIconVisibleInMenu(True)
-        # self.addAction(self.updateRunnerAction)
-
-        # self.spawnRunnerAction = QAction(QIcon(os.path.join(self.iconRoot, 'spawn.png')), 'Spawn', self)
-        # self.spawnRunnerAction.setShortcut('Ctrl+H')
-        # self.spawnRunnerAction.triggered.connect(self.spawnRunner)
-        # self.spawnRunnerAction.setIconVisibleInMenu(True)
-        # self.addAction(self.spawnRunnerAction)
-
         self.deleteNodeAction = QtWidgets.QAction('Delete', self)
         self.deleteNodeAction.setShortcut('Delete')
         self.deleteNodeAction.triggered.connect(self.deleteNode)
         self.deleteNodeAction.setIconVisibleInMenu(True)
         self.addAction(self.deleteNodeAction)
-
-        # self.connectAction = QtWidgets.QAction(
-        #     QtGui.QIcon(os.path.join(self.iconRoot, 'connect.png')),
-        #     'Connect', self)
-        # self.connectAction.setShortcut('Ctrl+C')
-        # self.connectAction.triggered.connect(self.connect)
-        # self.connectAction.setIconVisibleInMenu(True)
-        # self.addAction(self.connectAction)
 
         self.statusAction = QtWidgets.QAction('Status', self)
         # self.statusAction.setShortcut('Ctrl+R')
@@ -891,14 +846,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.createSubgraphAction.setIconVisibleInMenu(False)
         self.addAction(self.createSubgraphAction)
 
-        self.configureAction = QtWidgets.QAction(
-            QtGui.QIcon(os.path.join(self.iconRoot, 'configure.png')),
-            'configure', self)
-        self.configureAction.setShortcut('Ctrl+Y')
-        self.configureAction.triggered.connect(self.configureInterpreter)
-        self.configureAction.setIconVisibleInMenu(False)
-        self.addAction(self.configureAction)
-
     def initMenus(self):
         fileMenu = self.menuBar.addMenu('&File')
         fileMenu.addAction(self.data_action)
@@ -931,35 +878,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.mainToolBar.addAction(self.exe_action)
         # self.mainToolBar.addAction(self.gotoRunnerAction)
         self.mainToolBar.addSeparator()
-        # self.mainToolBar.addAction(self.spawnRunnerAction)
-        # self.mainToolBar.addAction(self.spawnRunnerAction)
         self.mainToolBar.addAction(self.prediction_action)
         # self.mainToolBar.addAction(self.updateRunnerAction)
         self.mainToolBar.addAction(self.clear_all_action)
         self.mainToolBar.addSeparator()
-        # self.mainToolBar.addAction(self.deleteNodeAction)
-        # self.mainToolBar.addAction(self.connectAction)
-        # self.mainToolBar.addAction(self.statusAction)
         self.mainToolBar.addAction(self.train_configure_action)
         self.mainToolBar.addAction(self.settings_action)
-
-        # self.mainToolBar.addSeparator()
-        # self.mainToolBar.addWidget(QLabel('Display Macro:'))
-        # macroSelector = QComboBox(self.mainToolBar)
-        # self.macroSelector = macroSelector
-        # macroSelector.addItem('main')
-        # self.knownSubgraphs = {'main'}
-        # macroSelector.currentTextChanged.connect(self.selectSubgraph)
-        # macroSelector.activated.connect(self.getSubgraphList)
-        # self.mainToolBar.addWidget(macroSelector)
 
     def selectSubgraph(self):
         self.drawer.setSelectedSubgraph(self.macroSelector.currentText())
         self.drawer.update()
-
-    def configureInterpreter(self):
-        self.drawer.graph.configureInterpreter(
-            {'framerate': 0.01, 'foo': 'bar'})
 
     def getSubgraphList(self):
         new = self.drawer.getAllSubgraphs()
