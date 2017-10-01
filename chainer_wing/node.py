@@ -4,7 +4,7 @@ import inspect
 
 from PyQt5.QtGui import QColor
 
-from chainer_wing.util import ExistsInvalidParameter
+from chainer_wing import util
 
 NODECLASSES = {}
 
@@ -57,7 +57,7 @@ class Info(object):
         else:
             self.hints = [var_type.__name__] + hints
         self.default = default
-        self.value = None
+        self.value = util.NotSettedParameter()
         self.select = select
         self.owner = owner
         self.list = list
@@ -106,7 +106,7 @@ class Info(object):
         self.value = None
 
     def has_value_set(self):
-        return self.value is not None
+        return not isinstance(self.value, util.NotSettedParameter)
 
 
 class InputInfo(Info):
@@ -566,7 +566,7 @@ class Node(object, metaclass=MetaNode):
     def check_member(self, members):
         for member in members:
             if not hasattr(self, member):
-                raise ExistsInvalidParameter(self.ID, member)
+                raise util.ExistsInvalidParameter(self.ID, member)
 
     def get_name(self):
         if self.name:

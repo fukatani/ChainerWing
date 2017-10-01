@@ -1,3 +1,4 @@
+import json
 import sys
 
 from chainer import cuda
@@ -66,3 +67,20 @@ def get_executed_last_node():
                 break
 
     return last_node
+
+
+class NotSettedParameter(object): pass
+
+
+class NetJSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, NotSettedParameter):
+            return 'NotSettedParameter'
+        return super(NetJSONEncoder, self).default(o)
+
+
+def nethook(dct):
+    for key, value in dct.items():
+        if value == 'NotSettedParameter':
+            dct[key] = NotSettedParameter()
+    return dict

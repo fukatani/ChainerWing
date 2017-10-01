@@ -477,6 +477,17 @@ class Painter2D(QtWidgets.QWidget):
             # for i, inputPin in enumerate(node.inputPins.values()):
             for i, drawItem in enumerate(self.drawItemsOfNode[node]['inp']):
                 inputPin = drawItem.data
+                if inputPin.name == 'TRIGGER':
+                    if node not in self.triggers and not inputPin.info.connected:
+                        drawItem.update(x, y + drawOffset + 8, w, h,
+                                        painter.transform())
+                        drawItem.deactivate()
+                        drawOffset += (8 + PINSIZE)
+                        continue
+                    else:
+                        self.triggers.add(node)
+                        drawItem.activate()
+                # pen.setColor(QColor(255, 190, 0))
                 try:
                     pen.setColor(Painter2D.PINCOLORS[inputPin.info.var_type])
                 except KeyError:
@@ -997,8 +1008,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         logger.debug('Attempting to load graph: {}'.format(file_name))
         self.clear_all_nodes()
         with open(file_name, 'r') as fp:
-            line = ''.join(fp.readlines())
-            proj_dict = json.loads(line)
+            proj_dict = json.load(fp)
+            # proj_dict = json.load(fp, object_hook=util.nethook)
             if 'graph' in proj_dict:
                 self.drawer.graph.load_from_dict(proj_dict['graph'])
                 self.statusBar.showMessage(
@@ -1024,7 +1035,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         with open(file_name, 'w') as fp:
             proj_dict = {'graph': self.drawer.graph.to_dict(),
                          'train': TrainParamServer().to_dict()}
-            proj_dump = json.dumps(proj_dict, sort_keys=True, indent=4)
+            proj_dump = json.dumps(proj_dict, sort_keys=True, indent=4,
+                                   cls=util.NetJSONEncoder)
             fp.write(proj_dump)
         self.statusBar.showMessage('Graph saved as {}.'.format(file_name), 2000)
         logger.info('Save graph as {}'.format(file_name))
