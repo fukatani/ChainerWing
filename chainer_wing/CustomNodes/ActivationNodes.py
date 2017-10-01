@@ -4,8 +4,8 @@ from chainer_wing.node import Input, Output, Function
 
 
 class Relu(Function):
-    Input('in_array', chainer.Variable)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Output('out_array', (chainer.Variable,))
 
     def call(self):
         return self.ID + ' = relu('
@@ -16,8 +16,8 @@ class Relu(Function):
 
 
 class Sigmoid(Function):
-    Input('in_array', chainer.Variable)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Output('out_array', (chainer.Variable,))
 
     def call(self):
         return self.ID + ' = sigmoid('
@@ -28,8 +28,8 @@ class Sigmoid(Function):
 
 
 class Tanh(Function):
-    Input('in_array', chainer.Variable)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Output('out_array', (chainer.Variable,))
 
     def call(self):
         return self.ID + ' = tanh('
@@ -40,9 +40,9 @@ class Tanh(Function):
 
 
 class Dropout(Function):
-    Input('in_array', chainer.Variable)
-    Input('ratio', float)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('ratio', (float,))
+    Output('out_array', (chainer.Variable,))
 
     def call(self):
         self.check_member(('_ratio',))
@@ -54,9 +54,9 @@ class Dropout(Function):
 
 
 class Elu(Function):
-    Input('in_array', chainer.Variable)
-    Input('alpha', float)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('alpha', (float,))
+    Output('out_array', (chainer.Variable,))
 
     def call(self):
         self.check_member(('_alpha',))
@@ -68,9 +68,9 @@ class Elu(Function):
 
 
 class ClippedRelu(Function):
-    Input('in_array', chainer.Variable)
-    Input('z', float)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('z', (float,))
+    Output('out_array', (chainer.Variable,))
 
     def call(self):
         self.check_member(('_alpha',))
@@ -82,8 +82,8 @@ class ClippedRelu(Function):
 
 
 class HardSigmoid(Function):
-    Input('in_array', chainer.Variable)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Output('out_array', (chainer.Variable,))
 
     def call(self):
         return self.ID + ' = hard_sigmoid('

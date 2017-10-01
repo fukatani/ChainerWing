@@ -5,10 +5,10 @@ from chainer_wing.node import Input, Output, Link
 
 # TODO(fukatani): implement systematically.
 class Linear(Link):
-    Input('in_array', chainer.Variable)
-    Input('out_size', int)
-    Input('nobias', bool, select=[True, False])
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('out_size', (int,))
+    Input('nobias', (bool,), select=[True, False])
+    Output('out_array', (chainer.Variable,))
 
     def call_init(self):
         self.check_member(('_out_size', '_nobias'))
@@ -22,10 +22,10 @@ class Linear(Link):
 
 
 class Maxout(Link):
-    Input('in_array', chainer.Variable)
-    Input('out_size', int)
-    Input('pool_size', int)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('out_size', (int,))
+    Input('pool_size', (int,))
+    Output('out_array', (chainer.Variable,))
     def call_init(self):
         self.check_member(('_out_size', '_pool_size'))
         return 'Maxout(None, {out_size}, {pool_size}),' \

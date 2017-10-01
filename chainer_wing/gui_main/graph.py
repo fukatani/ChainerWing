@@ -150,9 +150,7 @@ class Graph(object):
             inpNode = self.nodes[inpNode]
         outInfo = outNode.getOutputInfo(out)
         inpInfo = inpNode.getInputInfo(inp)
-        # if not outInfo.var_type == inpInfo.var_type:
-        if not issubclass(outInfo.var_type, inpInfo.var_type) and not issubclass(
-                inpInfo.var_type, outInfo.var_type):
+        if not set(outInfo.var_type) & set(inpInfo.var_type):
             raise TypeError(
                 'Output \'{}\' of node {} and input \'{}\' of not {} don\'t match.'.format(
                     out,

@@ -55,54 +55,61 @@ class Info(object):
         self.var_type = var_type
         self.optional = optional
         if not hints:
-            self.hints = [var_type.__name__]
+            self.hints = [var_type[0].__name__]
         else:
-            self.hints = [var_type.__name__] + hints
+            self.hints = [var_type[0].__name__] + hints
         self.value = value
         self.select = select
         self.owner = owner
-        self.loopLevel = 0
-        self.usedDefault = False
         self.pure = 0
 
     def setOwner(self, owner):
         self.owner = owner
 
-    def set_value(self, value):
-        if not self.var_type == object:
+    def convert_var_type(self, value):
+        if None in self.var_type and value == 'None':
+            return None
+        elif int in self.var_type and value.isdigit():
+            return int(self.value)
+        elif float in self.var_type and value.isdecimal():
+            return float(self.value)
+        elif str in self.var_type:
+            return value
+        else:
+            raise TypeError
+
+
+    def set_value_from_text(self, text):
+        if not self.var_type == (object,):
             try:
-                self.value = self.var_type(value)
+                self.value = self.convert_var_type(text)
             except TypeError:
-                if self.var_type == int:
+                if int in self.var_type:
                     self.value = 0
-                elif self.var_type == float:
+                elif float in self.var_type:
                     self.value = 0.0
-                elif self.var_type == bool:
+                elif bool in self.var_type:
                     self.value = False
-                elif self.var_type == str:
+                elif str in self.var_type:
                     self.value = ''
             except ValueError:
                 self.value = None
-            if self.var_type == bool:
+            if bool in self.var_type:
                 try:
-                    if value.upper() == 'TRUE':
+                    if text.upper() == 'TRUE':
                         self.value = True
                     else:
                         self.value = False
                 except:
-                    self.value = value
+                    self.value = text
         else:
-            self.value = value
+            self.value = text
+
+    def set_value(self, value):
+        self.value = value
 
     def __str__(self):
         return 'INFO'
-
-    def reset(self, nodeLoopLevel=0, force=False):
-        if nodeLoopLevel > self.loopLevel and not force:
-            # print('Not resetting Input {} because owing node has higher node\n'
-            #       'level than the node setting the Input: {}vs.{}'.format(self.name, nodeLoopLevel, self.loopLevel))
-            return
-        self.value = None
 
     def has_value_set(self):
         return not isinstance(self.value, util.NotSettedParameter)
@@ -111,20 +118,15 @@ class Info(object):
 class InputInfo(Info):
     def __call__(self, no_exception=False):
         if self.has_value_set():
-            if not self.var_type == object and not \
-                    self.var_type == variable.Variable:
-                return self.var_type(self.value)
-            else:
-                return self.value
+            return self.value
         elif self.value is not None and not self.connected:
-            self.usedDefault = self.loopLevel > 0
-            if not self.var_type == object and self.value:
+            if not self.var_type == (object,) and self.value:
                 return self.var_type(self.value)
             else:
                 return self.value
         else:
             if no_exception:
-                return None
+                return util.NotSettedParameter
             elif self.name == 'in_array':  # treat as start node.
                 return ''
             else:
@@ -141,12 +143,12 @@ class InputInfo(Info):
         if info:
             if self.has_value_set():
                 return True
-            elif self.value is not None and not self.connected and not self.usedDefault and self.pure < 2:
+            elif self.value is not None and not self.connected and self.pure < 2:
                 return True
             return False
         if self.has_value_set():
             return True
-        elif self.value is not None and not self.connected and not self.usedDefault and self.pure < 2:
+        elif self.value is not None and not self.connected and self.pure < 2:
             if self.pure == 1:
                 self.pure = 2
             return True
@@ -258,7 +260,6 @@ class Node(object, metaclass=MetaNode):
     is_image_node = False
 
     def __init__(self, graph, id_proposal=None):
-        self.loopLevel = 0
         self.__pos__ = (0, 0)
         self.graph = graph
         self.subgraph = 'main'
@@ -346,36 +347,6 @@ class Node(object, metaclass=MetaNode):
         """
         raise NotImplementedError('This method should be override')
 
-    def report(self):
-        """
-        Create and returns a dictionary encoding the current state of the Node instance.
-        Override this method to implement custom reporting behavior. Check the ReportWidget documentation for details
-        on how to implement custom templates.
-
-        The 'keep' key can be used to cache data by the editor. The value assigned to 'keep' must be another key of
-        the report dictionary or 'CLEAR'. If it is a key, the value assigned to that key will be cached. If it is
-        'CLEAR' the editors cache will be purged. This can be useful for plotting an ongoing stream of data points
-        in the editor.
-
-        The 'ready' item is set to True when all inputs are available. This is mainly useful for debugging graph
-        applications.
-        """
-        ready = all(
-            [inp.isAvailable(info=True) for inp in self.inputs.values()])
-        return {'template': 'DefaultTemplate',
-                'class': self.__class__.__name__,
-                'ID': self.ID,
-                'inputs': [(i, v.var_type.__name__,
-                            str(v.value) if len(str(v.value)) < 10 else str(
-                                v.value)[:10] + '...') for i, v in
-                           self.inputs.items()],
-                'outputs': [(i, v.var_type.__name__,
-                             str(v.value) if len(str(v.value)) < 10 else str(
-                                 v.value)[:10] + '...') for i, v in
-                            self.outputs.items()],
-                'keep': None,
-                'ready': 'Ready' if ready else 'Waiting'}
-
     def _addInput(*args, data='', cls=None):
         """
         This should be a classmethod.
@@ -460,6 +431,12 @@ class Node(object, metaclass=MetaNode):
                                                                 var_type):
                 return out
 
+    def get_value_type(self, value):
+        if value.value == '':
+            return value.var_type[0].__name__
+        else:
+            return type(value.value).__name__
+
     def to_dict(self):
         """
         Returns a dictionary containing all data necessary to reinstanciate the Node instance with the same properties
@@ -478,11 +455,11 @@ class Node(object, metaclass=MetaNode):
                 'name': self.name,
                 'position': self.__pos__,
                 'inputs': [
-                    (input_name, inp.var_type.__name__, inp.value)
+                    (input_name, self.get_value_type(inp), inp.value)
                     for input_name, inp in self.inputs.items()],
                 'inputConnections': inputConns,
                 'outputs': [
-                    (output_name, out.var_type.__name__, out.value)
+                    (output_name, self.get_value_type(out), out.value)
                     for output_name, out in self.outputs.items()],
                 'outputConnections': outputConns,
                 'subgraph': self.subgraph}

@@ -4,7 +4,7 @@ from chainer_wing.node import Input, Loss
 
 
 class SoftmaxCrossEntropy(Loss):
-    Input('in_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
 
     def call(self):
         return 'softmax_cross_entropy(self.y, t)'
@@ -15,7 +15,7 @@ class SoftmaxCrossEntropy(Loss):
 
 
 class SigmoidCrossEntropy(Loss):
-    Input('in_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
 
     def call(self):
         return 'sigmoid_cross_entropy(self.y, t)'
@@ -26,7 +26,7 @@ class SigmoidCrossEntropy(Loss):
 
 
 class MeanSquaredError(Loss):
-    Input('in_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
 
     def call(self):
         return 'mean_squared_error(self.y, t)'

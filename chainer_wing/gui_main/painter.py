@@ -472,16 +472,16 @@ class Painter2D(QtWidgets.QWidget):
             for i, drawItem in enumerate(self.drawItemsOfNode[node]['inp']):
                 inputPin = drawItem.data
                 try:
-                    pen.setColor(Painter2D.PINCOLORS[inputPin.info.var_type])
+                    pen.setColor(Painter2D.PINCOLORS[inputPin.info.var_type[0]])
                 except KeyError:
-                    pen.setColor(QtGui.QColor(*inputPin.info.var_type.color))
+                    pen.setColor(QtGui.QColor(*inputPin.info.var_type[0].color))
                 pen.setWidth(2)
                 painter.setPen(pen)
                 if inputPin.ID == self.clickedPin:
                     pen.setColor(Qt.red)
                     painter.setPen(pen)
 
-                if inputPin.info.var_type is chainer.Variable:
+                if inputPin.info.var_type[0] is chainer.Variable:
                     painter.drawEllipse(x - halfPinSize,
                                         y + drawOffset + PINSIZE, PINSIZE,
                                         PINSIZE)
@@ -503,9 +503,9 @@ class Painter2D(QtWidgets.QWidget):
                 outputPin = drawItem.data
                 # pen.setColor(QColor(0, 115, 130))
                 try:
-                    pen.setColor(Painter2D.PINCOLORS[outputPin.info.var_type])
+                    pen.setColor(Painter2D.PINCOLORS[outputPin.info.var_type[0]])
                 except KeyError:
-                    pen.setColor(QtGui.QColor(*outputPin.info.var_type.color))
+                    pen.setColor(QtGui.QColor(*outputPin.info.var_type[0].color))
                 pen.setWidth(2)
                 painter.setPen(pen)
                 if outputPin.ID == self.clickedPin:
@@ -568,9 +568,9 @@ class Painter2D(QtWidgets.QWidget):
                 start = self.pinPositions[outputID]
                 end = self.pinPositions[inputID]
                 try:
-                    color = Painter2D.PINCOLORS[var_type]
+                    color = Painter2D.PINCOLORS[var_type[0]]
                 except KeyError:
-                    color = QtGui.QColor(*var_type.color)
+                    color = QtGui.QColor(*var_type[0].color)
                 rotate = None
                 self.drawBezier(start, end, color, painter, rotate)
 
@@ -1145,7 +1145,7 @@ class Selector(DrawItem):
 
     def watchDown(self, pos):
         self.select = str(self.items[self.highlight - 1])
-        self.parent.inputs[self.data.name].set_value(self.select)
+        self.parent.inputs[self.data.name].set_value_from_text(self.select)
         # self.parent._Boolean.setDefault(self.select)
         # self.painter.removeWatchingItem(self)
 
@@ -1312,14 +1312,14 @@ class LineEdit(DrawItem):
         else:
             self.text += self._sanitize_string(event.text())
         self.painter.update()
-        self.parent.inputs[self.data.name].set_value(self.text)
+        self.parent.inputs[self.data.name].set_value_from_text(self.text)
 
     def _sanitize_string(self, string):
         string = string.strip('\r\n')
         try:
-            if self.data.info.var_type is float and string == '.':
+            if float in self.data.info.var_type and string == '.':
                 return '0.'
-            self.data.info.var_type(string)
+            self.data.info.convert_var_type(string)
         except ValueError:
             return ''
         return string

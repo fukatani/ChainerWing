@@ -4,14 +4,14 @@ from chainer_wing.node import Input, Output, Link
 
 
 class Convolution2D(Link):
-    Input('in_array', chainer.Variable)
-    Input('in_channels', int)
-    Input('out_channels', int)
-    Input('ksize', int)
-    Input('stride', int)
-    Input('pad', int)
-    Input('nobias', bool, select=[True, False])
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('in_channels', (int,))
+    Input('out_channels', (int,))
+    Input('ksize', (int,))
+    Input('stride', (int,))
+    Input('pad', (int,))
+    Input('nobias', (bool,), select=[True, False])
+    Output('out_array', (chainer.Variable,))
     is_image_node = True
 
     def call_init(self):
@@ -27,14 +27,15 @@ class Convolution2D(Link):
 
 
 class DepthwiseConvolution2D(Link):
-    Input('in_array', chainer.Variable)
-    Input('in_channels', int)
-    Input('channel_multiplier', int)
-    Input('ksize', int)
-    Input('stride', int)
-    Input('pad', int)
-    Input('nobias', bool, select=[True, False])
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('in_channels', (int,))
+    Input('channel_multiplier', (int,))
+    Input('ksize', (int,))
+    Input('stride', (int,))
+    Input('pad', (int,))
+    Input('nobias', (bool,), select=[True, False])
+    Output('out_array', (chainer.Variable,))
+
     is_image_node = True
 
     def call_init(self):
@@ -50,13 +51,13 @@ class DepthwiseConvolution2D(Link):
 
 
 class BatchNormalization(Link):
-    Input('in_array', chainer.Variable)
-    Input('size', int)
-    Input('decay', float)
-    Input('eps', float)
-    Input('use_gamma', bool, select=[True, False])
-    Input('use_beta', bool, select=[True, False])
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('size', (int,))
+    Input('decay', (float,))
+    Input('eps', (float,))
+    Input('use_gamma', (bool,), select=[True, False])
+    Input('use_beta', (bool,), select=[True, False])
+    Output('out_array', (chainer.Variable,))
     is_image_node = True
 
     def call_init(self):

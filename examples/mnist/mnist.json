@@ -1,11 +1,11 @@
 {
     "graph": [
         [
-            "f0",
+            "f1",
             {
                 "class": "Relu",
                 "inputConnections": {
-                    "in_array": "l1:Oout_array"
+                    "in_array": "l0:Oout_array"
                 },
                 "inputs": [
                     [
@@ -17,7 +17,7 @@
                 "name": "",
                 "outputConnections": {
                     "out_array": [
-                        "loss0:Iin_array"
+                        "l1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -28,50 +28,32 @@
                     ]
                 ],
                 "position": [
-                    116,
-                    -126
+                    -225,
+                    -96
                 ],
                 "subgraph": "main"
             }
         ],
         [
-            "l0",
+            "loss0",
             {
-                "class": "Linear",
-                "inputConnections": {},
+                "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "f0:Oout_array"
+                },
                 "inputs": [
                     [
                         "in_array",
                         "Variable",
                         ""
-                    ],
-                    [
-                        "out_size",
-                        "int",
-                        200
-                    ],
-                    [
-                        "nobias",
-                        "bool",
-                        false
                     ]
                 ],
                 "name": "",
-                "outputConnections": {
-                    "out_array": [
-                        "f1:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        ""
-                    ]
-                ],
+                "outputConnections": {},
+                "outputs": [],
                 "position": [
-                    -383,
-                    -90
+                    420,
+                    -131
                 ],
                 "subgraph": "main"
             }
@@ -121,35 +103,53 @@
             }
         ],
         [
-            "loss0",
+            "l0",
             {
-                "class": "SoftmaxCrossEntropy",
-                "inputConnections": {
-                    "in_array": "f0:Oout_array"
-                },
+                "class": "Linear",
+                "inputConnections": {},
                 "inputs": [
                     [
                         "in_array",
                         "Variable",
                         ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        200
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
                     ]
                 ],
                 "name": "",
-                "outputConnections": {},
-                "outputs": [],
+                "outputConnections": {
+                    "out_array": [
+                        "f1:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
                 "position": [
-                    420,
-                    -131
+                    -383,
+                    -90
                 ],
                 "subgraph": "main"
             }
         ],
         [
-            "f1",
+            "f0",
             {
                 "class": "Relu",
                 "inputConnections": {
-                    "in_array": "l0:Oout_array"
+                    "in_array": "l1:Oout_array"
                 },
                 "inputs": [
                     [
@@ -161,7 +161,7 @@
                 "name": "",
                 "outputConnections": {
                     "out_array": [
-                        "l1:Iin_array"
+                        "loss0:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -172,8 +172,8 @@
                     ]
                 ],
                 "position": [
-                    -225,
-                    -96
+                    116,
+                    -126
                 ],
                 "subgraph": "main"
             }

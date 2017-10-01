@@ -4,10 +4,10 @@ from chainer_wing.node import Input, Output, Function
 
 
 class AveragePooling2d(Function):
-    Input('in_array', chainer.Variable)
-    Input('ksize', int)
-    Input('pad', int)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('ksize', (int,))
+    Input('pad', (int,))
+    Output('out_array', (chainer.Variable,))
 
     is_image_node = True
 
@@ -21,10 +21,10 @@ class AveragePooling2d(Function):
 
 
 class MaxPooling2d(Function):
-    Input('in_array', chainer.Variable)
-    Input('ksize', int)
-    Input('pad', int)
-    Output('out_array', chainer.Variable)
+    Input('in_array', (chainer.Variable,))
+    Input('ksize', (int,))
+    Input('pad', (int,))
+    Output('out_array', (chainer.Variable,))
 
     is_image_node = True
 
