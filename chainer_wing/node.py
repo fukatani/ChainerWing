@@ -276,9 +276,7 @@ class Node(object, metaclass=MetaNode):
         self.loopLevel = 0
         self.__pos__ = (0, 0)
         self.graph = graph
-        self.locked = False
         self.subgraph = 'main'
-        self.buffered = False
         self.inputs = OrderedDict()
         self.outputs = OrderedDict()
         self.outputBuffer = {}
@@ -354,13 +352,6 @@ class Node(object, metaclass=MetaNode):
         if hasattr(cls, 'register_chainer_impl'):
             return cls.register_chainer_impl().__doc__
         return 'No detail for this function.'
-
-    def lock(self):
-        self.locked = True
-
-    def unlock(self):
-        self.locked = False
-        self.graph.runningNodes.remove(self.ID)
 
     def run(self):
         """
