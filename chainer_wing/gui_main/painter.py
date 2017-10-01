@@ -57,7 +57,6 @@ class Painter2D(QtWidgets.QWidget):
         self.watchingItems = set()
         self.contextSensitive = False
         self.rightClickedNode = None
-        self.lastReport = None
         self.mouseDownPos = None
         self.relayTo = None
         self.selectFrame = None
@@ -79,7 +78,6 @@ class Painter2D(QtWidgets.QWidget):
         self.drawItemsOfNode = {}
         self.watchingItems = set()
         self.rightClickedNode = None
-        self.lastReport = None
         self.contextSensitive = False
         self.mouseDownPos = None
         self.relayTo = None
