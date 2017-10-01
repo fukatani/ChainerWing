@@ -982,7 +982,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         logger.debug('Attempting to load graph: {}'.format(file_name))
         self.clear_all_nodes()
         with open(file_name, 'r') as fp:
-            proj_dict = json.load(fp)
+            try:
+                proj_dict = json.load(fp)
+            except json.decoder.JSONDecodeError:
+                util.disp_error(file_name + ' is corrupted.')
+                return
             # proj_dict = json.load(fp, object_hook=util.nethook)
             if 'graph' in proj_dict:
                 self.drawer.graph.load_from_dict(proj_dict['graph'])
