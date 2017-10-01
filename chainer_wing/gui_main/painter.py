@@ -55,7 +55,6 @@ class Painter2D(QtWidgets.QWidget):
         self.drawItems = []
         self.drawItemsOfNode = {}
         self.watchingItems = set()
-        self.triggers = set()
         self.contextSensitive = False
         self.rightClickedNode = None
         self.lastReport = None
@@ -72,7 +71,6 @@ class Painter2D(QtWidgets.QWidget):
 
     def reset(self):
         self.nodes = []
-        self.triggers = set()
         self.graph = None
         self.looseConnection = None
         self.reportWidget = None
@@ -98,8 +96,6 @@ class Painter2D(QtWidgets.QWidget):
             subgraph.add(node)
         allInputs = [i for i in self.getAllInputsOfSubgraph(name)]
         for inp in allInputs:
-            if inp.name == 'TRIGGER':
-                continue
             con = self.graph.getConnectionOfInput(inp)
             if con:
                 outNode = con.output_node
@@ -477,17 +473,6 @@ class Painter2D(QtWidgets.QWidget):
             # for i, inputPin in enumerate(node.inputPins.values()):
             for i, drawItem in enumerate(self.drawItemsOfNode[node]['inp']):
                 inputPin = drawItem.data
-                if inputPin.name == 'TRIGGER':
-                    if node not in self.triggers and not inputPin.info.connected:
-                        drawItem.update(x, y + drawOffset + 8, w, h,
-                                        painter.transform())
-                        drawItem.deactivate()
-                        drawOffset += (8 + PINSIZE)
-                        continue
-                    else:
-                        self.triggers.add(node)
-                        drawItem.activate()
-                # pen.setColor(QColor(255, 190, 0))
                 try:
                     pen.setColor(Painter2D.PINCOLORS[inputPin.info.var_type])
                 except KeyError:

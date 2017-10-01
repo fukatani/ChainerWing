@@ -267,7 +267,6 @@ class Node(object, metaclass=MetaNode):
 
     An 'InputNotAvailable' Exception is raised is the input is not set yet.
     """
-    Input('TRIGGER', object, optional=True)
     Tag('Node')
     registered_id = []
     is_image_node = False

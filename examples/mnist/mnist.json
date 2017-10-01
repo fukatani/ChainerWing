@@ -1,144 +1,11 @@
 {
     "graph": [
         [
-            "f1",
-            {
-                "class": "Relu",
-                "inputConnections": {
-                    "in_array": "l0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "name": "",
-                "outputConnections": {
-                    "out_array": [
-                        "l1:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        "NotSettedParameter",
-                        ""
-                    ]
-                ],
-                "position": [
-                    -225,
-                    -96
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "loss0",
-            {
-                "class": "SoftmaxCrossEntropy",
-                "inputConnections": {
-                    "in_array": "f0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "name": "",
-                "outputConnections": {},
-                "outputs": [],
-                "position": [
-                    420,
-                    -131
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "l1",
-            {
-                "class": "Linear",
-                "inputConnections": {
-                    "in_array": "f1:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ],
-                    [
-                        "out_size",
-                        "int",
-                        10,
-                        10
-                    ],
-                    [
-                        "nobias",
-                        "bool",
-                        true,
-                        true
-                    ]
-                ],
-                "name": "linear1",
-                "outputConnections": {
-                    "out_array": [
-                        "f0:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        "NotSettedParameter",
-                        ""
-                    ]
-                ],
-                "position": [
-                    -38,
-                    -105
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
             "l0",
             {
                 "class": "Linear",
                 "inputConnections": {},
                 "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
                     [
                         "in_array",
                         "Variable",
@@ -180,6 +47,31 @@
             }
         ],
         [
+            "loss0",
+            {
+                "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "f0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "name": "",
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    420,
+                    -131
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
             "f0",
             {
                 "class": "Relu",
@@ -187,12 +79,6 @@
                     "in_array": "l1:Oout_array"
                 },
                 "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
                     [
                         "in_array",
                         "Variable",
@@ -217,6 +103,90 @@
                 "position": [
                     116,
                     -126
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f1",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ]
+                ],
+                "name": "",
+                "outputConnections": {
+                    "out_array": [
+                        "l1:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        "NotSettedParameter",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -225,
+                    -96
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l1",
+            {
+                "class": "Linear",
+                "inputConnections": {
+                    "in_array": "f1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        null,
+                        ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        10,
+                        10
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        true,
+                        true
+                    ]
+                ],
+                "name": "linear1",
+                "outputConnections": {
+                    "out_array": [
+                        "f0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        "NotSettedParameter",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -38,
+                    -105
                 ],
                 "subgraph": "main"
             }

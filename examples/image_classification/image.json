@@ -7,12 +7,6 @@
                 "inputConnections": {},
                 "inputs": [
                     [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
                         "in_array",
                         "Variable",
                         "",
@@ -85,12 +79,6 @@
                 },
                 "inputs": [
                     [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
-                    [
                         "in_array",
                         "Variable",
                         null,
@@ -115,12 +103,6 @@
                     "in_array": "l0:Oout_array"
                 },
                 "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
                     [
                         "in_array",
                         "Variable",
@@ -193,12 +175,6 @@
                     "in_array": "l1:Oout_array"
                 },
                 "inputs": [
-                    [
-                        "TRIGGER",
-                        "object",
-                        "",
-                        ""
-                    ],
                     [
                         "in_array",
                         "Variable",
