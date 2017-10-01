@@ -144,9 +144,9 @@ class Graph(object):
         :param inp: string representing the Input's name.
         :return:
         """
-        if type(outNode) == str:
+        if isinstance(outNode, str):
             outNode = self.nodes[outNode]
-        if type(inpNode) == str:
+        if isinstance(inpNode, str):
             inpNode = self.nodes[inpNode]
         outInfo = outNode.getOutputInfo(out)
         inpInfo = inpNode.getInputInfo(inp)
@@ -211,7 +211,8 @@ class Graph(object):
     def update(self):
         """
         Updates and repaints the painter instance.
-        WARNING: Only call this method from the main thread. Other threads must use the Graph.requestUpdate method which
+        WARNING: Only call this method from the main thread.
+        Other threads must use the Graph.requestUpdate method which
         has a slight delay.
         :return:
         """

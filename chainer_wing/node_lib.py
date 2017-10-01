@@ -1,5 +1,5 @@
-import os
 from importlib.machinery import SourceFileLoader
+import os
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *

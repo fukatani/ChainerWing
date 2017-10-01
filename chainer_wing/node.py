@@ -128,7 +128,7 @@ class InputInfo(Info):
             if no_exception:
                 return None
             elif self.name == 'in_array':  # treat as start node.
-                return ""
+                return ''
             else:
                 raise InputNotAvailable('Input not set for node.')
 
