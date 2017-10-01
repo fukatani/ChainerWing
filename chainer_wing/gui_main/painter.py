@@ -467,7 +467,7 @@ class Painter2D(QtWidgets.QWidget):
             painter.drawText(x, y + 20, w, h, Qt.AlignHCenter,
                              node.get_name())
             painter.setBrush(QtGui.QColor(40, 40, 40))
-            drawOffset = 25
+            drawOffset = 33
             # for i, inputPin in enumerate(node.inputPins.values()):
             for i, drawItem in enumerate(self.drawItemsOfNode[node]['inp']):
                 inputPin = drawItem.data
