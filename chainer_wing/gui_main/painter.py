@@ -1125,15 +1125,15 @@ class Selector(DrawItem):
         self.highlight = 0
         self.select = None
         self.items = self.data.info.select
-        if self.data.info.default is not None:
-            self.select = str(self.data.info.default)
+        if self.data.info.has_value_set():
+            self.select = str(self.data.info.value)
 
     def update(self, x, y, w, h, transform):
         super(Selector, self).update(x, y, w, h, transform)
         if self.select is not None:
             self.items = self.data.info.select
-            if self.data.info.default is not None:
-                self.select = str(self.data.info.default)
+            if self.data.info.has_value_set():
+                self.select = str(self.data.info.value)
 
     def watch(self, pos):
         scale = self.painter.scale
@@ -1145,7 +1145,7 @@ class Selector(DrawItem):
 
     def watchDown(self, pos):
         self.select = str(self.items[self.highlight - 1])
-        self.parent.inputs[self.data.name].setDefault(self.select)
+        self.parent.inputs[self.data.name].set_value(self.select)
         # self.parent._Boolean.setDefault(self.select)
         # self.painter.removeWatchingItem(self)
 
@@ -1263,10 +1263,10 @@ class LineEdit(DrawItem):
         return collides
 
     def draw(self, painter, as_label=''):
-        if not self.text and not self.data.info.default:
+        if not self.text and not self.data.info.value:
             text = self.data.name
         else:
-            text = self.data.info.default
+            text = self.data.info.value
         if as_label:
             text = as_label
             alignment = self.__class__.alignment
@@ -1312,7 +1312,7 @@ class LineEdit(DrawItem):
         else:
             self.text += self._sanitize_string(event.text())
         self.painter.update()
-        self.parent.inputs[self.data.name].setDefault(self.text)
+        self.parent.inputs[self.data.name].set_value(self.text)
 
     def _sanitize_string(self, string):
         string = string.strip('\r\n')

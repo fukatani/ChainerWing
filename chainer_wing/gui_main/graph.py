@@ -83,7 +83,7 @@ class Graph(object):
             inps.append({'name': iName,
                          'var_type': info.var_type,
                          'hints': info.hints,
-                         'default': None,
+                         'value': None,
                          'select': info.select,
                          'list': info.list,
                          'optional': info.optional})
@@ -97,7 +97,7 @@ class Graph(object):
             outs.append({'name': oName,
                          'var_type': info.var_type,
                          'hints': info.hints,
-                         'default': None,
+                         'value': None,
                          'select': info.select,
                          'list': info.list,
                          'optional': info.optional})
@@ -331,7 +331,7 @@ class Graph(object):
             inputs = nodeData['inputs']
             for input in inputs:
                 if input[1] in ('bool', 'int', 'float'):
-                    restoredNode.inputs[input[0]].setDefault(input[-1])
+                    restoredNode.inputs[input[0]].set_value(input[-1])
                     # outputs = nodeData['outputs']
                     # for output in outputs:
                     #     restoredNode.outputs[output[0]].setDefault(output[-1])

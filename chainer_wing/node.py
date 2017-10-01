@@ -2,6 +2,7 @@ from collections import OrderedDict
 from copy import copy
 import inspect
 
+from chainer import variable
 from PyQt5.QtGui import QColor
 
 from chainer_wing import util
@@ -46,7 +47,8 @@ class Info(object):
     Class for handling all information related to both inputs and outputs.
     """
 
-    def __init__(self, name, var_type, hints=None, default='', select=None,
+    def __init__(self, name, var_type, hints=None,
+                 value=util.NotSettedParameter(), select=None,
                  owner=False, optional=False):
         self.name = name
         self.connected = False
@@ -56,8 +58,7 @@ class Info(object):
             self.hints = [var_type.__name__]
         else:
             self.hints = [var_type.__name__] + hints
-        self.default = default
-        self.value = util.NotSettedParameter()
+        self.value = value
         self.select = select
         self.owner = owner
         self.loopLevel = 0
@@ -67,31 +68,31 @@ class Info(object):
     def setOwner(self, owner):
         self.owner = owner
 
-    def setDefault(self, value):
+    def set_value(self, value):
         if not self.var_type == object:
             try:
-                self.default = self.var_type(value)
+                self.value = self.var_type(value)
             except TypeError:
                 if self.var_type == int:
-                    self.default = 0
+                    self.value = 0
                 elif self.var_type == float:
-                    self.default = 0.0
+                    self.value = 0.0
                 elif self.var_type == bool:
-                    self.default = False
+                    self.value = False
                 elif self.var_type == str:
-                    self.default = ''
+                    self.value = ''
             except ValueError:
-                self.default = None
+                self.value = None
             if self.var_type == bool:
                 try:
                     if value.upper() == 'TRUE':
-                        self.default = True
+                        self.value = True
                     else:
-                        self.default = False
+                        self.value = False
                 except:
-                    self.default = value
+                    self.value = value
         else:
-            self.default = value
+            self.value = value
 
     def __str__(self):
         return 'INFO'
@@ -101,7 +102,6 @@ class Info(object):
             # print('Not resetting Input {} because owing node has higher node\n'
             #       'level than the node setting the Input: {}vs.{}'.format(self.name, nodeLoopLevel, self.loopLevel))
             return
-        self.default = None
         self.value = None
 
     def has_value_set(self):
@@ -111,16 +111,17 @@ class Info(object):
 class InputInfo(Info):
     def __call__(self, no_exception=False):
         if self.has_value_set():
-            if not self.var_type == object:
+            if not self.var_type == object and not \
+                    self.var_type == variable.Variable:
                 return self.var_type(self.value)
             else:
                 return self.value
-        elif self.default is not None and not self.connected:
+        elif self.value is not None and not self.connected:
             self.usedDefault = self.loopLevel > 0
-            if not self.var_type == object and self.default:
-                return self.var_type(self.default)
+            if not self.var_type == object and self.value:
+                return self.var_type(self.value)
             else:
-                return self.default
+                return self.value
         else:
             if no_exception:
                 return None
@@ -128,14 +129,6 @@ class InputInfo(Info):
                 return ''
             else:
                 raise InputNotAvailable('Input not set for node.')
-
-    def set(self, value, override=False, loopLevel=0):
-        if self.has_value_set() and not override:
-            raise InputAlreadySet(
-                'Input "{}" of node "{}" is already set.'.format(self.name,
-                                                                 self.owner))
-        self.value = value
-        self.loopLevel = loopLevel
 
     def setPure(self):
         self.pure = 1
@@ -148,12 +141,12 @@ class InputInfo(Info):
         if info:
             if self.has_value_set():
                 return True
-            elif self.default is not None and not self.connected and not self.usedDefault and self.pure < 2:
+            elif self.value is not None and not self.connected and not self.usedDefault and self.pure < 2:
                 return True
             return False
         if self.has_value_set():
             return True
-        elif self.default is not None and not self.connected and not self.usedDefault and self.pure < 2:
+        elif self.value is not None and not self.connected and not self.usedDefault and self.pure < 2:
             if self.pure == 1:
                 self.pure = 2
             return True
@@ -196,25 +189,25 @@ class MetaNode(type):
     def addInput(name,
                  var_type,
                  hints=None,
-                 default='',
+                 value='',
                  select=None,
                  optional=False):
         MetaNode.inputs.append({'name': name,
                                 'var_type': var_type,
                                 'hints': hints,
-                                'default': default,
+                                'value': value,
                                 'select': select,
                                 'optional': optional})
 
     def addOutput(name,
                   var_type,
                   hints=None,
-                  default='',
+                  value='',
                   select=None):
         MetaNode.outputs.append({'name': name,
                                  'var_type': var_type,
                                  'hints': hints,
-                                 'default': default,
+                                 'value': value,
                                  'select': select})
 
     def __new__(cls, name, bases, classdict):
@@ -312,6 +305,7 @@ class Node(object, metaclass=MetaNode):
         # self.set_inputs_to_initial()
         self.setup()
 
+    # TODO()
     def set_inputs_to_initial(self):
         if not hasattr(self, 'register_chainer_impl'):
             return
@@ -351,19 +345,6 @@ class Node(object, metaclass=MetaNode):
         :rtype: None
         """
         raise NotImplementedError('This method should be override')
-
-    def setInput(self, input_name, value, override=False, loopLevel=0):
-        """
-        Set the value of an input.
-        :param input_name: str representing the name of the input.
-        :param value: object of the appropriate type for that input.
-        :param override: boolean specifying whether the input should be overridden if it was set already.
-        :param loopLevel: int. Nested number of loop.
-        :return: None
-        """
-        self.loopLevel = max([self.loopLevel, loopLevel])
-        self.inputs[input_name].set(value, override=override,
-                                    loopLevel=loopLevel)
 
     def report(self):
         """
@@ -497,11 +478,11 @@ class Node(object, metaclass=MetaNode):
                 'name': self.name,
                 'position': self.__pos__,
                 'inputs': [
-                    (input_name, inp.var_type.__name__, inp(True), inp.default)
+                    (input_name, inp.var_type.__name__, inp.value)
                     for input_name, inp in self.inputs.items()],
                 'inputConnections': inputConns,
                 'outputs': [
-                    (output_name, out.var_type.__name__, out.value, out.default)
+                    (output_name, out.var_type.__name__, out.value)
                     for output_name, out in self.outputs.items()],
                 'outputConnections': outputConns,
                 'subgraph': self.subgraph}

@@ -1,6 +1,40 @@
 {
     "graph": [
         [
+            "f1",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": "",
+                "outputConnections": {
+                    "out_array": [
+                        "f0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -243,
+                    -178
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
             "f0",
             {
                 "class": "Dropout",
@@ -11,13 +45,11 @@
                     [
                         "in_array",
                         "Variable",
-                        null,
                         ""
                     ],
                     [
                         "ratio",
                         "float",
-                        0.5,
                         0.5
                     ]
                 ],
@@ -31,13 +63,56 @@
                     [
                         "out_array",
                         "Variable",
-                        null,
                         ""
                     ]
                 ],
                 "position": [
                     -107,
                     -177
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l0",
+            {
+                "class": "Linear",
+                "inputConnections": {
+                    "in_array": "f0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        1
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        true
+                    ]
+                ],
+                "name": "",
+                "outputConnections": {
+                    "out_array": [
+                        "loss0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    59,
+                    -171
                 ],
                 "subgraph": "main"
             }
@@ -51,19 +126,16 @@
                     [
                         "in_array",
                         "Variable",
-                        "",
                         ""
                     ],
                     [
                         "out_size",
                         "int",
-                        40,
                         40
                     ],
                     [
                         "nobias",
                         "bool",
-                        true,
                         true
                     ]
                 ],
@@ -77,7 +149,6 @@
                     [
                         "out_array",
                         "Variable",
-                        null,
                         ""
                     ]
                 ],
@@ -99,7 +170,6 @@
                     [
                         "in_array",
                         "Variable",
-                        null,
                         ""
                     ]
                 ],
@@ -109,90 +179,6 @@
                 "position": [
                     221,
                     -121
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "l0",
-            {
-                "class": "Linear",
-                "inputConnections": {
-                    "in_array": "f0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ],
-                    [
-                        "out_size",
-                        "int",
-                        1,
-                        1
-                    ],
-                    [
-                        "nobias",
-                        "bool",
-                        true,
-                        true
-                    ]
-                ],
-                "name": "",
-                "outputConnections": {
-                    "out_array": [
-                        "loss0:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    59,
-                    -171
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "f1",
-            {
-                "class": "Relu",
-                "inputConnections": {
-                    "in_array": "l1:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "in_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "name": "",
-                "outputConnections": {
-                    "out_array": [
-                        "f0:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        null,
-                        ""
-                    ]
-                ],
-                "position": [
-                    -243,
-                    -178
                 ],
                 "subgraph": "main"
             }
