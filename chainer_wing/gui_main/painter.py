@@ -481,11 +481,7 @@ class Painter2D(QtWidgets.QWidget):
                     pen.setColor(Qt.red)
                     painter.setPen(pen)
 
-                if inputPin.info.list:
-                    painter.drawRect(x - halfPinSize,
-                                     y + drawOffset + PINSIZE, PINSIZE,
-                                     PINSIZE)
-                elif inputPin.info.var_type is chainer.Variable:
+                if inputPin.info.var_type is chainer.Variable:
                     painter.drawEllipse(x - halfPinSize,
                                         y + drawOffset + PINSIZE, PINSIZE,
                                         PINSIZE)
@@ -516,14 +512,9 @@ class Painter2D(QtWidgets.QWidget):
                     pen.setColor(Qt.red)
                     painter.setPen(pen)
                 else:
-                    if outputPin.info.list:
-                        painter.drawRect(x + w - halfPinSize,
-                                         y + drawOffset + PINSIZE, PINSIZE,
-                                         PINSIZE)
-                    else:
-                        painter.drawEllipse(x + w - halfPinSize,
-                                            y + drawOffset + PINSIZE, PINSIZE,
-                                            PINSIZE)
+                    painter.drawEllipse(x + w - halfPinSize,
+                                        y + drawOffset + PINSIZE, PINSIZE,
+                                        PINSIZE)
                     point = QtCore.QPoint(x + w - 4,
                                    y + drawOffset + 4 + PINSIZE) * painter.transform()
                 drawOffset += (8 + PINSIZE)

@@ -47,7 +47,7 @@ class Info(object):
     """
 
     def __init__(self, name, var_type, hints=None, default='', select=None,
-                 owner=False, list=False, optional=False):
+                 owner=False, optional=False):
         self.name = name
         self.connected = False
         self.var_type = var_type
@@ -60,7 +60,6 @@ class Info(object):
         self.value = util.NotSettedParameter()
         self.select = select
         self.owner = owner
-        self.list = list
         self.loopLevel = 0
         self.usedDefault = False
         self.pure = 0
@@ -113,8 +112,6 @@ class InputInfo(Info):
     def __call__(self, no_exception=False):
         if self.has_value_set():
             if not self.var_type == object:
-                if self.list:
-                    return [self.var_type(i) for i in self.value]
                 return self.var_type(self.value)
             else:
                 return self.value
@@ -201,28 +198,24 @@ class MetaNode(type):
                  hints=None,
                  default='',
                  select=None,
-                 list=False,
                  optional=False):
         MetaNode.inputs.append({'name': name,
                                 'var_type': var_type,
                                 'hints': hints,
                                 'default': default,
                                 'select': select,
-                                'list': list,
                                 'optional': optional})
 
     def addOutput(name,
                   var_type,
                   hints=None,
                   default='',
-                  select=None,
-                  list=False):
+                  select=None):
         MetaNode.outputs.append({'name': name,
                                  'var_type': var_type,
                                  'hints': hints,
                                  'default': default,
-                                 'select': select,
-                                 'list': list})
+                                 'select': select})
 
     def __new__(cls, name, bases, classdict):
         result = type.__new__(cls, name, bases, classdict)
@@ -263,7 +256,7 @@ class Node(object, metaclass=MetaNode):
     e.g.:
 
         class MyNode(Node):
-            Input('myStringInput', str, list=True)
+            Input('myStringInput', str)
 
     An 'InputNotAvailable' Exception is raised is the input is not set yet.
     """
