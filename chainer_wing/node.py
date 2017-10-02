@@ -76,8 +76,7 @@ class Info(object):
         elif str in self.var_type:
             return value
         else:
-            raise TypeError
-
+            raise ValueError
 
     def set_value_from_text(self, text):
         if not self.var_type == (object,):
