@@ -15,10 +15,13 @@ class Convolution2D(Link):
     is_image_node = True
 
     def call_init(self):
-        return 'Convolution2D({in_channels}, {out_channels}, {ksize}, {nobias}),' \
+        return 'Convolution2D({in_channels}, {out_channels}, {ksize}, ' \
+               '{stride}, {pad}, {nobias}),' \
             .format(in_channels=self._in_channels,
                     out_channels=self._out_channels,
                     ksize=self._ksize,
+                    stride=self._stride,
+                    pad=self._pad,
                     nobias=self._nobias)
 
     @classmethod
@@ -39,10 +42,13 @@ class DepthwiseConvolution2D(Link):
     is_image_node = True
 
     def call_init(self):
-        return 'DepthwiseConvolution2D({in_channels}, {channel_multiplier}, {ksize}, {nobias}),' \
+        return 'DepthwiseConvolution2D({in_channels}, {channel_multiplier}, ' \
+               '{ksize}, {stride}, {pad}, {nobias}),' \
             .format(in_channels=self._in_channels,
                     channel_multiplier=self._channel_multiplier,
                     ksize=self._ksize,
+                    stride=self._stride,
+                    pad=self._pad,
                     nobias=self._nobias)
 
     @classmethod

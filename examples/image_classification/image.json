@@ -1,30 +1,6 @@
 {
     "graph": [
         [
-            "loss0",
-            {
-                "class": "SoftmaxCrossEntropy",
-                "inputConnections": {
-                    "in_array": "f0:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "in_array",
-                        "Variable",
-                        ""
-                    ]
-                ],
-                "name": null,
-                "outputConnections": {},
-                "outputs": [],
-                "position": [
-                    344,
-                    -178
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
             "l1",
             {
                 "class": "Convolution2D",
@@ -40,7 +16,7 @@
                     [
                         "in_channels",
                         "int",
-                        0
+                        3
                     ],
                     [
                         "out_channels",
@@ -50,17 +26,17 @@
                     [
                         "ksize",
                         "int",
-                        0
+                        2
                     ],
                     [
                         "stride",
                         "int",
-                        0
+                        1
                     ],
                     [
                         "pad",
                         "int",
-                        0
+                        1
                     ],
                     [
                         "nobias",
@@ -104,12 +80,12 @@
                     [
                         "ksize",
                         "int",
-                        0
+                        2
                     ],
                     [
                         "pad",
                         "int",
-                        0
+                        1
                     ]
                 ],
                 "name": null,
@@ -133,6 +109,30 @@
             }
         ],
         [
+            "loss0",
+            {
+                "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "f0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    344,
+                    -178
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
             "l0",
             {
                 "class": "Convolution2D",
@@ -146,7 +146,7 @@
                     [
                         "in_channels",
                         "int",
-                        0
+                        3
                     ],
                     [
                         "out_channels",
@@ -156,17 +156,17 @@
                     [
                         "ksize",
                         "int",
-                        0
+                        3
                     ],
                     [
                         "stride",
                         "int",
-                        0
+                        2
                     ],
                     [
                         "pad",
                         "int",
-                        0
+                        2
                     ],
                     [
                         "nobias",
