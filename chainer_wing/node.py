@@ -70,9 +70,9 @@ class Info(object):
         if None in self.var_type and value == 'None':
             return None
         elif int in self.var_type and value.isdigit():
-            return int(self.value)
+            return int(value)
         elif float in self.var_type and value.isdecimal():
-            return float(self.value)
+            return float(value)
         elif str in self.var_type:
             return value
         else:
