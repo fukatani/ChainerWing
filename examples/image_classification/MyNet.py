@@ -15,15 +15,17 @@ class MyNet(chainer.Chain):
 
     def __init__(self):
         super(MyNet, self).__init__(
-            l0=Convolution2D(3, 3, 3, 2, 2, False),
             l1=Convolution2D(3, 3, 2, 1, 1, False),
+            l0=Convolution2D(3, 3, 3, 2, 2, False),
+            l2=Linear(None, 5, nobias=False),
         )
 
     def _predict(self, x):
         l0 = self.l0(x)
         l1 = self.l1(l0)
         f0 = average_pooling_2d(ksize=2, pad=1, x=l1)
-        return f0
+        l2 = self.l2(f0)
+        return l2
 
     def predict(self, x):
         return self._predict(x).data

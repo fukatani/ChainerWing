@@ -24,6 +24,8 @@ class TrainRunner(object):
 
     def run(self):
         train_server = TrainParamServer()
+        if not os.path.isdir(train_server['WorkDir'] + '/result'):
+            os.mkdir(train_server['WorkDir'] + '/result')
         if 'Image' in TrainParamServer()['Task']:
             ImageDataManager().get_data_train()
             train_label_file = os.path.join(train_server.get_work_dir(),
