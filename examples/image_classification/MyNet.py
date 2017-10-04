@@ -43,7 +43,7 @@ class MyNet(chainer.Chain):
         return self.loss0
 
 def get_optimizer():
-    return AdaDelta(eps=1e-06, rho=0.95)
+    return AdaDelta(rho=0.95, eps=1e-06)
 
 
 def training_main(train, test, pbar=None, plot_postprocess=None):
@@ -62,7 +62,7 @@ def training_main(train, test, pbar=None, plot_postprocess=None):
                                        device=0)
     
     if pbar is None:
-        trainer = training.Trainer(updater, (10, 'epoch'))
+        trainer = training.Trainer(updater, (40, 'epoch'))
     else:
         trainer = training.Trainer(updater, pbar.get_stop_trigger)
     

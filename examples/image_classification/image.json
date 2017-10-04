@@ -1,50 +1,6 @@
 {
     "graph": [
         [
-            "f0",
-            {
-                "class": "AveragePooling2d",
-                "inputConnections": {
-                    "in_array": "l1:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "in_array",
-                        "Variable",
-                        ""
-                    ],
-                    [
-                        "ksize",
-                        "int",
-                        2
-                    ],
-                    [
-                        "pad",
-                        "int",
-                        1
-                    ]
-                ],
-                "name": null,
-                "outputConnections": {
-                    "out_array": [
-                        "l2:Iin_array"
-                    ]
-                },
-                "outputs": [
-                    [
-                        "out_array",
-                        "Variable",
-                        ""
-                    ]
-                ],
-                "position": [
-                    -8,
-                    -194
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
             "l1",
             {
                 "class": "Convolution2D",
@@ -104,6 +60,50 @@
                 "position": [
                     -221,
                     -228
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f0",
+            {
+                "class": "AveragePooling2d",
+                "inputConnections": {
+                    "in_array": "l1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        2
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        1
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "l2:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -8,
+                    -194
                 ],
                 "subgraph": "main"
             }
@@ -171,30 +171,6 @@
             }
         ],
         [
-            "loss0",
-            {
-                "class": "SoftmaxCrossEntropy",
-                "inputConnections": {
-                    "in_array": "l2:Oout_array"
-                },
-                "inputs": [
-                    [
-                        "in_array",
-                        "Variable",
-                        ""
-                    ]
-                ],
-                "name": null,
-                "outputConnections": {},
-                "outputs": [],
-                "position": [
-                    366,
-                    -108
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
             "l2",
             {
                 "class": "Linear",
@@ -237,6 +213,30 @@
                 ],
                 "subgraph": "main"
             }
+        ],
+        [
+            "loss0",
+            {
+                "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "l2:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    366,
+                    -108
+                ],
+                "subgraph": "main"
+            }
         ]
     ],
     "train": {
@@ -245,7 +245,7 @@
         "CropHeight": 1,
         "CropWidth": 1,
         "Crop_idx": 0,
-        "Epoch": 10,
+        "Epoch": 40,
         "GPU": 1,
         "ModelName": "MyModel",
         "NetName": "MyNet",
