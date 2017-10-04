@@ -14,11 +14,6 @@
                         ""
                     ],
                     [
-                        "in_channels",
-                        "int",
-                        3
-                    ],
-                    [
                         "out_channels",
                         "int",
                         3
@@ -118,11 +113,6 @@
                         "in_array",
                         "Variable",
                         ""
-                    ],
-                    [
-                        "in_channels",
-                        "int",
-                        3
                     ],
                     [
                         "out_channels",

@@ -5,7 +5,6 @@ from chainer_wing.node import Input, Output, Link
 
 class Convolution2D(Link):
     Input('in_array', (chainer.Variable,))
-    Input('in_channels', (int,))
     Input('out_channels', (int,))
     Input('ksize', (int,))
     Input('stride', (int,))
@@ -17,7 +16,7 @@ class Convolution2D(Link):
     def call_init(self):
         return 'Convolution2D({in_channels}, {out_channels}, {ksize}, ' \
                '{stride}, {pad}, {nobias}),' \
-            .format(in_channels=self._in_channels,
+            .format(in_channels='None',
                     out_channels=self._out_channels,
                     ksize=self._ksize,
                     stride=self._stride,
@@ -31,7 +30,6 @@ class Convolution2D(Link):
 
 class DepthwiseConvolution2D(Link):
     Input('in_array', (chainer.Variable,))
-    Input('in_channels', (int,))
     Input('channel_multiplier', (int,))
     Input('ksize', (int,))
     Input('stride', (int,))
@@ -44,7 +42,7 @@ class DepthwiseConvolution2D(Link):
     def call_init(self):
         return 'DepthwiseConvolution2D({in_channels}, {channel_multiplier}, ' \
                '{ksize}, {stride}, {pad}, {nobias}),' \
-            .format(in_channels=self._in_channels,
+            .format(in_channels='None',
                     channel_multiplier=self._channel_multiplier,
                     ksize=self._ksize,
                     stride=self._stride,
