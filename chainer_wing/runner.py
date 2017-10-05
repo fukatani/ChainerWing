@@ -42,7 +42,8 @@ class TrainRunner(object):
             train_data, test_data = DataManager().get_data_train()
         self.module.training_main(train_data, test_data, self.pbar,
                                   cw_postprocess)
-        util.disp_message('Training is finished.')
+        util.disp_message('Training is finished. Model file is saved to ' +
+                          train_server.get_model_name() + '.npz')
 
     def kill(self):
         self.pbar.finalize()
