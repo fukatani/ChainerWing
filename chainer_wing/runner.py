@@ -3,6 +3,7 @@ import os
 
 import numpy
 
+from chainer_wing import util
 from chainer_wing.data_fetch import DataManager
 from chainer_wing.data_fetch import ImageDataManager
 from chainer_wing.extension.cw_progress_bar import CWProgressBar
@@ -41,6 +42,7 @@ class TrainRunner(object):
             train_data, test_data = DataManager().get_data_train()
         self.module.training_main(train_data, test_data, self.pbar,
                                   cw_postprocess)
+        util.disp_message('Training is finished.')
 
     def kill(self):
         self.pbar.finalize()

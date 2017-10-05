@@ -13,6 +13,13 @@ def disp_error(message: str):
     error.exec_()
 
 
+def disp_message(message: str):
+    msgbox = QtWidgets.QMessageBox()
+    msgbox.setIcon(QtWidgets.QMessageBox.Information)
+    msgbox.setText(message)
+    msgbox.exec_()
+
+
 def check_cuda_available():
     try:
         cuda.check_cuda_available()
