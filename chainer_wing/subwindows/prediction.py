@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'prediction.ui'
+# Form implementation generated from reading ui file './prediction.ui'
 #
 # Created by: PyQt5 UI code generator 5.7.1
 #
@@ -130,10 +130,10 @@ class Ui_PredictionWindow(object):
         PredictionWindow.setWindowTitle(_translate("PredictionWindow", "Do Prediction"))
         self.label.setText(_translate("PredictionWindow", "Max display rows:"))
         self.label_5.setText(_translate("PredictionWindow", "Prediction Model"))
-        self.model_sel_button.setText(_translate("PredictionWindow", "Browse"))
+        self.model_sel_button.setText(_translate("PredictionWindow", "Select Model"))
         self.model_name.setText(_translate("PredictionWindow", "Model is not selected."))
         self.label_6.setText(_translate("PredictionWindow", "Input Data"))
-        self.input_sel_button.setText(_translate("PredictionWindow", "Browse"))
+        self.input_sel_button.setText(_translate("PredictionWindow", "Select Data File"))
         self.input_data_name.setText(_translate("PredictionWindow", "Input Data File is not selected."))
         self.including_label.setText(_translate("PredictionWindow", "Data including label"))
         self.label_7.setText(_translate("PredictionWindow", "Output File"))

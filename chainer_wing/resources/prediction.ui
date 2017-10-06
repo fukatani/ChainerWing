@@ -87,7 +87,7 @@
         <item>
          <widget class="QPushButton" name="model_sel_button">
           <property name="text">
-           <string>Browse</string>
+           <string>Select Model</string>
           </property>
          </widget>
         </item>
@@ -112,7 +112,7 @@
         <item>
          <widget class="QPushButton" name="input_sel_button">
           <property name="text">
-           <string>Browse</string>
+           <string>Select Data File</string>
           </property>
          </widget>
         </item>
