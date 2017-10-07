@@ -995,6 +995,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 logger.info('Successfully loaded graph: {}'.format(file_name))
             if 'train' in proj_dict:
                 TrainParamServer().load_from_dict(proj_dict['train'])
+        self.update_data_label()
 
     def save_graph_and_train(self, *args):
         """

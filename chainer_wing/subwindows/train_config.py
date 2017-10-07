@@ -67,13 +67,7 @@ class TrainParamServer(object):
         return cls.get_result_dir() + '/' + cls['ModelName']
 
     def get_train_data_name(cls):
-        final_slash_pos = cls['TrainData'].rfind('/')
-        final_dot_pos = cls['TrainData'].rfind('.')
-        if final_slash_pos > 0 and final_dot_pos > 0:
-            assert final_slash_pos < final_dot_pos
-            return cls['TrainData'][final_slash_pos+1:]
-        else:
-            return ''
+        return cls['TrainData'].split('/')[-1]
 
     def use_minmax(cls):
         cls['PreProcessor'] == 'MinMax Scale'
