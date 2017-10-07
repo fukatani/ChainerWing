@@ -61,3 +61,14 @@ class PredictionRunner(object):
         input_data, label = DataManager().get_data_pred(including_label)
         result = self.module.prediction_main(input_data, classification)
         return result, label
+
+
+class ImagePredictionRunner(PredictionRunner):
+    def run(self, classification, including_label):
+        pred_label_file = ImageDataManager().get_data_pred()
+        mean_file = os.path.join(TrainParamServer().get_work_dir(),
+                                 'mean.npy')
+        mean = numpy.load(mean_file)
+        input_data = PreprocessedDataset(pred_label_file, mean)
+        result = self.module.prediction_main(input_data, classification)
+        return result, None

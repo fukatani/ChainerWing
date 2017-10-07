@@ -199,6 +199,31 @@ class ImageDataManager(object):
         mean = sum_image / N
         numpy.save(mean_file, mean)
 
+    def get_data_pred(self):
+        train_server = TrainParamServer()
+        if os.path.isdir(train_server['PredInputData']):
+            dir_name = train_server['PredInputData']
+            image_files = glob.glob(dir_name + '/*.jpg')
+            if not image_files:
+                raise Exception('No jpg file in {}'.format(dir_name))
+
+                pred_label_file = os.path.join(train_server.get_work_dir(),
+                                           'train_label.txt')
+
+        elif os.path.isfile(train_server['PredInputData']):
+            image_files = (train_server['PredInputData'],)
+            pred_label_file = os.path.join(train_server.get_work_dir(),
+                                           'train_label.txt')
+        else:
+            raise FileNotFoundError(train_server['PredInputData'] +
+                                    ' is not found.')
+
+        with open(pred_label_file, 'w') as fw:
+            for image, label in zip(image_files, pred_label_file):
+                fw.write(image + ' ' + label)
+
+        return pred_label_file
+
 
 if __name__ == '__main__':
     train_x, train_y = DataManager().get_data_from_file('sample_data.csv', True)
