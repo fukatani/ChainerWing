@@ -138,10 +138,6 @@ class DataConfig(object):
             data_file = QtWidgets.QFileDialog.getExistingDirectory(self.window,
                                                                    'Select Directory',
                                                                    init_path)
-        elif 'Image' in train_server['Task']:
-            data_file = QtWidgets.QFileDialog.getOpenFileName(
-                self.window, self.direction, init_path,
-                filter='(*.jpg *.png);; Any (*.*)')[0]
         else:
             data_file = QtWidgets.QFileDialog.getOpenFileName(
                 self.window, self.direction, init_path,
@@ -159,7 +155,10 @@ class PredInputDataConfig(DataConfig):
     def __init__(self, label, window):
         super(PredInputDataConfig, self).__init__(label, window)
         self.direction = 'Input Data File is not selected.'
-        self.filter = '(*.csv *.npz *.py);; Any (*.*)'
+        if 'Image' in TrainParamServer()['Task']:
+            self.filter = '(*.jpg *.png);; Any (*.*)'
+        else:
+            self.filter = '(*.csv *.npz *.py);; Any (*.*)'
 
 
 class PredOutputDataConfig(DataConfig):

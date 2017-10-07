@@ -207,8 +207,8 @@ class ImageDataManager(object):
             if not image_files:
                 raise Exception('No jpg file in {}'.format(dir_name))
 
-                pred_label_file = os.path.join(train_server.get_work_dir(),
-                                           'train_label.txt')
+            pred_label_file = os.path.join(train_server.get_work_dir(),
+                                       'train_label.txt')
 
         elif os.path.isfile(train_server['PredInputData']):
             image_files = (train_server['PredInputData'],)

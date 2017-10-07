@@ -42,7 +42,7 @@ class MyNet(chainer.Chain):
         return self.loss0
 
 def get_optimizer():
-    return AdaDelta(rho=0.95, eps=1e-06)
+    return AdaDelta(eps=1e-06, rho=0.95)
 
 
 def training_main(train, test, pbar=None, plot_postprocess=None):
