@@ -693,6 +693,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             self.resize(self.settings.value("size", (900, 700)))
             self.move(self.settings.value("pos", QtCore.QPoint(50, 50)))
+            init_graph = self.settings.value("graph_file", '')
         except TypeError:
             pass
         self.setWindowTitle('ChainerWind')
@@ -720,8 +721,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         ImageDataDialog(self, settings=self.settings).close()
         DataDialog(self, settings=self.settings).close()
         self.update_data_label()
-
         self.setupNodeLib()
+
+        # Open Last Opened JSON
+        if init_graph:
+            self.load_graph(init_graph)
 
     def setArgs(self, args):
         if args.test:
@@ -970,7 +974,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             util.disp_error('Compile is failured')
 
-    def load_graph(self, override=False):
+    def load_graph(self, override=''):
         if not override:
             init_path = TrainParamServer().get_work_dir()
             file_name = QtWidgets.QFileDialog.getOpenFileName(
@@ -995,6 +999,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 logger.info('Successfully loaded graph: {}'.format(file_name))
             if 'train' in proj_dict:
                 TrainParamServer().load_from_dict(proj_dict['train'])
+        self.settings.setValue('graph_file', file_name)
         self.update_data_label()
 
     def save_graph_and_train(self, *args):
