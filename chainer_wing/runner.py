@@ -8,6 +8,7 @@ from chainer_wing.data_fetch import DataManager
 from chainer_wing.data_fetch import ImageDataManager
 from chainer_wing.extension.cw_progress_bar import CWProgressBar
 from chainer_wing.extension.image_dataset import PreprocessedDataset
+from chainer_wing.extension.image_dataset import PreprocessedTestDataset
 from chainer_wing.extension.plot_extension import cw_postprocess
 from chainer_wing.subwindows.train_config import TrainParamServer
 
@@ -69,6 +70,11 @@ class ImagePredictionRunner(PredictionRunner):
         mean_file = os.path.join(TrainParamServer().get_work_dir(),
                                  'mean.npy')
         mean = numpy.load(mean_file)
-        input_data = PreprocessedDataset(pred_label_file, mean)
-        result = self.module.prediction_main(input_data, classification)
+
+        input_data = PreprocessedTestDataset(pred_label_file, mean)
+        arrays = []
+        for i in range(len(input_data)):
+            arrays.append(input_data.get_example(i))
+        input_array = numpy.stack(arrays, axis=0)
+        result = self.module.prediction_main(input_array, classification)
         return result, None

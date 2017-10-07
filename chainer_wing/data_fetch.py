@@ -220,7 +220,7 @@ class ImageDataManager(object):
 
         with open(pred_label_file, 'w') as fw:
             for image, label in zip(image_files, pred_label_file):
-                fw.write(image + ' ' + label)
+                fw.write(image)
 
         return pred_label_file
 
