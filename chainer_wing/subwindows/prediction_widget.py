@@ -26,10 +26,19 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
         self.exe_button.clicked.connect(self.exe_prediction)
         self.including_label.stateChanged.connect(self.set_including_label)
+        self.select_by_dir.stateChanged.connect(self.set_select_by_dir)
+
         if 'IncludingLabel' in TrainParamServer().__dict__:
             self.including_label.setChecked(TrainParamServer()['IncludingLabel'])
         if 'PredClass' in TrainParamServer().__dict__:
             self.classification.setChecked(TrainParamServer()['PredClass'])
+        if 'Image' in TrainParamServer()['Task']:
+            self.select_by_dir.setEnabled(True)
+            if 'SelectByDir' in TrainParamServer()['Task']:
+                self.select_by_dir.setChecked(TrainParamServer()['SelectByDir'])
+        else:
+            self.select_by_dir.setEnabled(False)
+            self.select_by_dir.setChecked(False)
 
     def set_input(self):
         self.input_config.set_data()
@@ -45,6 +54,10 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
     def set_classification(self, value):
         TrainParamServer()['PredClass'] = value
+
+    def set_select_by_dir(self, value):
+        TrainParamServer()['SelectByDir'] = value
+        self.input_config.is_dir = value
 
     def exe_prediction(self):
         if TrainParamServer()['GPU'] and not util.check_cuda_available():
@@ -94,7 +107,7 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
 
 class DataConfig(object):
-    def __init__(self, label, window, is_save=False):
+    def __init__(self, label, window, is_save=False, is_dir=False):
         self.param_name = self.__class__.__name__[:-6]  # remove 'Config'
         self.label = label
         train_server = TrainParamServer()
@@ -104,6 +117,7 @@ class DataConfig(object):
         self.direction = ''
         self.filter = ''
         self.is_save = is_save
+        self.is_dir = is_dir
 
     def set_data(self):
         train_server = TrainParamServer()
@@ -116,6 +130,10 @@ class DataConfig(object):
             data_file = QtWidgets.QFileDialog.getSaveFileName(
                 self.window, self.direction, init_path,
                 filter=self.filter)[0]
+        elif self.is_dir:
+            data_file = QtWidgets.QFileDialog.getExistingDirectory(self.window,
+                                                                   'Select Directory',
+                                                                   init_path)
         else:
             data_file = QtWidgets.QFileDialog.getOpenFileName(
                 self.window, self.direction, init_path,

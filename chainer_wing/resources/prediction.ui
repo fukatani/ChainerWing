@@ -111,6 +111,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="input_sel_button">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="text">
            <string>Select Data File</string>
           </property>
@@ -128,7 +131,17 @@
       <item>
        <widget class="QCheckBox" name="including_label">
         <property name="text">
-         <string>Data including label</string>
+         <string>Data Including Label</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="select_by_dir">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string>Select Input Data by Directory</string>
         </property>
        </widget>
       </item>
