@@ -7,6 +7,7 @@ from PyQt5 import QtCore
 from PyQt5 import QtWidgets
 from chainer_wing.subwindows.prediction import Ui_PredictionWindow
 from chainer_wing.subwindows.train_config import TrainParamServer
+from chainer_wing.runner import ImagePredictionRunner
 from chainer_wing.runner import PredictionRunner
 from chainer_wing import util
 
@@ -65,7 +66,10 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
 
         self.pred_progress.setText('Processing...')
         try:
-            runner = PredictionRunner()
+            if 'Image' in TrainParamServer()['Task']:
+                runner = ImagePredictionRunner()
+            else:
+                runner = PredictionRunner()
             result, label = runner.run(self.classification.isChecked(),
                                        self.including_label.isChecked())
             if 'PredOutputData' in TrainParamServer().__dict__:
@@ -134,6 +138,10 @@ class DataConfig(object):
             data_file = QtWidgets.QFileDialog.getExistingDirectory(self.window,
                                                                    'Select Directory',
                                                                    init_path)
+        elif 'Image' in train_server['Task']:
+            data_file = QtWidgets.QFileDialog.getOpenFileName(
+                self.window, self.direction, init_path,
+                filter='(*.jpg *.png);; Any (*.*)')[0]
         else:
             data_file = QtWidgets.QFileDialog.getOpenFileName(
                 self.window, self.direction, init_path,
