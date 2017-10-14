@@ -151,7 +151,7 @@ class ImageDataManager(object):
 
         with open(label_convertion_file, 'w') as fw:
             for key, value in self.label_to_int.items():
-                fw.write(key + ' ' + value)
+                fw.write(key + ' ' + value + '\n')
 
     def get_data_train(self):
         train_server = TrainParamServer()
@@ -176,9 +176,9 @@ class ImageDataManager(object):
 
         all_labels = numpy.hstack((train_labels, test_labels))
         all_labels = sorted(list(set(all_labels)))
-        label_convertion_file = os.path.join(train_server.get_work_dir(),
-                                             'label_convertion.txt')
-        self.make_label_conversion_file(all_labels, label_convertion_file)
+        label_conversion_file = os.path.join(train_server.get_work_dir(),
+                                             'label_conversion.txt')
+        self.make_label_conversion_file(all_labels, label_conversion_file)
 
         train_label_file = os.path.join(train_server.get_work_dir(),
                                         'train_label.txt')
@@ -229,7 +229,7 @@ class ImageDataManager(object):
                 raise Exception('No jpg file in {}'.format(dir_name))
 
             pred_label_file = os.path.join(train_server.get_work_dir(),
-                                       'pred_label.txt')
+                                           'pred_label.txt')
 
         elif os.path.isfile(train_server['PredInputData']):
             image_files = (train_server['PredInputData'],)

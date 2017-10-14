@@ -1,4 +1,5 @@
 import json
+import os
 import sys
 
 from chainer import cuda
@@ -91,3 +92,16 @@ def nethook(dct):
         if value == 'NotSettedParameter':
             dct[key] = NotSettedParameter()
     return dict
+
+
+def deserialize_label_conversion():
+    label_to_class = {}
+    label_conversion_file = os.path.join(TrainParamServer().get_work_dir(),
+                                         'label_conversion.txt')
+    with open(label_conversion_file, 'r') as fr:
+        for line in fr:
+            line = line.strip()
+            if line:
+                class_str, int_str = line.split(' ')
+                label_to_class[int_str] = class_str
+    return label_to_class

@@ -179,6 +179,12 @@ class ResultTableModel(QtCore.QAbstractTableModel):
     def __init__(self, array_data, parent=None, *args):
         QtCore.QAbstractTableModel.__init__(self, parent, *args)
         self.array_data = array_data
+        self.label_to_class = {}
+        self.set_label_to_class()
+
+    def set_label_to_class(self):
+        if 'Image' in TrainParamServer()['Task']:
+            self.label_to_class = util.deserialize_label_conversion()
 
     def headerData(self, column, orientation, role=QtCore.Qt.DisplayRole):
         if role!=QtCore.Qt.DisplayRole:
@@ -187,6 +193,11 @@ class ResultTableModel(QtCore.QAbstractTableModel):
             if (TrainParamServer()['IncludingLabel'] and
                         column == self.array_data.shape[1] - 1):
                 return QtCore.QVariant('Label')
+            elif self.label_to_class:
+                if str(column) in self.label_to_class:
+                    return QtCore.QVariant('{}'.format(self.label_to_class[str(column)]))
+                else:
+                    return QtCore.QVariant('Not assigned')
             else:
                 return QtCore.QVariant('Pred {0}'.format(column))
         else:

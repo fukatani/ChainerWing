@@ -15,9 +15,9 @@ class MyNet(chainer.Chain):
 
     def __init__(self):
         super(MyNet, self).__init__(
-            l2=Linear(None, 5, nobias=False),
             l1=Convolution2D(None, 3, 2, 1, 1, False),
             l0=Convolution2D(None, 3, 3, 2, 2, False),
+            l2=Linear(None, 5, nobias=False),
         )
 
     def _predict(self, x):
@@ -43,7 +43,7 @@ class MyNet(chainer.Chain):
         return self.loss0
 
 def get_optimizer():
-    return AdaDelta(rho=0.95, eps=1e-06)
+    return AdaDelta(eps=1e-06, rho=0.95)
 
 
 def training_main(train, test, pbar=None, plot_postprocess=None):
@@ -52,8 +52,8 @@ def training_main(train, test, pbar=None, plot_postprocess=None):
     optimizer = get_optimizer()
     optimizer.setup(model)
 
-    train_iter = chainer.iterators.SerialIterator(train, 20)
-    test_iter = chainer.iterators.SerialIterator(test, 20,
+    train_iter = chainer.iterators.SerialIterator(train, 1)
+    test_iter = chainer.iterators.SerialIterator(test, 1,
                                                  repeat=False,
                                                  shuffle=False)
 
@@ -62,7 +62,7 @@ def training_main(train, test, pbar=None, plot_postprocess=None):
                                        device=0)
     
     if pbar is None:
-        trainer = training.Trainer(updater, (40, 'epoch'))
+        trainer = training.Trainer(updater, (10, 'epoch'))
     else:
         trainer = training.Trainer(updater, pbar.get_stop_trigger)
     

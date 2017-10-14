@@ -345,8 +345,7 @@ class WorkDirLabel(QtWidgets.QLabel):
 class TaskEdit(QtWidgets.QComboBox):
     def __init__(self, settings, parent):
         menu = ('Simple Classification', 'Simple Regression',
-                )
-                # 'Image Classification')
+                'Image Classification')
         self.parent = parent
         self.settings = settings
         super(TaskEdit, self).__init__()
