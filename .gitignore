@@ -5,6 +5,7 @@
 *.jpg'
 *.gif'
 *.npy
+*_label.txt
 bin/MyNet1.py
 examples/mnist/result/*
 examples/image_classification/result/*
