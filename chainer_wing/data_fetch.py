@@ -132,11 +132,20 @@ class ImageDataManager(object):
             labels.append(label)
         return numpy.array(image_files), numpy.array(labels)
 
-    def make_image_list(self, image_files, labels, list_file_name):
+    def make_image_list(self, image_files, labels, list_file_name,
+                        label_convertion_file):
         assert len(image_files) == len(labels)
+
+        label_to_int = {}
         with open(list_file_name, 'w') as fw:
             for image, label in zip(image_files, labels):
-                fw.write(image + ' '+ label)
+                if label not in label_to_int:
+                    label_to_int[label] = str(len(label_to_int))
+                fw.write(image + ' '+ label_to_int[label])
+
+        with open(label_convertion_file, 'w') as fw:
+            for key, value in label_to_int.items():
+                fw.write(image + ' '+ label_to_int[label])
 
     def get_data_train(self):
         train_server = TrainParamServer()
@@ -164,7 +173,11 @@ class ImageDataManager(object):
         self.make_image_list(train_images, train_labels, train_label_file)
         test_label_file = os.path.join(train_server.get_work_dir(),
                                         'test_label.txt')
-        self.make_image_list(test_images, test_labels, test_label_file)
+
+        label_convertion_file = os.path.join(train_server.get_work_dir(),
+                                             'label_convertion.txt')
+        self.make_image_list(test_images, test_labels, test_label_file,
+                             label_convertion_file)
 
         self.compute_mean(train_images)
 
