@@ -140,7 +140,7 @@ class ImageDataManager(object):
         assert len(image_files) == len(labels)
         with open(list_file_name, 'w') as fw:
             for image, label in zip(image_files, labels):
-                fw.write(image + ' ' + self.label_to_int[label])
+                fw.write(image + ' ' + self.label_to_int[label] + '\n')
 
     def make_label_conversion_file(self, labels,
                                    label_convertion_file):
@@ -241,7 +241,7 @@ class ImageDataManager(object):
 
         with open(pred_label_file, 'w') as fw:
             for image, label in zip(image_files, pred_label_file):
-                fw.write(image)
+                fw.write(image + '\n')
 
         return pred_label_file
 
