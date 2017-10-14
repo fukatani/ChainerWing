@@ -1,12 +1,34 @@
 {
     "graph": [
         [
-            "l2",
+            "loss0",
             {
-                "class": "Linear",
+                "class": "SoftmaxCrossEntropy",
                 "inputConnections": {
-                    "in_array": "f0:Oout_array"
+                    "in_array": "l2:Oout_array"
                 },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    366,
+                    -108
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l0",
+            {
+                "class": "Convolution2D",
+                "inputConnections": {},
                 "inputs": [
                     [
                         "in_array",
@@ -14,9 +36,24 @@
                         ""
                     ],
                     [
-                        "out_size",
+                        "out_channels",
                         "int",
-                        5
+                        3
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        3
+                    ],
+                    [
+                        "stride",
+                        "int",
+                        2
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        2
                     ],
                     [
                         "nobias",
@@ -27,7 +64,7 @@
                 "name": null,
                 "outputConnections": {
                     "out_array": [
-                        "loss0:Iin_array"
+                        "l1:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -38,8 +75,8 @@
                     ]
                 ],
                 "position": [
-                    205,
-                    -207
+                    -434,
+                    -199
                 ],
                 "subgraph": "main"
             }
@@ -148,59 +185,22 @@
             }
         ],
         [
-            "loss0",
+            "l2",
             {
-                "class": "SoftmaxCrossEntropy",
+                "class": "Linear",
                 "inputConnections": {
-                    "in_array": "l2:Oout_array"
+                    "in_array": "f0:Oout_array"
                 },
                 "inputs": [
                     [
                         "in_array",
                         "Variable",
                         ""
-                    ]
-                ],
-                "name": null,
-                "outputConnections": {},
-                "outputs": [],
-                "position": [
-                    366,
-                    -108
-                ],
-                "subgraph": "main"
-            }
-        ],
-        [
-            "l0",
-            {
-                "class": "Convolution2D",
-                "inputConnections": {},
-                "inputs": [
-                    [
-                        "in_array",
-                        "Variable",
-                        ""
                     ],
                     [
-                        "out_channels",
+                        "out_size",
                         "int",
-                        3
-                    ],
-                    [
-                        "ksize",
-                        "int",
-                        3
-                    ],
-                    [
-                        "stride",
-                        "int",
-                        2
-                    ],
-                    [
-                        "pad",
-                        "int",
-                        2
+                        5
                     ],
                     [
                         "nobias",
@@ -211,7 +211,7 @@
                 "name": null,
                 "outputConnections": {
                     "out_array": [
-                        "l1:Iin_array"
+                        "loss0:Iin_array"
                     ]
                 },
                 "outputs": [
@@ -222,8 +222,8 @@
                     ]
                 ],
                 "position": [
-                    -434,
-                    -199
+                    205,
+                    -207
                 ],
                 "subgraph": "main"
             }
@@ -243,7 +243,7 @@
         "PCAlighting": 0.5,
         "PreProcessor": "Do Nothing",
         "PreProcessor_idx": 0,
-        "PredInputData": "/home/ryo/workspace/github/CW_gui/examples/image_classification/0",
+        "PredInputData": "/home/ryo/workspace/github/CW_gui/examples/image_classification/Green",
         "PredModel": "/home/ryo/workspace/github/CW_gui/examples/image_classification/result/MyModel.npz",
         "ResizeHeight": 100,
         "ResizeWidth": 100,

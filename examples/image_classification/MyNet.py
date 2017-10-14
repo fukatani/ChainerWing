@@ -16,8 +16,8 @@ class MyNet(chainer.Chain):
     def __init__(self):
         super(MyNet, self).__init__(
             l1=Convolution2D(None, 3, 2, 1, 1, False),
-            l0=Convolution2D(None, 3, 3, 2, 2, False),
             l2=Linear(None, 5, nobias=False),
+            l0=Convolution2D(None, 3, 3, 2, 2, False),
         )
 
     def _predict(self, x):
@@ -43,7 +43,7 @@ class MyNet(chainer.Chain):
         return self.loss0
 
 def get_optimizer():
-    return AdaDelta(eps=1e-06, rho=0.95)
+    return AdaDelta(rho=0.95, eps=1e-06)
 
 
 def training_main(train, test, pbar=None, plot_postprocess=None):
