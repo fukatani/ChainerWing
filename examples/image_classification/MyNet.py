@@ -15,9 +15,9 @@ class MyNet(chainer.Chain):
 
     def __init__(self):
         super(MyNet, self).__init__(
-            l1=Convolution2D(None, 3, 2, 1, 1, False),
-            l2=Linear(None, 5, nobias=False),
             l0=Convolution2D(None, 3, 3, 2, 2, False),
+            l2=Linear(None, 5, nobias=False),
+            l1=Convolution2D(None, 3, 2, 1, 1, False),
         )
 
     def _predict(self, x):

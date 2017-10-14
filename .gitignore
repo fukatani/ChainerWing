@@ -1,12 +1,11 @@
 *.pyc
 *.npz
 *.log
-*.jpg
-*.jpg'
 *.gif'
 *.npy
 *_label.txt
 *_conversion.txt
+*preview_temp.jpg
 bin/MyNet1.py
 examples/mnist/result/*
 examples/image_classification/result/*
