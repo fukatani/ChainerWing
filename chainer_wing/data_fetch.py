@@ -116,6 +116,10 @@ class DataManager(object):
 
 
 class ImageDataManager(object):
+
+    def __init__(self):
+        self.label_to_int = {}
+
     def get_label(self, label):
         return label.split('/')[-2]
 
@@ -132,20 +136,22 @@ class ImageDataManager(object):
             labels.append(label)
         return numpy.array(image_files), numpy.array(labels)
 
-    def make_image_list(self, image_files, labels, list_file_name,
-                        label_convertion_file):
+    def make_image_list(self, image_files, labels, list_file_name):
         assert len(image_files) == len(labels)
-
-        label_to_int = {}
         with open(list_file_name, 'w') as fw:
             for image, label in zip(image_files, labels):
-                if label not in label_to_int:
-                    label_to_int[label] = str(len(label_to_int))
-                fw.write(image + ' '+ label_to_int[label])
+                fw.write(image + ' ' + self.label_to_int[label])
+
+    def make_label_conversion_file(self, labels,
+                                   label_convertion_file):
+        self.label_to_int = {}
+        for label in labels:
+            if label not in self.label_to_int:
+                self.label_to_int[label] = str(len(self.label_to_int))
 
         with open(label_convertion_file, 'w') as fw:
-            for key, value in label_to_int.items():
-                fw.write(image + ' '+ label_to_int[label])
+            for key, value in self.label_to_int.items():
+                fw.write(key + ' ' + value)
 
     def get_data_train(self):
         train_server = TrainParamServer()
@@ -159,7 +165,7 @@ class ImageDataManager(object):
                 numpy.random.shuffle(indices)
 
             train_idx = indices[:split_idx]
-            test_idx = indices[:split_idx]
+            test_idx = indices[split_idx:]
 
             test_images = train_images[test_idx]
             test_labels = train_labels[test_idx]
@@ -168,16 +174,18 @@ class ImageDataManager(object):
         else:
             test_images, test_labels = self.get_all_images(train_server['TrainData'])
 
+        all_labels = numpy.hstack((train_labels, test_labels))
+        all_labels = sorted(list(set(all_labels)))
+        label_convertion_file = os.path.join(train_server.get_work_dir(),
+                                             'label_convertion.txt')
+        self.make_label_conversion_file(all_labels, label_convertion_file)
+
         train_label_file = os.path.join(train_server.get_work_dir(),
                                         'train_label.txt')
         self.make_image_list(train_images, train_labels, train_label_file)
         test_label_file = os.path.join(train_server.get_work_dir(),
                                         'test_label.txt')
-
-        label_convertion_file = os.path.join(train_server.get_work_dir(),
-                                             'label_convertion.txt')
-        self.make_image_list(test_images, test_labels, test_label_file,
-                             label_convertion_file)
+        self.make_image_list(test_images, test_labels, test_label_file)
 
         self.compute_mean(train_images)
 
