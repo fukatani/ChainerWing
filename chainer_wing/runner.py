@@ -13,6 +13,12 @@ from chainer_wing.extension.plot_extension import cw_postprocess
 from chainer_wing.subwindows.train_config import TrainParamServer
 
 
+def softmax(x):
+    """Compute softmax values for each sets of scores in x."""
+    e_x = numpy.exp(x - numpy.max(x, axis=1)[:, None])
+    return e_x / e_x.sum(axis=1)[:, None] * 100
+
+
 class TrainRunner(object):
 
     def __init__(self):
@@ -61,6 +67,7 @@ class PredictionRunner(object):
     def run(self, classification, including_label):
         input_data, label = DataManager().get_data_pred(including_label)
         result = self.module.prediction_main(input_data, classification)
+        result = softmax(result)
         return result, label
 
 
@@ -77,4 +84,5 @@ class ImagePredictionRunner(PredictionRunner):
             arrays.append(input_data.get_example(i))
         input_array = numpy.stack(arrays, axis=0)
         result = self.module.prediction_main(input_array, classification)
+        result = softmax(result)
         return result, None
