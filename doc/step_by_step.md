@@ -2,19 +2,23 @@
 
 ## 0.Define your task and Prepare data.
 
-chainer can handle various problem, but currect version ChainerWing support only simple regression and simple classification by supervised training.
-For example, image classification will be supported in future version.
+chainer can handle various problem, but currect version ChainerWing support only simple regression simple classification, and image classification by supervised training.
+
 
 Simple classification:
 From the input feature, model predict which class the sample belongs to.
-
 
 Simple regression:
 From the input feature, model predict the quantity of the objective variable of the sample.
 For example, problem like predicting stock price from profit margin and sales is regression.
 
+Image classification:
+From the jpg image, model predict which class the sample belongs to.
+You can see Example.
 
-Both simple regression and classification is called "supervised training", data with correct answer is required.
+![ImageExample](https://github.com/fukatani/ChainerWing/blob/master/example/image_classification/readme.md "ImageExample")
+
+All of these task is called "supervised training", data with correct answer is required.
 
 Typically, the data may contains several thousand, or tens of thousands or more samples.
 

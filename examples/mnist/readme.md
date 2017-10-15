@@ -8,7 +8,7 @@ Push button here, and select example/mnist/mnist.json.
 
 ![LoadButton](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/load.png "LoadButton")
 
-#### 2.Load Project
+#### 2.Load Training Data
 Push button here, and select example/mnist/get_mnist_train.py.
 
 ![LoadButton](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/selectdata.png "SelectData")
