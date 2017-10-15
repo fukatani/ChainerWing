@@ -126,7 +126,9 @@ class ImageDataManager(object):
     def get_all_images(self, dir_name):
         if not os.path.isdir(dir_name):
             raise Exception('Directory {} was not found.'.format(dir_name))
-        image_files = glob.glob(dir_name + '/*/*.jpg')
+        image_files = []
+        for ext in util.for_image_extensions():
+            image_files += glob.glob(dir_name + '/*/*.{}'.format(ext))
         if not image_files:
             raise Exception('No jpg file in {}'.format(dir_name))
 
@@ -224,7 +226,10 @@ class ImageDataManager(object):
         train_server = TrainParamServer()
         if os.path.isdir(train_server['PredInputData']):
             dir_name = train_server['PredInputData']
-            image_files = glob.glob(dir_name + '/*.jpg')
+            image_files = []
+            for ext in util.for_image_extensions():
+                image_files += glob.glob(dir_name + '/*.{}'.format(ext))
+                image_files += glob.glob(dir_name + '/*/*.{}'.format(ext))
             if not image_files:
                 raise Exception('No jpg file in {}'.format(dir_name))
 

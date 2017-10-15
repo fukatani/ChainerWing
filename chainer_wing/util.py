@@ -118,3 +118,7 @@ def deserialize_pred_label():
                 file_name = line.split('/')[-1]
                 image_files.append(file_name)
     return image_files
+
+
+def for_image_extensions():
+    return ('jpg', 'png', 'tiff', 'bmp')
