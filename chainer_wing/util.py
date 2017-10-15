@@ -105,3 +105,16 @@ def deserialize_label_conversion():
                 class_str, int_str = line.split(' ')
                 label_to_class[int_str] = class_str
     return label_to_class
+
+
+def deserialize_pred_label():
+    image_files = []
+    list_file = os.path.join(TrainParamServer().get_work_dir(),
+                             'pred_label.txt')
+    with open(list_file, 'r') as fr:
+        for line in fr:
+            line = line.strip()
+            if line:
+                file_name = line.split('/')[-1]
+                image_files.append(file_name)
+    return image_files

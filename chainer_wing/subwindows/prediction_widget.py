@@ -180,11 +180,13 @@ class ResultTableModel(QtCore.QAbstractTableModel):
         QtCore.QAbstractTableModel.__init__(self, parent, *args)
         self.array_data = array_data
         self.label_to_class = {}
-        self.set_label_to_class()
+        self.image_file_names = ()
+        self.desirialize_files()
 
-    def set_label_to_class(self):
+    def desirialize_files(self):
         if 'Image' in TrainParamServer()['Task']:
             self.label_to_class = util.deserialize_label_conversion()
+            self.image_file_names = util.deserialize_pred_label()
 
     def headerData(self, column, orientation, role=QtCore.Qt.DisplayRole):
         if role!=QtCore.Qt.DisplayRole:
@@ -201,7 +203,10 @@ class ResultTableModel(QtCore.QAbstractTableModel):
             else:
                 return QtCore.QVariant('Pred {0}'.format(column))
         else:
-            return QtCore.QVariant(column)
+            if self.image_file_names:
+                return QtCore.QVariant(self.image_file_names[column])
+            else:
+                return QtCore.QVariant(column)
 
     def rowCount(self, parent):
         return min(1000, self.array_data.shape[0])
