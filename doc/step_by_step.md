@@ -16,7 +16,7 @@ Image classification:
 From the jpg image, model predict which class the sample belongs to.
 You can see Example.
 
-![ImageExample](https://github.com/fukatani/ChainerWing/blob/master/example/image_classification/readme.md "ImageExample")
+https://github.com/fukatani/ChainerWing/blob/master/examples/image_classification/readme.md
 
 All of these task is called "supervised training", data with correct answer is required.
 
