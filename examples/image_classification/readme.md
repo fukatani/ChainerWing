@@ -11,19 +11,24 @@ Push button here, and select example/image_classification/image.json.
 #### 2.Confirm Train Configuration
 Confirm task is Image Classification.
 ![ImageTask](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/image_classification_task.png "ImageTask")
+
 If you create image classification project from scratch, you should set this option by yourself.
 
 #### 3.Load Training Data
-Push button here, and select example/mnist/image_classification/data
+Push button here, and select example/mnist/image_classification/data directory.
 
 ![LoadButton](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/selectdata.png "SelectData")
 
-"data" directory includes "Green" and "Spanish" subdirectory. Each subdirectory contains an image corresponding to that directory name.
+"data" directory includes "Green" and "Spanish" subdirectory.
+
+Each subdirectory contains an image corresponding to that directory name.
+
 If you create your own image classification project, you should make similar directory structure.
 
 #### 4.Data Augmentaion
 To improve model performance, you can use data augmentation technic.
 ![DataAugmentation](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/data_augmentation.png "DataAugmentation")
+
 By preview update button, You can check data augmentation result visually.
 
 #### 5.Start training
@@ -35,12 +40,14 @@ Push button here.
 Plot on rightbottom shows training result.
 
 Here, accuracy shows how how many classifications succeeded (in %).
+
 Loss is also an index showing the goodness of the performance of the model, the smaller the loss, the better model.
 
 ![report](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/report.png "report")
 
 #### 7.Change net configuration to improve model performance
 For example, you can add Convolution layer for more complicated task.
+
 Or you can tuning parameter such as ksize, pad or stride.
 
 
