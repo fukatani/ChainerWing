@@ -37,6 +37,8 @@ class PredictionWindow(QtWidgets.QMainWindow, Ui_PredictionWindow):
             self.select_by_dir.setEnabled(True)
             if 'SelectByDir' in TrainParamServer()['Task']:
                 self.select_by_dir.setChecked(TrainParamServer()['SelectByDir'])
+            else:
+                self.select_by_dir.setChecked(True)
         else:
             self.select_by_dir.setEnabled(False)
             self.select_by_dir.setChecked(False)
