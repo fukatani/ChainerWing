@@ -190,12 +190,13 @@ class Graph(object):
         """
         Returns the connection involving an input
         :param inp: InputInfo instance.
-        :return: Connection instance.
+        :return: Connection instance. If there is no connection, return None.
         """
         for con in self.getConnectionsTo(
                 self.nodes[inp.ID.partition(':')[0]]):
             if con.input_name == inp.name:
                 return con
+        return None
 
     def getConnectionsOfOutput(self, output):
         """

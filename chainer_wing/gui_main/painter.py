@@ -95,7 +95,7 @@ class Painter2D(QtWidgets.QWidget):
         allInputs = [i for i in self.getAllInputsOfSubgraph(name)]
         for inp in allInputs:
             con = self.graph.getConnectionOfInput(inp)
-            if con:
+            if con is not None:
                 outNode = con.output_node
                 if outNode not in subgraph:
                     relayInputs.add((inp, outNode, con.output_name))
@@ -106,11 +106,10 @@ class Painter2D(QtWidgets.QWidget):
         allOutputs = self.getAllOutputsOfSubgraph(name)
         for out in allOutputs:
             cons = self.graph.getConnectionsOfOutput(out)
-            if cons:
-                for con in cons:
-                    if con.input_node not in subgraph:
-                        relayOutputs.add((out, con.input_node, con.input_name))
-                        break
+            for con in cons:
+                if con.input_node not in subgraph:
+                    relayOutputs.add((out, con.input_node, con.input_name))
+                    break
             else:
                 relayOutputs.add((out, None, None))
         # print('xxx', self.graph.toJson(subgraph=name))
@@ -219,7 +218,6 @@ class Painter2D(QtWidgets.QWidget):
                         break
 
             for point, i in self.inputPinPositions:
-                # print(event.pos(), point, i)
                 if abs(event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
                             event.pos().y() - point.y()) < PINSIZE * self.scale:
                     self.clickedPin = i
@@ -229,15 +227,15 @@ class Painter2D(QtWidgets.QWidget):
                     self.graph.removeConnection(i, from_self=False)
                     self.update()
                     return
+
             for point, i in self.outputPinPositions:
-                # print(event.pos(), point, i)
-                # w = node.__size__[0]*100
                 if abs(event.pos().x() - point.x()) < PINSIZE * self.scale and abs(
                             event.pos().y() - point.y()) < PINSIZE * self.scale:
                     self.clickedPin = i
                     self.graph.removeConnection(i, from_self=True)
                     self.update()
                     return
+
             for nodePoints in self.nodePoints:
                 x1 = nodePoints[0].x()
                 x2 = nodePoints[1].x()  # + x1
@@ -248,7 +246,6 @@ class Painter2D(QtWidgets.QWidget):
                 xx = xx.x()
                 if x1 < xx < x2 and y1 < yy < y2:
                     self.clickedNode = nodePoints[-1]
-                    # print(self.clickedNode)
                     self.update()
                     self.downOverNode = event.pos()
                     return
@@ -306,11 +303,6 @@ class Painter2D(QtWidgets.QWidget):
             y1, y2 = self._selectFrame.y(), self._selectFrame_End.y()
             if y1 > y2:
                 y2, y1 = y1, y2
-            # x1 += self.globalOffset.x()
-            # print(x1, '     ', self.globalOffset.x(), '    ', event.pos().x())
-            # x2 += self.globalOffset.x()
-            # y1 += self.globalOffset.y()
-            # y2 += self.globalOffset.y()
             self.groupSelection = self.massNodeCollide(x1, y1,
                                                        x2, y2)
         self.selectFrame = None
@@ -491,7 +483,7 @@ class Painter2D(QtWidgets.QWidget):
                 drawOffset += (8 + PINSIZE)
                 drawItem.update(x, y + drawOffset + 8, w, h,
                                 painter.transform())
-                if self.graph.getConnectionOfInput(inputPin):
+                if self.graph.getConnectionOfInput(inputPin) is not None:
                     text = inputPin.name
                     drawItem.draw(painter, as_label=text)
                 else:
@@ -827,14 +819,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.settings_action.setIconVisibleInMenu(False)
         self.addAction(self.settings_action)
 
-        self.createSubgraphAction = QtWidgets.QAction(
-            QtGui.QIcon(os.path.join(self.iconRoot, 'macro.png')),
-            'Create Macro', self)
-        self.createSubgraphAction.setShortcut('Ctrl+G')
-        self.createSubgraphAction.triggered.connect(self.openMacroDialog)
-        self.createSubgraphAction.setIconVisibleInMenu(False)
-        self.addAction(self.createSubgraphAction)
-
     def initMenus(self):
         fileMenu = self.menuBar.addMenu('&File')
         fileMenu.addAction(self.data_action)
@@ -903,18 +887,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.select_data_button.setText('Selecting Data: ' + text)
         else:
             self.select_data_button.setText('Please Select Data File')
-
-    def openMacroDialog(self):
-        if not self.drawer.groupSelected():
-            self.statusBar.showMessage(
-                'You Must Select a Group to Create a Macro.', 2000)
-            return
-        name, state = QtWidgets.QInputDialog.getText(
-            self, 'Create Macro', 'Macro Name:')
-        if not state:
-            return
-        self.drawer.createSubgraph(name)
-        self.getSubgraphList()
 
     def openSettingsDialog(self):
         SettingsDialog(self, settings=self.settings).show()
