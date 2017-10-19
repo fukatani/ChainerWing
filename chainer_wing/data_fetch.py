@@ -1,6 +1,6 @@
 import csv
-from importlib import machinery
 import glob
+from importlib import machinery
 import os
 
 from chainer.datasets import tuple_dataset

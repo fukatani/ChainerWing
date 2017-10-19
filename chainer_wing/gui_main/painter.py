@@ -319,7 +319,6 @@ class Painter2D(QtWidgets.QWidget):
             y2 = nodePoints[1].y()  # + y1
             if x < x1 < xx and y < y1 < yy and x < x2 < xx and y < y2 < yy:
                 nodes.append(nodePoints[-1])
-                # print(self.clickedNode)
         return nodes
 
     def mouseMoveEvent(self, event):
@@ -330,7 +329,6 @@ class Painter2D(QtWidgets.QWidget):
         if self.drag:
             self.globalOffset += event.pos() - self.drag
             self.drag = event.pos()
-            # self.repaint()
             self.update()
         if self.downOverNode:
             if self.groupSelection:
@@ -393,7 +391,6 @@ class Painter2D(QtWidgets.QWidget):
             self.repaint()
 
     def paintEvent(self, event):
-        # before = time.time()
         self.inputPinPositions = []
         self.outputPinPositions = []
         self.nodePoints = []
@@ -411,9 +408,7 @@ class Painter2D(QtWidgets.QWidget):
         self.center = QtCore.QPoint(self.width() / 2. + self.globalOffset.x(),
                              self.height() / 2. + self.globalOffset.y())
         painter.scale(self.scale, self.scale)
-        # painter.translate(self.width()/2., self.height()/2.)
         painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing)
-        # painter.drawEllipse(QtCore.QPoint(0,0),5,5)
 
         lastDraws = []
         halfPinSize = PINSIZE // 2
@@ -493,7 +488,6 @@ class Painter2D(QtWidgets.QWidget):
 
             for k, drawItem in enumerate(self.drawItemsOfNode[node]['out']):
                 outputPin = drawItem.data
-                # pen.setColor(QColor(0, 115, 130))
                 try:
                     pen.setColor(Painter2D.PINCOLORS[outputPin.info.var_type[0]])
                 except KeyError:
@@ -517,7 +511,6 @@ class Painter2D(QtWidgets.QWidget):
 
         self.pinPositions = {value[1]: value[0] for value in
                              self.inputPinPositions + self.outputPinPositions}
-        # self.drawConnections(painter)
         for item in lastDraws:
             item.draw(painter, last=True)
 
@@ -620,9 +613,6 @@ class Painter2D(QtWidgets.QWidget):
             self.drawItems.append(s)
             self.drawItemsOfNode[node]['out'].append(s)
         for inp in node.inputPins.values():
-            # print(inp.name)
-            # if inp.name == 'TRIGGER':# and inp.connected:
-            #      self.triggers.add(node)
             if inp.info.select:
                 s = Selector(node, inp, self)
             else:
@@ -637,6 +627,8 @@ class Painter2D(QtWidgets.QWidget):
     def drawGrid(self, painter):
         color = 105
         spacing = 100 * self.scale
+
+        # More zoom up, use darker grid.
         while spacing < 25:
             spacing *= 9
             color = 70 + (color - 70) / 2.5
@@ -830,31 +822,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         run_menu.addAction(self.compile_and_exe_action)
         run_menu.addAction(self.compile_action)
         run_menu.addAction(self.exe_action)
-        # run_menu.addAction(self.connectAction)
-        # run_menu.addAction(self.createSubgraphAction)
 
         settingsMenu = self.menuBar.addMenu('&Settings')
         settingsMenu.addAction(self.train_configure_action)
         settingsMenu.addAction(self.settings_action)
 
-        # self.mainToolBar.addAction(self.exitAction)
         self.mainToolBar.addWidget(self.select_data_button)
-        # self.mainToolBar.addAction(self.data_action)
         self.mainToolBar.addSeparator()
+
         self.mainToolBar.addAction(self.save_action)
         self.mainToolBar.addAction(self.load_action)
         self.mainToolBar.addSeparator()
+
         self.mainToolBar.addAction(self.compile_and_exe_action)
         self.mainToolBar.addSeparator()
-        # self.mainToolBar.addAction(self.pauseRunnerAction)
+
         self.mainToolBar.addAction(self.compile_action)
         self.mainToolBar.addAction(self.exe_action)
-        # self.mainToolBar.addAction(self.gotoRunnerAction)
         self.mainToolBar.addSeparator()
+
         self.mainToolBar.addAction(self.prediction_action)
-        # self.mainToolBar.addAction(self.updateRunnerAction)
         self.mainToolBar.addAction(self.clear_all_action)
         self.mainToolBar.addSeparator()
+
         self.mainToolBar.addAction(self.train_configure_action)
         self.mainToolBar.addAction(self.settings_action)
 
