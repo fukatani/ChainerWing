@@ -16,10 +16,8 @@ def dummy(node_class):
 
 class Graph(object):
     """
-    Managing all nodes. This class provides interfaces for spawning/removing nodes and connections.
-    It also provides interfaces for spawning and connecting to graph interpreters and for communicating with them.
-    Since a Graph interpreter is nothing but a small program able to load a Graph instance and listening to commands,
-    the Graph class also provides methods for executing the implemented logic.
+    Managing all nodes. This class provides interfaces for spawning/removing
+    nodes and connections.
     """
     nextFreeNodeID = 0
     nodes = {}
@@ -36,7 +34,7 @@ class Graph(object):
         self.connections = {}
         # from other to self
         self.reverseConnections = {}
-        # self.statusLock = Lock()
+
         if painter:
             self.painter = painter
             painter.registerGraph(self)
@@ -49,12 +47,15 @@ class Graph(object):
     def spawnNode(self, node_class, connections=None, position=(0, 0),
                   silent=False, id=None, name=None):
         """
-        Spawns a new node of a given class at a given position with optional connections to other nodes.
+        Spawns a new node of a given class at a given position with optional
+        connections to other nodes.
         :param node_class: subclass object of 'Node'.
         :param connections: Dictionary
-        :param position: Tuple of two integer representing the nodes position on the screen relative the the graph's
+        :param position: Tuple of two integer representing the nodes position
+        on the screen relative the the graph's
         origin.
-        :param silent: Boolean. Suppresses all notifications that a node was spawned if True.
+        :param silent: Boolean. Suppresses all notifications that a node was
+        spawned if True.
         :return: newly created Node instance.
         """
         newNode = node_class(self, id)
@@ -244,6 +245,8 @@ class Graph(object):
         """
         self.clear_error()
         if TrainParamServer()['GPU'] and not util.check_cuda_available():
+            util.disp_error('GPU option is selected but available cuda device'
+                            'is not found.')
             return
 
         try:
@@ -278,7 +281,8 @@ class Graph(object):
     def to_dict(self, subgraph=None):
         """
         Encodes the graph as a JSON string and returns the string.
-        :param subgraph: Returns whole graph is 'subgraph=None' else only the nodes corresponding to the subgraph.
+        :param subgraph: Returns whole graph is 'subgraph=None' else only the
+         nodes corresponding to the subgraph.
         :return:
         """
         if subgraph:

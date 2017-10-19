@@ -14,10 +14,12 @@ def disp_error(message: str):
     error.exec_()
 
 
-def disp_message(message: str):
+def disp_message(message: str, title=None):
     msgbox = QtWidgets.QMessageBox()
     msgbox.setIcon(QtWidgets.QMessageBox.Information)
     msgbox.setText(message)
+    if title is not None:
+        msgbox.setWindowTitle(title)
     msgbox.exec_()
 
 
@@ -121,4 +123,4 @@ def deserialize_pred_label():
 
 
 def for_image_extensions():
-    return ('jpg', 'png', 'tiff', 'bmp')
+    return 'jpg', 'jpeg', 'png', 'tiff', 'bmp'

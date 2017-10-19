@@ -1,9 +1,6 @@
-import random
-
 import chainer
-import numpy
-
 from chainercv import transforms
+import numpy
 
 from chainer_wing.subwindows.train_config import TrainParamServer
 
@@ -83,9 +80,6 @@ class PreprocessedTestDataset(PreprocessedDataset):
         self.use_random_y_flip = TrainParamServer()['UseRandomYFlip']
         self.use_random_rotate = TrainParamServer()['UseRandomRotation']
         self.pca_lighting = TrainParamServer()['PCAlighting']
-
-    def __len__(self):
-        return len(self.base)
 
     def get_example(self, i):
         image = self.base[i]
