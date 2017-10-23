@@ -16,3 +16,19 @@ class VGG16(Link):
     @classmethod
     def register_chainer_impl(cls):
         return chainer.links.VGG16Layers
+
+
+class ResNet50(Link):
+    Input('in_array', (chainer.Variable,))
+    Input('pretrained_model', (str,))
+    Output('out_array', (chainer.Variable,))
+    is_image_node = True
+
+    def call_init(self):
+        return 'ResNetLayers({pretrained_model}, n_layers=50),' \
+            .format(pretrained_model=self._pretrained_model)
+
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.links.ResNet50Layers
+
