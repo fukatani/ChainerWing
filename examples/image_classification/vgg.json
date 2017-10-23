@@ -1,0 +1,99 @@
+{
+    "graph": [
+        [
+            "l0",
+            {
+                "class": "VGG16",
+                "inputConnections": {},
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "pretrained_model",
+                        "str",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "loss0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -72,
+                    -63
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "loss0",
+            {
+                "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "l0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    366,
+                    -108
+                ],
+                "subgraph": "main"
+            }
+        ]
+    ],
+    "train": {
+        "BatchSize": 1,
+        "Crop": "Do Nothing",
+        "CropHeight": 1,
+        "CropWidth": 1,
+        "Crop_idx": 0,
+        "Epoch": 10,
+        "GPU": 1,
+        "ModelName": "MyModel",
+        "NetName": "MyNet",
+        "Optimizer": "AdaDelta",
+        "PCAlighting": 0.5,
+        "PreProcessor": "Do Nothing",
+        "PreProcessor_idx": 0,
+        "PredInputData": "/home/ryo/workspace/github/CW_gui/examples/image_classification/data/Spanish",
+        "PredModel": "/home/ryo/workspace/github/CW_gui/examples/image_classification/result/MyModel.npz",
+        "ResizeHeight": 100,
+        "ResizeWidth": 100,
+        "SelectByDir": 2,
+        "Shuffle": true,
+        "Task": "Image Classification",
+        "Task_idx": 2,
+        "TestData": "./",
+        "TestDataRatio": 0.5,
+        "TrainData": "/home/ryo/workspace/github/CW_gui/examples/image_classification/data",
+        "UseRandomRotation": true,
+        "UseRandomXFlip": false,
+        "UseRandomYFlip": false,
+        "UseResize": false,
+        "UseSameData": true,
+        "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/image_classification",
+        "opt_eps": 1e-06,
+        "opt_rho": 0.95
+    }
+}
