@@ -963,6 +963,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 TrainParamServer().load_from_dict(proj_dict['train'])
         self.settings.setValue('graph_file', file_name)
         self.update_data_label()
+        self.setupNodeLib()
 
     def save_graph_and_train(self, *args):
         """
