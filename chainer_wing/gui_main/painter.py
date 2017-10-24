@@ -1113,8 +1113,6 @@ class Selector(DrawItem):
     def watchDown(self, pos):
         self.select = str(self.items[self.highlight - 1])
         self.parent.inputs[self.data.name].set_value_from_text(self.select)
-        # self.parent._Boolean.setDefault(self.select)
-        # self.painter.removeWatchingItem(self)
 
     def collide(self, pos):
         if self._x < pos.x() < self._xx + 16 and self._y < pos.y() < self._yy:
@@ -1196,8 +1194,6 @@ class Selector(DrawItem):
                 painter.drawText(xx + 5, yy + PINSIZE - 3 + i * (
                     4 + PINSIZE) + TEXTYOFFSET, ww - 20, hh + 5 + PINSIZE,
                                  alignment, item)
-            # painter.drawText(xx-5, yy-3+0, ww-20, hh+5, alignment, 'True')
-            # painter.drawText(xx-5, yy-3+12, ww-20, hh+5, alignment, 'False')
 
             pen = QtGui.QPen(Qt.darkGray)
             painter.setPen(pen)

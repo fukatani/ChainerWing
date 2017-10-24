@@ -19,14 +19,11 @@ class Graph(object):
     Managing all nodes. This class provides interfaces for spawning/removing
     nodes and connections.
     """
-    nextFreeNodeID = 0
-    nodes = {}
 
     def __init__(self, painter=None):
         self.slave = False
         self.statusLock = None
         self.connected = False
-        self.nextFreeNodeID = 0
         self.nodes = {}
         self.runner = None
         self.status = None
