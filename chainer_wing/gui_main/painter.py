@@ -55,7 +55,6 @@ class Painter2D(QtWidgets.QWidget):
         self.drawItems = []
         self.drawItemsOfNode = {}
         self.watchingItems = set()
-        self.contextSensitive = False
         self.rightClickedNode = None
         self.mouseDownPos = None
         self.relayTo = None
@@ -64,9 +63,6 @@ class Painter2D(QtWidgets.QWidget):
         self.selectedSubgraph = ('main', None)
         self.groupSelection = []
         self.reset()
-
-    def groupSelected(self):
-        return len(self.groupSelection)
 
     def reset(self):
         self.nodes = []
@@ -78,7 +74,6 @@ class Painter2D(QtWidgets.QWidget):
         self.drawItemsOfNode = {}
         self.watchingItems = set()
         self.rightClickedNode = None
-        self.contextSensitive = False
         self.mouseDownPos = None
         self.relayTo = None
         self.selectFrame = None
@@ -413,7 +408,7 @@ class Painter2D(QtWidgets.QWidget):
         lastDraws = []
         halfPinSize = PINSIZE // 2
 
-        for j, node in enumerate(self.nodes):
+        for node in self.nodes:
             if not self.selectedSubgraph[0] == node.subgraph:
                 continue
             pen = QtGui.QPen()
@@ -455,7 +450,6 @@ class Painter2D(QtWidgets.QWidget):
                              node.get_name())
             painter.setBrush(QtGui.QColor(40, 40, 40))
             drawOffset = 33
-            # for i, inputPin in enumerate(node.inputPins.values()):
             for i, drawItem in enumerate(self.drawItemsOfNode[node]['inp']):
                 inputPin = drawItem.data
                 try:
