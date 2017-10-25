@@ -46,3 +46,6 @@ Parts of chainer extension is referenced by chainer.
 (https://github.com/pfnet/chainer)
 chainer is licenced by MIT License.
 
+## Blog Entry(Japanese)
+http://segafreder.hatenablog.com/entry/2017/10/25/225047
+
