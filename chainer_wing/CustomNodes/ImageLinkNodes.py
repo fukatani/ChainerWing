@@ -28,6 +28,31 @@ class Convolution2D(Link):
         return chainer.links.Convolution2D
 
 
+class Deconvolution2D(Link):
+    Input('in_array', (chainer.Variable,))
+    Input('out_channels', (int,))
+    Input('ksize', (int,))
+    Input('stride', (int,))
+    Input('pad', (int,))
+    Input('nobias', (bool,), select=[True, False])
+    Output('out_array', (chainer.Variable,))
+    is_image_node = True
+
+    def call_init(self):
+        return 'Deconvolution2D({in_channels}, {out_channels}, {ksize}, ' \
+               '{stride}, {pad}, {nobias}),' \
+            .format(in_channels='None',
+                    out_channels=self._out_channels,
+                    ksize=self._ksize,
+                    stride=self._stride,
+                    pad=self._pad,
+                    nobias=self._nobias)
+
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.links.Deconvolution2D
+
+
 class DepthwiseConvolution2D(Link):
     Input('in_array', (chainer.Variable,))
     Input('channel_multiplier', (int,))

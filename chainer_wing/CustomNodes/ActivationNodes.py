@@ -103,4 +103,4 @@ class LeakyRelu(Function):
 
     @classmethod
     def register_chainer_impl(cls):
-        return chainer.functions.relu
+        return chainer.functions.leaky_relu
