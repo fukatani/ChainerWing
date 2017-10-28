@@ -60,7 +60,7 @@ class Elu(Function):
 
     def call(self):
         self.check_member(('_alpha',))
-        return self.ID + ' = elu(alpha={0}, x='.format(self._elu)
+        return self.ID + ' = elu(alpha={0}, x='.format(self._alpha)
 
     @classmethod
     def register_chainer_impl(cls):
@@ -74,7 +74,7 @@ class ClippedRelu(Function):
 
     def call(self):
         self.check_member(('_alpha',))
-        return self.ID + ' = clipped_relu(z={0}, x='.format(self._elu)
+        return self.ID + ' = clipped_relu(z={0}, x='.format(self._z)
 
     @classmethod
     def register_chainer_impl(cls):
@@ -91,3 +91,16 @@ class HardSigmoid(Function):
     @classmethod
     def register_chainer_impl(cls):
         return chainer.functions.hard_sigmoid
+
+
+class LeakyRelu(Function):
+    Input('in_array', (chainer.Variable,))
+    Input('slope', (float,))
+    Output('out_array', (chainer.Variable,))
+
+    def call(self):
+        return self.ID + ' = leaky_relu(slope={0}, x='.format(self._slope)
+
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.functions.relu
