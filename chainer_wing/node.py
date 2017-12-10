@@ -71,7 +71,7 @@ class Info(object):
             return None
         elif int in self.var_type and value.isdigit():
             return int(value)
-        elif float in self.var_type and value.isdecimal():
+        elif float in self.var_type and util.isfloat(value):
             return float(value)
         elif str in self.var_type:
             return value

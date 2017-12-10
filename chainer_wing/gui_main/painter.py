@@ -1283,7 +1283,7 @@ class LineEdit(DrawItem):
         string = string.strip('\r\n')
         try:
             if float in self.data.info.var_type and string == '.':
-                return '0.'
+                string = '0.'
             self.data.info.convert_var_type(string)
         except ValueError:
             return ''
