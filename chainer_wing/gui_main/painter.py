@@ -374,6 +374,8 @@ class Painter2D(QtWidgets.QWidget):
         self.unregisterNode(node)
         node.clear()
         self.repaint()
+        # release clicked node for prevent double deleting.
+        self.clickedNode = None
 
     def get_all_name(self):
         return [node.get_name() for node in self.nodes]
