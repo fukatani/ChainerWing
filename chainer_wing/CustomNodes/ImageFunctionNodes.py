@@ -35,3 +35,22 @@ class MaxPooling2d(Function):
     @classmethod
     def register_chainer_impl(cls):
         return chainer.functions.max_pooling_2d
+
+
+class LocalResponseNormalization(Function):
+    Input('in_array', (chainer.Variable,))
+    Input('n', (int,))
+    Input('k', (int,))
+    # Input('alpha', (float,))
+    # Input('beta', (float,))
+    Output('out_array', (chainer.Variable,))
+    is_image_node = True
+
+    def call(self):
+        return self.ID + ' = LocalResponseNormalization({n}, {k}, x=' \
+            .format(n=self._n,
+                    k=self._k)
+
+    @classmethod
+    def register_chainer_impl(cls):
+        return chainer.functions.LocalResponseNormalization
