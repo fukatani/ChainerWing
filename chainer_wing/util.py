@@ -124,3 +124,11 @@ def deserialize_pred_label():
 
 def for_image_extensions():
     return 'jpg', 'jpeg', 'png', 'tiff', 'bmp'
+
+
+def isfloat(string: str):
+    try:
+        float(string)
+    except ValueError:
+        return False
+    return True
