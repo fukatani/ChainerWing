@@ -41,13 +41,13 @@ class LocalResponseNormalization(Function):
     Input('in_array', (chainer.Variable,))
     Input('n', (int,))
     Input('k', (int,))
-    # Input('alpha', (float,))
-    # Input('beta', (float,))
+    Input('alpha', (float,))
+    Input('beta', (float,))
     Output('out_array', (chainer.Variable,))
     is_image_node = True
 
     def call(self):
-        return self.ID + ' = LocalResponseNormalization({n}, {k}, x=' \
+        return self.ID + ' = local_response_normalization(n={n}, k={k}, x=' \
             .format(n=self._n,
                     k=self._k)
 
