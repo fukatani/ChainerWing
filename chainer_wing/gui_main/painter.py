@@ -704,8 +704,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupNodeLib()
 
         # Open Last Opened JSON
-        if init_graph:
-            self.load_graph(init_graph)
+        try:
+            if init_graph:
+                self.load_graph(init_graph)
+        except FileNotFoundError:
+            pass
 
     def setArgs(self, args):
         if args.test:
