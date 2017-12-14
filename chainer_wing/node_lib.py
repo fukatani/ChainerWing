@@ -131,21 +131,10 @@ class NodeList(QListView):
         if event.pos().x() < 0:
             # transform = self.graph.painter.transform
             pos = QCursor.pos()
-            pos = self.correct_pos(pos)
+            pos = self.graph.correct_pos(pos)
 
             self.graph.spawnNode(self.selectedClass, position=(pos.x(), pos.y()))
             self.graph.update()
-
-    def correct_pos(self, pos):
-        pos -= self.get_top_left()
-        pos -= self.graph.painter.center
-        # print(pos, self.graph.painter.center, pos*transform)
-        pos /= self.graph.painter.scale
-        # print(transform)
-        return pos
-
-    def get_top_left(self):
-        return self.graph.painter.mapToGlobal(self.graph.painter.pos())
 
     def mouseMoveEvent(self, event):
         """

@@ -1,3 +1,4 @@
+import copy
 import json
 import logging
 import os
@@ -62,6 +63,7 @@ class Painter2D(QtWidgets.QWidget):
         self.selectFrame_End = None
         self.selectedSubgraph = ('main', None)
         self.groupSelection = []
+        self.copied_node = None
         self.reset()
 
     def reset(self):
@@ -80,6 +82,7 @@ class Painter2D(QtWidgets.QWidget):
         self.selectFrame_End = None
         self.selectedSubgraph = ('main', None)
         self.groupSelection = []
+        self.copied_node = None
 
     def createSubgraph(self, name):
         subgraph = set()
@@ -356,18 +359,28 @@ class Painter2D(QtWidgets.QWidget):
 
     def contextMenuEvent(self, event):
         node = self.rightClickedNode
-        if not node:
-            return None
-
         menu = QtWidgets.QMenu(self)
+        if not node:
+            if self.copied_node is not None:
+                paste_action = menu.addAction('Paste node')
+                action = menu.exec_(self.mapToGlobal(event.pos()))
+                if action == paste_action:
+                    self.paste_node(event.pos())
+                return
+            else:
+                return
+
         delete_action = menu.addAction('Delete node')
         rename_action = menu.addAction('Rename node')
+        copy_action = menu.addAction('Copy node')
         action = menu.exec_(self.mapToGlobal(event.pos()))
         if action == delete_action:
             self.delete_node(node)
         elif action == rename_action:
             self.rename_node(node)
-        return None
+        elif action == copy_action:
+            self.copyNode(node)
+        return
 
     def delete_node(self, node):
         self.graph.deleteNode(node)
@@ -376,6 +389,21 @@ class Painter2D(QtWidgets.QWidget):
         self.repaint()
         # release clicked node for prevent double deleting.
         self.clickedNode = None
+
+    def copyNode(self, node):
+        self.copied_node = node
+
+    def paste_node(self, pos):
+        pos -= self.center
+        pos /= self.scale
+        self.graph.spawnNode(self.copied_node.__class__, position=(pos.x(), pos.y()))
+        self.repaint()
+
+    def correct_pos(self, pos):
+        pos -= self.mapToGlobal(self.pos())  # get top left
+        pos -= self.center
+        pos /= self.scale
+        return pos
 
     def get_all_name(self):
         return [node.get_name() for node in self.nodes]
@@ -693,8 +721,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.DrawArea.setLayout(l)
         self.drawer = painter
 
-        # self.drawer.graph.spawnAndConnect()
-
         # to reflect initial configuration
         SettingsDialog(self, settings=self.settings).close()
         TrainDialog(self, settings=self.settings).close()
@@ -703,7 +729,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.update_data_label()
         self.setupNodeLib()
 
-        # Open Last Opened JSON
+        # Open Last Opened JSON if enable
         try:
             if init_graph:
                 self.load_graph(init_graph)
@@ -1069,9 +1095,6 @@ class DrawItem(object):
 
     def run(self):
         pass
-
-    def setState(self, state):
-        self.state = state
 
     def collide(self, pos):
         if not self.active:

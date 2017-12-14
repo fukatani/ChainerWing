@@ -208,9 +208,6 @@ class Graph(object):
     def update(self):
         """
         Updates and repaints the painter instance.
-        WARNING: Only call this method from the main thread.
-        Other threads must use the Graph.requestUpdate method which
-        has a slight delay.
         :return:
         """
         try:
@@ -332,9 +329,6 @@ class Graph(object):
             for input in inputs:
                 if input[1] in ('bool', 'int', 'float'):
                     restoredNode.inputs[input[0]].set_value(input[-1])
-                    # outputs = nodeData['outputs']
-                    # for output in outputs:
-                    #     restoredNode.outputs[output[0]].setDefault(output[-1])
         for id, nodeData in graph_state:
             for input_name, outputID in nodeData['inputConnections'].items():
                 output_node, output_name = outputID.split(':O')
@@ -409,6 +403,9 @@ class Graph(object):
         for out in node.outputs.values():
             self.removeConnection(out.ID, from_self=True)
         del self.nodes[node.ID]
+
+    def correct_pos(self, pos):
+        return self.painter.correct_pos(pos)
 
 
 class Connection(object):
