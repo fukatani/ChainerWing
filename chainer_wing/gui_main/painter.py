@@ -251,14 +251,14 @@ class Painter2D(QtWidgets.QWidget):
 
     def getOutputPinAt(self, pos):
         for point, pin in self.outputPinPositions:
-            if abs(pos.x() - point.x()) < 7 * self.scale and abs(
-                            pos.y() - point.y()) < 7 * self.scale:
+            if abs(pos.x() - point.x()) < 16 * self.scale and abs(
+                            pos.y() - point.y()) < 16 * self.scale:
                 return pin
 
     def getInputPinAt(self, pos):
         for point, pin in self.inputPinPositions:
-            if abs(pos.x() - point.x()) < 7 * self.scale and abs(
-                            pos.y() - point.y()) < 7 * self.scale:
+            if abs(pos.x() - point.x()) < 16 * self.scale and abs(
+                            pos.y() - point.y()) < 16 * self.scale:
                 if pin[-8:] != 'in_array': return None
                 return pin
 
