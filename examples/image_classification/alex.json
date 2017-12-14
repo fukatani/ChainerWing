@@ -1,0 +1,897 @@
+{
+    "graph": [
+        [
+            "f4",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l2:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "l3:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    399,
+                    -126
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f2",
+            {
+                "class": "MaxPooling2d",
+                "inputConnections": {
+                    "in_array": "f11:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        3
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        2
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "l2:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    38,
+                    67
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l6",
+            {
+                "class": "Linear",
+                "inputConnections": {
+                    "in_array": "l5:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        4096
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "l7:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    217,
+                    239
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l5",
+            {
+                "class": "Linear",
+                "inputConnections": {
+                    "in_array": "f13:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        4096
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "l6:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    60,
+                    230
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f0",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f10:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -314,
+                    -108
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f10",
+            {
+                "class": "LocalResponseNormalization",
+                "inputConnections": {
+                    "in_array": "f0:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "n",
+                        "int",
+                        5
+                    ],
+                    [
+                        "k",
+                        "int",
+                        2
+                    ],
+                    [
+                        "alpha",
+                        "float",
+                        0.0004
+                    ],
+                    [
+                        "beta",
+                        "float",
+                        0.75
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f1:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -191,
+                    -141
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l0",
+            {
+                "class": "Convolution2D",
+                "inputConnections": {},
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_channels",
+                        "int",
+                        96
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        11
+                    ],
+                    [
+                        "stride",
+                        "int",
+                        4
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        0
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -483,
+                    -170
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l2",
+            {
+                "class": "Convolution2D",
+                "inputConnections": {
+                    "in_array": "f2:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_channels",
+                        "int",
+                        384
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        3
+                    ],
+                    [
+                        "stride",
+                        "int",
+                        1
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        1
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f4:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    221,
+                    -163
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f14",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l4:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f13:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -309,
+                    226
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f1",
+            {
+                "class": "MaxPooling2d",
+                "inputConnections": {
+                    "in_array": "f10:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        3
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        2
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "l1:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    38,
+                    -139
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l4",
+            {
+                "class": "Convolution2D",
+                "inputConnections": {
+                    "in_array": "f6:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_channels",
+                        "int",
+                        256
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        3
+                    ],
+                    [
+                        "stride",
+                        "int",
+                        1
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        1
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f14:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -491,
+                    212
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f11",
+            {
+                "class": "LocalResponseNormalization",
+                "inputConnections": {
+                    "in_array": "f3:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "n",
+                        "int",
+                        5
+                    ],
+                    [
+                        "k",
+                        "int",
+                        2
+                    ],
+                    [
+                        "alpha",
+                        "float",
+                        0.0004
+                    ],
+                    [
+                        "beta",
+                        "float",
+                        0.75
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f2:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -181,
+                    45
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f3",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f11:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -308,
+                    82
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l1",
+            {
+                "class": "Convolution2D",
+                "inputConnections": {
+                    "in_array": "f1:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_channels",
+                        "int",
+                        256
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        5
+                    ],
+                    [
+                        "stride",
+                        "int",
+                        1
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        2
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f3:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -490,
+                    24
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f6",
+            {
+                "class": "Relu",
+                "inputConnections": {
+                    "in_array": "l3:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "l4:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    401,
+                    72
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l7",
+            {
+                "class": "Linear",
+                "inputConnections": {
+                    "in_array": "l6:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_size",
+                        "int",
+                        1000
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "loss0:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    375,
+                    238
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "f13",
+            {
+                "class": "MaxPooling2d",
+                "inputConnections": {
+                    "in_array": "f14:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        3
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        2
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "l5:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    -174,
+                    223
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "l3",
+            {
+                "class": "Convolution2D",
+                "inputConnections": {
+                    "in_array": "f4:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ],
+                    [
+                        "out_channels",
+                        "int",
+                        384
+                    ],
+                    [
+                        "ksize",
+                        "int",
+                        3
+                    ],
+                    [
+                        "stride",
+                        "int",
+                        1
+                    ],
+                    [
+                        "pad",
+                        "int",
+                        1
+                    ],
+                    [
+                        "nobias",
+                        "bool",
+                        false
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {
+                    "out_array": [
+                        "f6:Iin_array"
+                    ]
+                },
+                "outputs": [
+                    [
+                        "out_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "position": [
+                    222,
+                    65
+                ],
+                "subgraph": "main"
+            }
+        ],
+        [
+            "loss0",
+            {
+                "class": "SoftmaxCrossEntropy",
+                "inputConnections": {
+                    "in_array": "l7:Oout_array"
+                },
+                "inputs": [
+                    [
+                        "in_array",
+                        "Variable",
+                        ""
+                    ]
+                ],
+                "name": null,
+                "outputConnections": {},
+                "outputs": [],
+                "position": [
+                    60,
+                    374
+                ],
+                "subgraph": "main"
+            }
+        ]
+    ],
+    "train": {
+        "BatchSize": 16,
+        "Crop": "Do Nothing",
+        "CropHeight": 1,
+        "CropWidth": 1,
+        "Crop_idx": 0,
+        "Epoch": 30,
+        "GPU": 1,
+        "ModelName": "MyModel",
+        "NetName": "MyNet",
+        "Optimizer": "AdaDelta",
+        "PCAlighting": 0.5,
+        "PreProcessor": "Do Nothing",
+        "PreProcessor_idx": 0,
+        "PredInputData": "/home/ryo/workspace/github/CW_gui/examples/image_classification/data/Spanish",
+        "PredModel": "/home/ryo/workspace/github/CW_gui/examples/image_classification/result/MyModel.npz",
+        "ResizeHeight": 227,
+        "ResizeWidth": 227,
+        "SelectByDir": 2,
+        "Shuffle": true,
+        "Task": "Image Classification",
+        "Task_idx": 2,
+        "TestData": "./",
+        "TestDataRatio": 0.5,
+        "TrainData": "/home/ryo/workspace/github/CW_gui/examples/image_classification/data",
+        "UseRandomRotation": true,
+        "UseRandomXFlip": false,
+        "UseRandomYFlip": false,
+        "UseResize": false,
+        "UseSameData": true,
+        "WorkDir": "/home/ryo/workspace/github/CW_gui/examples/image_classification",
+        "opt_eps": 1e-06,
+        "opt_rho": 0.95
+    }
+}
