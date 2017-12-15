@@ -339,13 +339,6 @@ class Node(object, metaclass=MetaNode):
             return cls.register_chainer_impl().__doc__
         return 'No detail for this function.'
 
-    def run(self):
-        """
-        Execute the node. Override this to implement logic.
-        :rtype: None
-        """
-        raise NotImplementedError('This method should be override')
-
     def _addInput(*args, data='', cls=None):
         """
         This should be a classmethod.
