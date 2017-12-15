@@ -61,7 +61,6 @@ class Info(object):
         self.value = value
         self.select = select
         self.owner = owner
-        self.pure = 0
 
     def setOwner(self, owner):
         self.owner = owner
@@ -131,27 +130,9 @@ class InputInfo(Info):
             else:
                 raise InputNotAvailable('Input not set for node.')
 
-    def setPure(self):
-        self.pure = 1
-
     def setConnected(self, value):
         assert isinstance(value, bool)
         self.connected = value
-
-    def isAvailable(self, info=False):
-        if info:
-            if self.has_value_set():
-                return True
-            elif self.value is not None and not self.connected and self.pure < 2:
-                return True
-            return False
-        if self.has_value_set():
-            return True
-        elif self.value is not None and not self.connected and self.pure < 2:
-            if self.pure == 1:
-                self.pure = 2
-            return True
-        return False
 
 
 class OutputInfo(Info):
@@ -299,8 +280,6 @@ class Node(object, metaclass=MetaNode):
             self.outputBuffer[out.name] = None
         if not self.inputs.keys():
             raise AttributeError('Nodes without any input are not valid.')
-        if len(self.inputs.keys()) == 2:
-            self.inputs[list(self.inputs.keys())[1]].setPure()
 
         # self.set_inputs_to_initial()
         self.setup()
