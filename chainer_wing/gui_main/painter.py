@@ -1,4 +1,3 @@
-import copy
 import json
 import logging
 import os
@@ -380,7 +379,7 @@ class Painter2D(QtWidgets.QWidget):
         elif action == rename_action:
             self.rename_node(node)
         elif action == copy_action:
-            self.copyNode(node)
+            self.copy_node(node)
         return
 
     def delete_node(self, node):
@@ -391,12 +390,16 @@ class Painter2D(QtWidgets.QWidget):
         # release clicked node for prevent double deleting.
         self.clickedNode = None
 
-    def copyNode(self, node):
+    def copy_node(self, node):
         self.copied_node = node
 
-    def paste_node(self, pos):
-        pos -= self.center
-        pos /= self.scale
+    def paste_node(self, pos=None):
+        if pos is None:
+            pos = self.copied_node.__pos__
+            pos = QtCore.QPoint(pos[0] - 5, pos[1] - 5)
+        else:
+            pos -= self.center
+            pos /= self.scale
         self.graph.pasteNode(self.copied_node, pos)
         self.repaint()
 
@@ -807,6 +810,18 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.deleteNodeAction.setIconVisibleInMenu(True)
         self.addAction(self.deleteNodeAction)
 
+        self.copyNodeAction = QtWidgets.QAction('Copy', self)
+        self.copyNodeAction.setShortcut('Ctrl+C')
+        self.copyNodeAction.triggered.connect(self.copyNode)
+        self.copyNodeAction.setIconVisibleInMenu(True)
+        self.addAction(self.copyNodeAction)
+
+        self.pasteNodeAction = QtWidgets.QAction('Paste', self)
+        self.pasteNodeAction.setShortcut('Ctrl+V')
+        self.pasteNodeAction.triggered.connect(self.pasteNode)
+        self.pasteNodeAction.setIconVisibleInMenu(True)
+        self.addAction(self.pasteNodeAction)
+
         self.statusAction = QtWidgets.QAction('Status', self)
         # self.statusAction.setShortcut('Ctrl+R')
         self.statusAction.triggered.connect(self.updateStatus)
@@ -941,6 +956,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         node = self.drawer.getSelectedNode()
         if node:
             self.drawer.delete_node(node)
+
+    def copyNode(self):
+        node = self.drawer.getSelectedNode()
+        if node:
+            self.drawer.copy_node(node)
+
+    def pasteNode(self):
+        self.drawer.paste_node()
 
     def clear_all_nodes(self):
         while self.drawer.nodes:
