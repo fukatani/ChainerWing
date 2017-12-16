@@ -355,15 +355,25 @@ class Node(object, metaclass=MetaNode):
         :return: object; Attribute
         :rtype: object
         """
+        default_dict = {key: value.default for key, value in
+                        inspect.signature(self.register_chainer_impl()).parameters.items()
+                        if repr(value.default) != "<class 'inspect._empty'>"}
+
         if item.startswith('_') and not item.startswith('__'):
             try:
-                return self.inputs[item.lstrip('_')]()
+                key = item.lstrip('_')
+                input_val = self.inputs[key]()
+                if input_val is not None:
+                    return input_val
+                if key in default_dict:
+                    return default_dict[key]
+                raise KeyError
             except KeyError:
                 try:
                     return self.outputs[item.lstrip('_')]
                 except KeyError:
                     raise AttributeError(
-                        'No I/O with name {} defined.'.format(item.lstrip('_')))
+                        'Please set {}.'.format(item.lstrip('_')))
 
     def getInputPin(self, input_name):
         """
