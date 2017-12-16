@@ -360,14 +360,11 @@ class Painter2D(QtWidgets.QWidget):
         node = self.rightClickedNode
         menu = QtWidgets.QMenu(self)
         if not node:
-            if self.copied_node is not None:
-                paste_action = menu.addAction('Paste node')
-                action = menu.exec_(self.mapToGlobal(event.pos()))
-                if action == paste_action:
-                    self.paste_node(event.pos())
-                return
-            else:
-                return
+            paste_action = menu.addAction('Paste node')
+            action = menu.exec_(self.mapToGlobal(event.pos()))
+            if action == paste_action:
+                self.paste_node(event.pos())
+            return
 
         copy_action = menu.addAction('Copy node')
         rename_action = menu.addAction('Rename node')
@@ -394,6 +391,8 @@ class Painter2D(QtWidgets.QWidget):
         self.copied_node = node
 
     def paste_node(self, pos=None):
+        if self.copied_node is None:
+            return
         if pos is None:
             pos = self.copied_node.__pos__
             pos = QtCore.QPoint(pos[0] - 5, pos[1] - 5)
