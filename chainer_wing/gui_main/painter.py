@@ -1277,48 +1277,36 @@ class LineEdit(DrawItem):
         return collides
 
     def draw(self, painter, as_label=''):
-        if not self.text and not self.data.info.value:
-            text = self.data.name
-        else:
-            text = self.data.info.value
+        """
+        :param as_label(str, optional):
+            Override text contents. Mainly used for connected pins.
+        """
         if as_label:
             text = as_label
-            alignment = self.__class__.alignment
-            pen = QtGui.QPen(Qt.darkGray)
-            painter.setPen(pen)
-            painter.setBrush(QtGui.QColor(40, 40, 40))
-            xx, yy, ww, hh = self.x + self.w / 2. - (
-                self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
-            self.set_font(painter)
-            painter.setPen(pen)
-            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
-                             alignment, text)
-            return
-        text = str(text)
-        if not self.state:
-            alignment = self.__class__.alignment
-            pen = QtGui.QPen(Qt.darkGray)
-            painter.setPen(pen)
-            painter.setBrush(QtGui.QColor(40, 40, 40))
-            xx, yy, ww, hh = self.x + self.w / 2. - (
-                self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
-            painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
-            self.set_font(painter)
-            painter.setPen(pen)
-            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
-                             alignment, text)
+        elif not self.text and not self.data.info.value:
+            text = self.data.name + '()'
+        elif self.state:  # if editting
+            text = self.data.info.value
         else:
-            alignment = self.__class__.alignment
-            pen = QtGui.QPen(Qt.darkGray)
-            painter.setPen(pen)
-            painter.setBrush(QtGui.QColor(10, 10, 10))
-            xx, yy, ww, hh = self.x + self.w / 2. - (
-                self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
+            text = self.data.name + '(' + str(self.data.info.value) + ')'
+        text = str(text)
+        alignment = self.__class__.alignment
+        pen = QtGui.QPen(Qt.darkGray)
+        painter.setPen(pen)
+        xx, yy, ww, hh = self.x + self.w / 2. - (
+            self.w - 25) / 2., self.y - 18, self.w - 18, 4 + PINSIZE
+        if as_label:
+            painter.setBrush(QtGui.QColor(40, 40, 40))
+        elif not self.state:
+            painter.setBrush(QtGui.QColor(40, 40, 40))
             painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
-            self.set_font(painter)
-            painter.setPen(pen)
-            painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
-                             alignment, text)
+        else:
+            painter.setBrush(QtGui.QColor(10, 10, 10))
+            painter.drawRoundedRect(xx, yy, ww, hh, 2, 20)
+        self.set_font(painter)
+        painter.setPen(pen)
+        painter.drawText(xx + 5, yy - 3 + TEXTYOFFSET, ww - 10, hh + 5,
+                         alignment, text)
 
     def keyPressEvent(self, event):
         if event.key() == 16777219:  # Backspace
