@@ -370,9 +370,10 @@ class Painter2D(QtWidgets.QWidget):
             else:
                 return
 
-        delete_action = menu.addAction('Delete node')
-        rename_action = menu.addAction('Rename node')
         copy_action = menu.addAction('Copy node')
+        rename_action = menu.addAction('Rename node')
+        delete_action = menu.addAction('Delete node')
+
         action = menu.exec_(self.mapToGlobal(event.pos()))
         if action == delete_action:
             self.delete_node(node)
@@ -396,7 +397,7 @@ class Painter2D(QtWidgets.QWidget):
     def paste_node(self, pos):
         pos -= self.center
         pos /= self.scale
-        self.graph.spawnNode(self.copied_node.__class__, position=(pos.x(), pos.y()))
+        self.graph.pasteNode(self.copied_node, pos)
         self.repaint()
 
     def correct_pos(self, pos):

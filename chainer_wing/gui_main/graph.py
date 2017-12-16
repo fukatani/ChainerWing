@@ -69,6 +69,10 @@ class Graph(object):
 
         return newNode
 
+    def pasteNode(self, node, pos):
+        new_node = self.spawnNode(node.__class__, position=(pos.x(), pos.y()))
+        node.clone_param(new_node)
+
     def createSubGraphNode(self, name, subgraph_save, input_relays,
                            output_relays, spawnAt=None):
         inps = []

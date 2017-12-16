@@ -2,7 +2,6 @@ from collections import OrderedDict
 from copy import copy
 import inspect
 
-from chainer import variable
 from PyQt5.QtGui import QColor
 
 from chainer_wing import util
@@ -493,6 +492,13 @@ class Node(object, metaclass=MetaNode):
         if self.name:
             return self.name
         return self.ID
+
+    def clone_param(self, other):
+        assert type(self) is type(other)
+        for key in self.inputs.keys():
+            if key == 'in_array':
+                continue
+            other.inputs[key].set_value(self.inputs[key].value)
 
 
 class Pin(object):
