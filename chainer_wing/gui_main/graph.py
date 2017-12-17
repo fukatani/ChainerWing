@@ -51,14 +51,14 @@ class Graph(object):
         spawned if True.
         :return: newly created Node instance.
         """
-        newNode = node_class(self, id)
+        newNode = node_class(self, position, id)
         newNode.name = name
         self.reverseConnections[newNode] = set()
         self.connections[newNode] = set()
         if connections:
             self._spawnConnections(connections, newNode)
         try:
-            self.painter.registerNode(newNode, position, silent)
+            self.painter.registerNode(newNode, silent)
         except AttributeError:
             pass
         self.nodes[newNode.ID] = newNode
@@ -68,40 +68,6 @@ class Graph(object):
     def pasteNode(self, node, pos):
         new_node = self.spawnNode(node.__class__, position=(pos.x(), pos.y()))
         node.clone_param(new_node)
-
-    def createSubGraphNode(self, name, subgraph_save, input_relays,
-                           output_relays, spawnAt=None):
-        inps = []
-        names = set()
-        for info, x, y in input_relays:
-            iName = info.name
-            while iName in names:
-                iName += '_'
-            names.add(iName)
-            inps.append({'name': iName,
-                         'var_type': info.var_type,
-                         'hints': info.hints,
-                         'value': None,
-                         'select': info.select,
-                         'list': info.list,
-                         'optional': info.optional})
-        outs = []
-        names = set()
-        for info, x, y in output_relays:
-            oName = info.name
-            while oName in names:
-                oName += '_'
-            names.add(oName)
-            outs.append({'name': oName,
-                         'var_type': info.var_type,
-                         'hints': info.hints,
-                         'value': None,
-                         'select': info.select,
-                         'list': info.list,
-                         'optional': info.optional})
-        node_class = self.createCustomNodeClass(name, inps, outs)
-        if spawnAt:
-            return self.spawnNode(node_class, position=spawnAt)
 
     def createCustomNodeClass(self, name, inputs, outputs, parents=(Node,)):
         node_class = MetaNode(name, parents, {})
@@ -211,11 +177,8 @@ class Graph(object):
         Updates and repaints the painter instance.
         :return:
         """
-        try:
-            self.painter.repaint()
-            self.painter.update()
-        except AttributeError:
-            pass
+        self.painter.repaint()
+        self.painter.update()
 
     def compile(self):
         """
@@ -282,9 +245,6 @@ class Graph(object):
          nodes corresponding to the subgraph.
         :return:
         """
-        if subgraph:
-            return [(node.ID, node.to_dict()) for node in self.nodes.values()
-                    if node.subgraph == subgraph]
         return [(node.ID, node.to_dict()) for node in self.nodes.values()]
 
     def killRunner(self):
@@ -311,16 +271,9 @@ class Graph(object):
                                               id=id,
                                               name=nodeData['name'])
             except KeyError:
-                try:
-                    dynamic = nodeData['dynamic']
-                except KeyError:
-                    dynamic = False
-                if not dynamic:
-                    util.disp_error('Unknown Node class **{}**'
+                util.disp_error('Unknown Node class **{}**'
                                     .format(nodeData['class']))
-                    continue
-                else:
-                    print('I need to create a custom class now.')
+                continue
             else:
                 try:
                     restoredNode.subgraph = nodeData['subgraph']

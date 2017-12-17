@@ -60,9 +60,10 @@ class Painter2D(QtWidgets.QWidget):
         self.relayTo = None
         self.selectFrame = None
         self.selectFrame_End = None
-        self.selectedSubgraph = ('main', None)
         self.groupSelection = []
         self.copied_node = None
+        self.graph_stack = []  # For undo/redo
+        self.max_graph_stack = 20
         self.reset()
 
     def reset(self):
@@ -79,72 +80,28 @@ class Painter2D(QtWidgets.QWidget):
         self.relayTo = None
         self.selectFrame = None
         self.selectFrame_End = None
-        self.selectedSubgraph = ('main', None)
         self.groupSelection = []
         self.copied_node = None
 
-    def createSubgraph(self, name):
-        subgraph = set()
-        relayInputs = set()
-        for node in self.groupSelection:
-            node.subgraph = name
-            subgraph.add(node)
-        allInputs = [i for i in self.getAllInputsOfSubgraph(name)]
-        for inp in allInputs:
-            con = self.graph.getConnectionOfInput(inp)
-            if con is not None:
-                outNode = con.output_node
-                if outNode not in subgraph:
-                    relayInputs.add((inp, outNode, con.output_name))
-            else:
-                relayInputs.add((inp, None, None))
+    def update_graph_stack(self):
+        """
+        This method should be called After graph manipulated.
+        """
+        if self.graph is None:
+            return
+        self.graph_stack.append(self.graph.to_dict())  # For undo/redo
+        if len(self.graph_stack) > self.max_graph_stack:
+            self.graph_stack.pop()
 
-        relayOutputs = set()
-        allOutputs = self.getAllOutputsOfSubgraph(name)
-        for out in allOutputs:
-            cons = self.graph.getConnectionsOfOutput(out)
-            for con in cons:
-                if con.input_node not in subgraph:
-                    relayOutputs.add((out, con.input_node, con.input_name))
-                    break
-            else:
-                relayOutputs.add((out, None, None))
-        # print('xxx', self.graph.toJson(subgraph=name))
-        # print([i for i in relayInputs])
-        relayOutputs = sorted(relayOutputs, key=lambda item: item[0].name)
-        relayInputs = sorted(relayInputs, key=lambda item: item[0].name)
-        pos = self.mapToGlobal(self.parent().pos())
-        topLeft = self.mapToGlobal(self.pos())
-        pos -= topLeft
-        # pos -= self.center
-        pos /= self.scale
-        newNode = self.graph.createSubGraphNode(name, self.graph.to_json(
-            subgraph=name), relayInputs,
-                                                relayOutputs,
-                                                spawnAt=(pos.x(), pos.y()))
-        self.update()
-
-    def setSelectedSubgraph(self, graph, parent=None):
-        if not parent:
-            parent = self.selectedSubgraph[0]
-        self.selectedSubgraph = (graph, parent)
-
-    def getAllSubgraphs(self):
-        return {node.subgraph for node in self.nodes}
-
-    def getAllInputsOfSubgraph(self, subgraph=None):
-        if not subgraph:
-            subgraph = self.selectedSubgraph[0]
-        inputs = {node.inputs.values() for node in self.nodes if
-                  node.subgraph == subgraph}
-        return [j for i in inputs for j in i]
-
-    def getAllOutputsOfSubgraph(self, subgraph=None):
-        if not subgraph:
-            subgraph = self.selectedSubgraph[0]
-        outputs = {node.outputs.values() for node in self.nodes if
-                   node.subgraph == subgraph}
-        return [j for i in outputs for j in i]
+    def undo_graph(self):
+        """
+        Undo graph manipulation by graph_stack.
+        """
+        if not self.graph_stack:
+            return
+        self.clear_all_nodes()
+        self.graph_stack.pop(-1)
+        self.graph.load_from_dict(self.graph_stack[-1])
 
     def relayInputEventsTo(self, drawItem):
         self.relayTo = drawItem
@@ -171,16 +128,12 @@ class Painter2D(QtWidgets.QWidget):
         super(Painter2D, self).keyReleaseEvent(event)
 
     def wheelEvent(self, event):
-        # self.scale += event.deltaX()
         up = event.angleDelta().y() > 0
         if up:
             x = 1.1
         else:
             x = .9
         self.scale *= x
-
-        # Dirty trick to make sure the connection beziers are drawn
-        # at the same zoom level as the nodes.
         self.repaint()
         self.update()
 
@@ -218,6 +171,7 @@ class Painter2D(QtWidgets.QWidget):
                         return
                     self.graph.removeConnection(i, from_self=False)
                     self.update()
+                    self.update_graph_stack()
                     return
 
             for point, i in self.outputPinPositions:
@@ -226,6 +180,7 @@ class Painter2D(QtWidgets.QWidget):
                     self.clickedPin = i
                     self.graph.removeConnection(i, from_self=True)
                     self.update()
+                    self.update_graph_stack()
                     return
 
             for nodePoints in self.nodePoints:
@@ -239,6 +194,7 @@ class Painter2D(QtWidgets.QWidget):
                 if x1 < xx < x2 and y1 < yy < y2:
                     self.clickedNode = nodePoints[-1]
                     self.update()
+                    self.update_graph_stack()
                     self.downOverNode = event.pos()
                     return
             self.groupSelection = []
@@ -282,6 +238,7 @@ class Painter2D(QtWidgets.QWidget):
                 try:
                     self.graph.connect(output_nodeID, output_name, input_nodeID,
                                        input_name)
+                    # self.update_graph_stack()
                 except TypeError:
                     util.disp_error('Cannot connect pins of different type')
             self.looseConnection = False
@@ -323,6 +280,7 @@ class Painter2D(QtWidgets.QWidget):
             self.globalOffset += event.pos() - self.drag
             self.drag = event.pos()
             self.update()
+            self.update_graph_stack()
         if self.downOverNode:
             if self.groupSelection:
                 for node in self.groupSelection:
@@ -332,6 +290,7 @@ class Painter2D(QtWidgets.QWidget):
                     node.__pos__ = (newPos.x(), newPos.y())
                 self.downOverNode = event.pos()
                 self.update()
+                self.update_graph_stack()
             else:
                 node = self.clickedNode
                 newPos = (event.pos() - self.downOverNode) / self.scale
@@ -340,10 +299,12 @@ class Painter2D(QtWidgets.QWidget):
                 node.__pos__ = (newPos.x(), newPos.y())
                 self.downOverNode = event.pos()
                 self.update()
+                self.update_graph_stack()
 
         else:
             self.drawLooseConnection(event.pos())
             self.update()
+            self.update_graph_stack()
         if self.selectFrame:
             self.selectFrame_End = event.pos() + (event.pos() - self.center) * (
                 1 - self.scale) * 1 / self.scale
@@ -376,15 +337,27 @@ class Painter2D(QtWidgets.QWidget):
         return
 
     def delete_node(self, node):
-        self.graph.deleteNode(node)
-        self.unregisterNode(node)
-        node.clear()
+        self.clear_node(node)
         self.repaint()
+        self.update_graph_stack()
         # release clicked node for prevent double deleting.
         self.clickedNode = None
 
+    def clear_node(self, node):
+        self.graph.deleteNode(node)
+        self.unregisterNode(node)
+        node.clear()
+
+    def clear_all_nodes(self, repaint=True):
+        while self.nodes:
+            node = self.nodes[0]
+            self.clear_node(node)
+        if repaint:
+            self.repaint()
+
     def copy_node(self, node):
         self.copied_node = node
+        self.update_graph_stack()
 
     def paste_node(self, pos=None):
         if self.copied_node is None:
@@ -396,6 +369,7 @@ class Painter2D(QtWidgets.QWidget):
             pos -= self.center
             pos /= self.scale
         self.graph.pasteNode(self.copied_node, pos)
+        self.update_graph_stack()
         self.repaint()
 
     def correct_pos(self, pos):
@@ -413,6 +387,7 @@ class Painter2D(QtWidgets.QWidget):
         if ok and text and text not in self.get_all_name():
             node.name = text
             self.repaint()
+            self.update_graph_stack()
 
     def paintEvent(self, event):
         self.inputPinPositions = []
@@ -438,8 +413,6 @@ class Painter2D(QtWidgets.QWidget):
         halfPinSize = PINSIZE // 2
 
         for node in self.nodes:
-            if not self.selectedSubgraph[0] == node.subgraph:
-                continue
             pen = QtGui.QPen()
             pen.setWidth(2)
             if node.runtime_error_happened:
@@ -618,13 +591,11 @@ class Painter2D(QtWidgets.QWidget):
         path.cubicTo(p21, p22, p31, p32, end.x(), end.y())
         painter.drawPath(path)
 
-    def registerNode(self, node, position, silent=False):
+    def registerNode(self, node, silent=False):
         if not silent:
             self.parent().parent().parent().parent().statusBar.showMessage(
                 'Spawned node of class \'{}\'.'.format(type(node).__name__),
                 2000)
-        node.__painter__ = {'position': position}
-        node.__pos__ = position
         node.__size__ = (1, len(node.inputs) + len(node.outputs))
         self.nodes.append(node)
         self.drawItemsOfNode[node] = {'inp': [], 'out': []}
@@ -817,6 +788,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pasteNodeAction.setIconVisibleInMenu(True)
         self.addAction(self.pasteNodeAction)
 
+        self.undoAction = QtWidgets.QAction('Undo', self)
+        self.undoAction.setShortcut('Ctrl+Z')
+        self.undoAction.triggered.connect(self.undoGraph)
+        self.undoAction.setIconVisibleInMenu(False)
+        self.addAction(self.undoAction)
+
         self.statusAction = QtWidgets.QAction('Status', self)
         # self.statusAction.setShortcut('Ctrl+R')
         self.statusAction.triggered.connect(self.updateStatus)
@@ -884,15 +861,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.mainToolBar.addAction(self.train_configure_action)
         self.mainToolBar.addAction(self.settings_action)
 
-    def selectSubgraph(self):
-        self.drawer.setSelectedSubgraph(self.macroSelector.currentText())
-        self.drawer.update()
-
-    def getSubgraphList(self):
-        new = self.drawer.getAllSubgraphs()
-        self.macroSelector.addItems(new.difference(self.knownSubgraphs))
-        self.knownSubgraphs = self.knownSubgraphs.union(new)
-
     def open_data_config(self):
         if 'Image' in TrainParamServer()['Task']:
             try:
@@ -952,6 +920,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if node:
             self.drawer.delete_node(node)
 
+    def clear_all_nodes(self):
+        self.drawer.clear_all_nodes()
+
     def copyNode(self):
         node = self.drawer.getSelectedNode()
         if node:
@@ -960,10 +931,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def pasteNode(self):
         self.drawer.paste_node()
 
-    def clear_all_nodes(self):
-        while self.drawer.nodes:
-            node = self.drawer.nodes[0]
-            self.drawer.delete_node(node)
+    def undoGraph(self):
+        self.drawer.undo_graph()
 
     def exe_runner(self):
         self.statusBar.showMessage('Run started.', 2000)
@@ -991,7 +960,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if not file_name:
             return
         logger.debug('Attempting to load graph: {}'.format(file_name))
-        self.clear_all_nodes()
+        self.drawer.clear_all_nodes()
         with open(file_name, 'r') as fp:
             try:
                 proj_dict = json.load(fp)
