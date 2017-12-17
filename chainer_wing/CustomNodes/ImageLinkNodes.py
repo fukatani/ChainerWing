@@ -90,7 +90,8 @@ class BatchNormalization(Link):
     is_image_node = True
 
     def call_init(self):
-        return 'BatchNormalization({size}, {decay}, {eps}, numpy.float32, {use_gamma}, {use_beta}),' \
+        return 'BatchNormalization({size}, {decay}, {eps}, numpy.float32, ' \
+               '{use_gamma}, {use_beta}),' \
             .format(size=self._size,
                     decay=self._decay,
                     eps=self._eps,

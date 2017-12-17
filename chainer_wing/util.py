@@ -79,7 +79,8 @@ def get_executed_last_node():
     return last_node
 
 
-class NotSettedParameter(object): pass
+class NotSettedParameter(object):
+    pass
 
 
 class NetJSONEncoder(json.JSONEncoder):

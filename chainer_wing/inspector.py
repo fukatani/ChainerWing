@@ -9,9 +9,10 @@ class OptimizerInspector(object):
     def __init__(self):
         self.members = collections.OrderedDict()
         sorted_members = sorted(inspect.getmembers(chainer.optimizers),
-                                key=lambda x:x[0])
+                                key=lambda x: x[0])
         for name, member in sorted_members:
-            if inspect.isclass(member) and issubclass(member, optimizer.Optimizer):
+            if inspect.isclass(member) and issubclass(member,
+                                                      optimizer.Optimizer):
                 self.members[name] = member
 
     def get_signature(self, name):

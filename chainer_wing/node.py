@@ -145,7 +145,8 @@ class OutputInfo(Info):
 
 class MetaNode(type):
     """
-    Meta class for the Node class. Makes node declaration objects available in the class's scope and registers each
+    Meta class for the Node class. Makes node declaration objects available in
+     the class's scope and registers each
     Node object to have a convenient way of accessing all subclasses of Node.
     """
     inputs = []
@@ -291,7 +292,7 @@ class Node(object, metaclass=MetaNode):
         print(inspect.signature(impl))
         default_dict = {key: value.default for key, value in
                         inspect.signature(impl).parameters.items()
-                        if repr(value.default) !="<class 'inspect._empty'>"}
+                        if repr(value.default) != "<class 'inspect._empty'>"}
         for key in self.inputs.keys():
             if key in default_dict:
                 self.inputs[key].value = default_dict[key]
@@ -419,9 +420,10 @@ class Node(object, metaclass=MetaNode):
 
     def to_dict(self):
         """
-        Returns a dictionary containing all data necessary to reinstanciate the Node instance with the same properties
-        it currently has. A list of the dictionaries of each node instance in a graph is all the data necessary to
-        reinstanciate the whole graph.
+        Returns a dictionary containing all data necessary to reinstanciate the
+         Node instance with the same properties
+        it currently has. A list of the dictionaries of each node instance in a
+         graph is all the data necessary to reinstanciate the whole graph.
         :return:
         """
         inputConns = self.get_input_connect_dict()

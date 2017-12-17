@@ -26,6 +26,7 @@ class Maxout(Link):
     Input('out_size', (int,))
     Input('pool_size', (int,))
     Output('out_array', (chainer.Variable,))
+
     def call_init(self):
         self.check_member(('_out_size', '_pool_size'))
         return 'Maxout(None, {out_size}, {pool_size}),' \

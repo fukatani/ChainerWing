@@ -54,7 +54,7 @@ if __name__ == '__main__':
         line = line.replace(',', '')
         line = line.split()
         assert len(line) >= 2
-        word_dict[line[0]]=line[1]
+        word_dict[line[0]] = line[1]
 
     if not os.path.isfile('imagenet.synset.obtain_synset_list'):
         print('retrieving obtain_synset list')
@@ -83,8 +83,8 @@ if __name__ == '__main__':
                                                args.num_of_categories,
                                                category))
         try:
-            urls=urlopen("http://www.image-net.org/api/text/imagenet.synset.geturls?wnid="+id).read()
-            urls=urls.split()
+            urls = urlopen("http://www.image-net.org/api/text/imagenet.synset.geturls?wnid="+id).read()
+            urls = urls.split()
             if not urls:
                 continue
             random.shuffle(urls)

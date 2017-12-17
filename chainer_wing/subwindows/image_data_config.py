@@ -170,8 +170,7 @@ class DataDirEdit(QtWidgets.QPushButton):
 
     def open_dialog(self):
         init_path = TrainParamServer().get_work_dir()
-        data_dir = QtWidgets.QFileDialog.getExistingDirectory(self,
-        'Select Directory', init_path)
+        data_dir = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Directory', init_path)
         if data_dir:
             self.value = data_dir
             self.label.setText(self.value)

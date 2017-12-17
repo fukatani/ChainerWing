@@ -261,7 +261,8 @@ class Painter2D(QtWidgets.QWidget):
         for point, pin in self.inputPinPositions:
             if abs(pos.x() - point.x()) < 16 * self.scale and abs(
                             pos.y() - point.y()) < 16 * self.scale:
-                if pin[-8:] != 'in_array': return None
+                if pin[-8:] != 'in_array':
+                    return None
                 return pin
 
     def mouseReleaseEvent(self, event):
@@ -434,7 +435,7 @@ class Painter2D(QtWidgets.QWidget):
         painter.translate(self.width() / 2. + self.globalOffset.x(),
                           self.height() / 2. + self.globalOffset.y())
         self.center = QtCore.QPoint(self.width() / 2. + self.globalOffset.x(),
-                             self.height() / 2. + self.globalOffset.y())
+                                    self.height() / 2. + self.globalOffset.y())
         painter.scale(self.scale, self.scale)
         painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing)
 
@@ -625,8 +626,8 @@ class Painter2D(QtWidgets.QWidget):
     def registerNode(self, node, position, silent=False):
         if not silent:
             self.parent().parent().parent().parent().statusBar.showMessage(
-                'Spawned node of class \'{}\'.'
-                    .format(type(node).__name__), 2000)
+                'Spawned node of class \'{}\'.'.format(type(node).__name__),
+                2000)
         node.__painter__ = {'position': position}
         node.__pos__ = position
         node.__size__ = (1, len(node.inputs) + len(node.outputs))
@@ -992,7 +993,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 filter='Chainer Wing Files (*.json);; Any (*.*)')[0]
         else:
             file_name = override
-        if not file_name: return
+        if not file_name:
+            return
         logger.debug('Attempting to load graph: {}'.format(file_name))
         self.clear_all_nodes()
         with open(file_name, 'r') as fp:

@@ -139,7 +139,8 @@ class Graph(object):
         Creates a logical connection between two nodes.
         Before the actual connection is established checks will be performed
          to make sure that the input is actually legal.
-        If necessary, previously created connections that are in conflict with the new one will be deleted.
+        If necessary, previously created connections that are in conflict with
+         the new one will be deleted.
         :param outNode: Node instance that has the output involved in the connection.
         :param out: string representing the Output's name.
         :param inpNode: Node instance that has the input involved in the connection.
@@ -261,7 +262,8 @@ class Graph(object):
                             TrainParamServer()['TrainData'])
         except ValueError as error:
             util.disp_error('{0}\n'.format(error.args[0]) +
-                'Irregal data was found @' + TrainParamServer()['TrainData'])
+                            'Irregal data was found @' +
+                            TrainParamServer()['TrainData'])
         except FileNotFoundError as error:
             util.disp_error('{} is not found.'
                             .format(error.filename))

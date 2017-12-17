@@ -32,8 +32,8 @@ class NodeFilter(QLineEdit):
 
     def focusInEvent(self, event):
         """
-        This is supposed to selected the whole text whenever the widget is focused. Apparently, things don't work that
-        way here.
+        This is supposed to selected the whole text whenever the widget is
+         focused. Apparently, things don't work that way here.
         :param event: QFocusEvent.
         :return: None
         """
@@ -42,7 +42,8 @@ class NodeFilter(QLineEdit):
 
     def update_node_list(self, text=''):
         """
-        Interpret the text in the LineEdit and send the filtered node list to the registered NodeList widget.
+        Interpret the text in the LineEdit and send the filtered node list to
+         the registered NodeList widget.
         :param text: string that is used for filtering the node list.
                      If '', display all Nodes.
         :return: None
@@ -66,7 +67,8 @@ class NodeFilter(QLineEdit):
 
     def register_list_view(self, view, text=''):
         """
-        Establishes a reference to the NodeList instance used for displaying the filtering results.
+        Establishes a reference to the NodeList instance used for displaying
+         the filtering results.
         :param view: Reference to a NodeList instance.
         :return: None
         """
@@ -88,7 +90,8 @@ class NodeFilter(QLineEdit):
 
 class NodeList(QListView):
     """
-    Widget for displaying the available (and filtered) list of nodes and handling drag&drop spawning of nodes.
+    Widget for displaying the available (and filtered) list of nodes and
+     handling drag & drop spawning of nodes.
     """
     def __init__(self,  parent=None):
         super(NodeList, self).__init__(parent)

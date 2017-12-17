@@ -186,7 +186,7 @@ class ImageDataManager(object):
                                         'train_label.txt')
         self.make_image_list(train_images, train_labels, train_label_file)
         test_label_file = os.path.join(train_server.get_work_dir(),
-                                        'test_label.txt')
+                                       'test_label.txt')
         self.make_image_list(test_images, test_labels, test_label_file)
 
         self.compute_mean(train_images)

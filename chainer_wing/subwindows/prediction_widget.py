@@ -191,9 +191,9 @@ class ResultTableModel(QtCore.QAbstractTableModel):
             self.image_file_names = util.deserialize_pred_label()
 
     def headerData(self, column, orientation, role=QtCore.Qt.DisplayRole):
-        if role!=QtCore.Qt.DisplayRole:
+        if role != QtCore.Qt.DisplayRole:
             return QtCore.QVariant()
-        if orientation==QtCore.Qt.Horizontal:
+        if orientation == QtCore.Qt.Horizontal:
             if (TrainParamServer()['IncludingLabel'] and
                         column == self.array_data.shape[1] - 1):
                 return QtCore.QVariant('Label')
