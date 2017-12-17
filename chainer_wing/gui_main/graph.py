@@ -75,40 +75,6 @@ class Graph(object):
         new_node = self.spawnNode(node.__class__, position=(pos.x(), pos.y()))
         node.clone_param(new_node)
 
-    def createSubGraphNode(self, name, subgraph_save, input_relays,
-                           output_relays, spawnAt=None):
-        inps = []
-        names = set()
-        for info, x, y in input_relays:
-            iName = info.name
-            while iName in names:
-                iName += '_'
-            names.add(iName)
-            inps.append({'name': iName,
-                         'var_type': info.var_type,
-                         'hints': info.hints,
-                         'value': None,
-                         'select': info.select,
-                         'list': info.list,
-                         'optional': info.optional})
-        outs = []
-        names = set()
-        for info, x, y in output_relays:
-            oName = info.name
-            while oName in names:
-                oName += '_'
-            names.add(oName)
-            outs.append({'name': oName,
-                         'var_type': info.var_type,
-                         'hints': info.hints,
-                         'value': None,
-                         'select': info.select,
-                         'list': info.list,
-                         'optional': info.optional})
-        node_class = self.createCustomNodeClass(name, inps, outs)
-        if spawnAt:
-            return self.spawnNode(node_class, position=spawnAt)
-
     def createCustomNodeClass(self, name, inputs, outputs, parents=(Node,)):
         node_class = MetaNode(name, parents, {})
         node_class.__inputs__ = OrderedDict()

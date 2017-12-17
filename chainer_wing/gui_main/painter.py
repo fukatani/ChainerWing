@@ -101,46 +101,6 @@ class Painter2D(QtWidgets.QWidget):
         self.graph_stack.pop(-1)
         self.graph = self.graph_stack[-1]
 
-    def createSubgraph(self, name):
-        subgraph = set()
-        relayInputs = set()
-        for node in self.groupSelection:
-            node.subgraph = name
-            subgraph.add(node)
-        allInputs = [i for i in self.getAllInputsOfSubgraph(name)]
-        for inp in allInputs:
-            con = self.graph.getConnectionOfInput(inp)
-            if con is not None:
-                outNode = con.output_node
-                if outNode not in subgraph:
-                    relayInputs.add((inp, outNode, con.output_name))
-            else:
-                relayInputs.add((inp, None, None))
-
-        relayOutputs = set()
-        allOutputs = self.getAllOutputsOfSubgraph(name)
-        for out in allOutputs:
-            cons = self.graph.getConnectionsOfOutput(out)
-            for con in cons:
-                if con.input_node not in subgraph:
-                    relayOutputs.add((out, con.input_node, con.input_name))
-                    break
-            else:
-                relayOutputs.add((out, None, None))
-        relayOutputs = sorted(relayOutputs, key=lambda item: item[0].name)
-        relayInputs = sorted(relayInputs, key=lambda item: item[0].name)
-        pos = self.mapToGlobal(self.parent().pos())
-        topLeft = self.mapToGlobal(self.pos())
-        pos -= topLeft
-        # pos -= self.center
-        pos /= self.scale
-        newNode = self.graph.createSubGraphNode(name, self.graph.to_json(
-            subgraph=name), relayInputs,
-                                                relayOutputs,
-                                                spawnAt=(pos.x(), pos.y()))
-        self.update()
-        self.update_graph_stack()
-
     def relayInputEventsTo(self, drawItem):
         self.relayTo = drawItem
 
