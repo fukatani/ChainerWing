@@ -283,16 +283,9 @@ class Graph(object):
                                               id=id,
                                               name=nodeData['name'])
             except KeyError:
-                try:
-                    dynamic = nodeData['dynamic']
-                except KeyError:
-                    dynamic = False
-                if not dynamic:
-                    util.disp_error('Unknown Node class **{}**'
+                util.disp_error('Unknown Node class **{}**'
                                     .format(nodeData['class']))
-                    continue
-                else:
-                    print('I need to create a custom class now.')
+                continue
             else:
                 try:
                     restoredNode.subgraph = nodeData['subgraph']
