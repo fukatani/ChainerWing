@@ -34,6 +34,12 @@ class Graph(object):
         else:
             self.painter = dummy
 
+    def make_clone(self):
+        clone = Graph(self.painter)
+        clone.connections = self.connections.copy()
+        clone.nodes = self.nodes.copy()
+        clone.reverseConnections = self.reverseConnections.copy()
+
     def __getattr__(self, item):
         return super(Graph, self).__getattr__(item)
 
