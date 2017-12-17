@@ -8,9 +8,10 @@ The interface may be changed.
 ## Software Requirement
 
 * Python (3.5 or later)
-* chainer (2.0.0)
+* chainer (2.0.0 or later)
 * cupy (For GPU user)
 * PyQt5
+* chainercv (Optional, for image classification task)
 ```
 pip install chainer --pre
 pip install cupy

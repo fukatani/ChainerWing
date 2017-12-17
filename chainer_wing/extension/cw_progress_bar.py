@@ -7,7 +7,10 @@ from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets
 
 from chainer.training import extension
-from chainer.training.triggers import interval
+try:
+    from chainer.training.triggers import interval
+except ImportError:
+    from chainer.training.triggers import interval_trigger as interval
 
 
 class CWProgressBar(extension.Extension, QtWidgets.QDialog):
