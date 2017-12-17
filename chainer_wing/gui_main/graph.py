@@ -34,12 +34,6 @@ class Graph(object):
         else:
             self.painter = dummy
 
-    def make_clone(self):
-        clone = Graph(self.painter)
-        clone.connections = self.connections.copy()
-        clone.nodes = self.nodes.copy()
-        clone.reverseConnections = self.reverseConnections.copy()
-
     def __getattr__(self, item):
         return super(Graph, self).__getattr__(item)
 
@@ -57,14 +51,14 @@ class Graph(object):
         spawned if True.
         :return: newly created Node instance.
         """
-        newNode = node_class(self, id)
+        newNode = node_class(self, position, id)
         newNode.name = name
         self.reverseConnections[newNode] = set()
         self.connections[newNode] = set()
         if connections:
             self._spawnConnections(connections, newNode)
         try:
-            self.painter.registerNode(newNode, position, silent)
+            self.painter.registerNode(newNode, silent)
         except AttributeError:
             pass
         self.nodes[newNode.ID] = newNode

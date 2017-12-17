@@ -87,19 +87,21 @@ class Painter2D(QtWidgets.QWidget):
         """
         This method should be called After graph manipulated.
         """
-        return
-        # if self.graph is None:
-        #     return
-        # self.graph_stack.append(self.graph.make_clone())  # For undo/redo
-        # if len(self.graph_stack) > self.max_graph_stack:
-        #     self.graph_stack.pop()
+        if self.graph is None:
+            return
+        self.graph_stack.append(self.graph.to_dict())  # For undo/redo
+        if len(self.graph_stack) > self.max_graph_stack:
+            self.graph_stack.pop()
 
     def undo_graph(self):
         """
         Undo graph manipulation by graph_stack.
         """
+        if not self.graph_stack:
+            return
+        self.clear_all_nodes()
         self.graph_stack.pop(-1)
-        self.graph = self.graph_stack[-1]
+        self.graph.load_from_dict(self.graph_stack[-1])
 
     def relayInputEventsTo(self, drawItem):
         self.relayTo = drawItem
@@ -236,7 +238,7 @@ class Painter2D(QtWidgets.QWidget):
                 try:
                     self.graph.connect(output_nodeID, output_name, input_nodeID,
                                        input_name)
-                    self.update_graph_stack()
+                    # self.update_graph_stack()
                 except TypeError:
                     util.disp_error('Cannot connect pins of different type')
             self.looseConnection = False
@@ -335,13 +337,23 @@ class Painter2D(QtWidgets.QWidget):
         return
 
     def delete_node(self, node):
-        self.graph.deleteNode(node)
-        self.unregisterNode(node)
-        node.clear()
+        self.clear_node(node)
         self.repaint()
         self.update_graph_stack()
         # release clicked node for prevent double deleting.
         self.clickedNode = None
+
+    def clear_node(self, node):
+        self.graph.deleteNode(node)
+        self.unregisterNode(node)
+        node.clear()
+
+    def clear_all_nodes(self, repaint=True):
+        while self.nodes:
+            node = self.nodes[0]
+            self.clear_node(node)
+        if repaint:
+            self.repaint()
 
     def copy_node(self, node):
         self.copied_node = node
@@ -579,13 +591,11 @@ class Painter2D(QtWidgets.QWidget):
         path.cubicTo(p21, p22, p31, p32, end.x(), end.y())
         painter.drawPath(path)
 
-    def registerNode(self, node, position, silent=False):
+    def registerNode(self, node, silent=False):
         if not silent:
             self.parent().parent().parent().parent().statusBar.showMessage(
                 'Spawned node of class \'{}\'.'.format(type(node).__name__),
                 2000)
-        node.__painter__ = {'position': position}
-        node.__pos__ = position
         node.__size__ = (1, len(node.inputs) + len(node.outputs))
         self.nodes.append(node)
         self.drawItemsOfNode[node] = {'inp': [], 'out': []}
@@ -910,6 +920,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if node:
             self.drawer.delete_node(node)
 
+    def clear_all_nodes(self):
+        self.drawer.clear_all_nodes()
+
     def copyNode(self):
         node = self.drawer.getSelectedNode()
         if node:
@@ -920,11 +933,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def undoGraph(self):
         self.drawer.undo_graph()
-
-    def clear_all_nodes(self):
-        while self.drawer.nodes:
-            node = self.drawer.nodes[0]
-            self.drawer.delete_node(node)
 
     def exe_runner(self):
         self.statusBar.showMessage('Run started.', 2000)
@@ -952,7 +960,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if not file_name:
             return
         logger.debug('Attempting to load graph: {}'.format(file_name))
-        self.clear_all_nodes()
+        self.drawer.clear_all_nodes()
         with open(file_name, 'r') as fp:
             try:
                 proj_dict = json.load(fp)

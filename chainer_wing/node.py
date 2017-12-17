@@ -239,8 +239,8 @@ class Node(object, metaclass=MetaNode):
     registered_id = []
     is_image_node = False
 
-    def __init__(self, graph, id_proposal=None):
-        self.__pos__ = (0, 0)
+    def __init__(self, graph, position, id_proposal=None):
+        self.__pos__ = position
         self.graph = graph
         self.subgraph = 'main'
         self.inputs = OrderedDict()
