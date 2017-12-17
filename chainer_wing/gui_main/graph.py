@@ -183,11 +183,8 @@ class Graph(object):
         Updates and repaints the painter instance.
         :return:
         """
-        try:
-            self.painter.repaint()
-            self.painter.update()
-        except AttributeError:
-            pass
+        self.painter.repaint()
+        self.painter.update()
 
     def compile(self):
         """
@@ -254,9 +251,6 @@ class Graph(object):
          nodes corresponding to the subgraph.
         :return:
         """
-        if subgraph:
-            return [(node.ID, node.to_dict()) for node in self.nodes.values()
-                    if node.subgraph == subgraph]
         return [(node.ID, node.to_dict()) for node in self.nodes.values()]
 
     def killRunner(self):
