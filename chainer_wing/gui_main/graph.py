@@ -21,12 +21,8 @@ class Graph(object):
     """
 
     def __init__(self, painter=None):
-        self.slave = False
-        self.statusLock = None
-        self.connected = False
         self.nodes = {}
         self.runner = None
-        self.status = None
         # from self to other
         self.connections = {}
         # from other to self
