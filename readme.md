@@ -37,6 +37,18 @@ I'm preparing user manual.
 
 https://github.com/fukatani/ChainerWing/blob/master/doc/step_by_step.md
 
+### Use with chainerui
+
+![chainerui](https://github.com/fukatani/ChainerWing/blob/master/doc/screenshot/chainerui.png "chainerui")
+
+Please setup chainerui.
+```
+pip install chainerui
+chainerui db create
+chainerui db upgrade
+```
+If chainerui installed, ChainerWing creates project, startup server open report by web browser automatically.
+
 ## Licence
 
 Many of GUI design is referenced by Floppy.
