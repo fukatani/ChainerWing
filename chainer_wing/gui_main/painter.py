@@ -700,6 +700,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupNodeLib()
 
         # Open Last Opened JSON if enable
+        TrainParamServer()['ProjectName'] = 'New Project'
         try:
             if init_graph:
                 self.load_graph(init_graph)
@@ -978,6 +979,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.settings.setValue('graph_file', file_name)
         self.update_data_label()
         self.setupNodeLib()
+        TrainParamServer()['ProjectName'] = file_name.split('/')[-1].replace('.json', '')
 
     def save_graph_and_train(self, *args):
         """

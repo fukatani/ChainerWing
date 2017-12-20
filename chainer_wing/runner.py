@@ -1,5 +1,6 @@
 from importlib import machinery
 import os
+import subprocess
 
 import numpy
 
@@ -11,6 +12,14 @@ from chainer_wing.extension.image_dataset import PreprocessedDataset
 from chainer_wing.extension.image_dataset import PreprocessedTestDataset
 from chainer_wing.extension.plot_extension import cw_postprocess
 from chainer_wing.subwindows.train_config import TrainParamServer
+
+try:
+    import chainerui
+    _chainerui_available = True
+    import time
+    import webbrowser
+except ImportError:
+    _chainerui_available = False
 
 
 def softmax(x):
@@ -29,11 +38,22 @@ class TrainRunner(object):
 
         # Progress bar should be initialized after loading module file.
         self.pbar = CWProgressBar(train_server['Epoch'])
+        self.chainerui_server = None
 
     def run(self):
         train_server = TrainParamServer()
-        if not os.path.isdir(train_server['WorkDir'] + '/result'):
-            os.mkdir(train_server['WorkDir'] + '/result')
+        result_dir = train_server['WorkDir'] + '/result'
+        if not os.path.isdir(result_dir):
+            os.mkdir(result_dir)
+        if _chainerui_available:
+            subprocess.call('chainerui project create -d {0} -n {1}'.format(result_dir,
+                                                                            train_server['ProjectName']),
+                            shell=True)
+            if self.chainerui_server is None:
+                self.chainerui_server = subprocess.Popen('chainerui server', shell=True)
+            time.sleep(0.5)
+            webbrowser.open('http://localhost:5000/')
+
         if 'Image' in TrainParamServer()['Task']:
             ImageDataManager().get_data_train()
             train_label_file = os.path.join(train_server.get_work_dir(),

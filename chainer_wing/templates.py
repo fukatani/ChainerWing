@@ -112,7 +112,7 @@ def training_main(train, test, pbar=None, plot_postprocess=None):
     '''.format(kwargs['Epoch']) + '''
     trainer.extend(extensions.Evaluator(test_iter, model, device={0}))
     '''.format(kwargs['GPU']-1) + '''
-    trainer.extend(extensions.LogReport(log_name='{0}/chainer.log'))
+    trainer.extend(extensions.LogReport(log_name='{0}/log'))
     trainer.extend(
         extensions.PlotReport(['main/loss', 'validation/main/loss'],
                                'epoch',
