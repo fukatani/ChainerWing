@@ -219,11 +219,13 @@ class AbstractTrainEdit(QtWidgets.QSpinBox):
 class BatchSizeEdit(AbstractTrainEdit):
     def __init__(self, settings, parent):
         super(BatchSizeEdit, self).__init__(settings, parent, 20)
+        self.setMaximum(1000)
 
 
 class EpochEdit(AbstractTrainEdit):
     def __init__(self, settings, parent):
         super(EpochEdit, self).__init__(settings, parent, 20)
+        self.setMaximum(100000)
 
 
 class GPUEdit(AbstractTrainEdit):
