@@ -43,6 +43,12 @@ from chainer import serializers
 
 import numpy
 
+try:
+    from chainerui.extensions import CommandsExtension
+    _chainerui_available = True
+except ImportError:
+    _chainerui_available = False
+
 
 class {0}(chainer.Chain):
 
@@ -130,6 +136,9 @@ def training_main(train, test, pbar=None, plot_postprocess=None):
         trainer.extend(pbar)
     else:
         trainer.extend(extensions.ProgressBar())
+
+    if _chainerui_available:
+        trainer.extend(CommandsExtension())
 
     trainer.run()
     serializers.save_npz('{1}.npz', model)
