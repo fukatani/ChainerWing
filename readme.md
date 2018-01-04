@@ -13,7 +13,7 @@ The interface may be changed.
 * PyQt5
 * chainercv (Optional, for image classification task)
 ```
-pip install chainer --pre
+pip install chainer
 pip install cupy
 pip install pyqt5
 ```
